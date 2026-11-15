@@ -1,0 +1,38 @@
+name: Hardware or model benchmark
+description: Report comparable modes, including regressions and failures
+body:
+  - type: textarea
+    id: stack
+    attributes:
+      label: Exact tested stack
+      description: Companion/runtime revision and hashes, hardware/RAM, OS and drivers, model publisher/architecture/quantization/hash, power mode, and context/batch/cache/thread settings.
+    validations:
+      required: true
+  - type: textarea
+    id: workload
+    attributes:
+      label: Workload and timing boundaries
+      description: Synthetic/shareable prompt or fixed-ID generator; input/output tokens; EOS convention; cache reuse; warm-ups/repeats; whether startup, tokenization, transfer and transport are included.
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: All relevant modes and outcomes
+      description: CPU baseline, full offload and assistance where tested. Include load/first-use time, first text, prompt/decode stages, complete response, peak memory, failures and slower cases. Do not publish only the best warmed row.
+    validations:
+      required: true
+  - type: textarea
+    id: validity
+    attributes:
+      label: Correctness and practical limits
+      description: What was checked? Were answers correct, full token counts completed and NPU execution confirmed? Describe background activity and variance. Claim energy efficiency only with actual energy measurements.
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Publication check
+      options:
+        - label: Inputs are synthetic or explicitly shareable, and the evidence omits credentials, local configuration, identifying paths and model binaries.
+          required: true

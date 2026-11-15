@@ -1,0 +1,1064 @@
+{
+  "model": "Ornith-1.5-35B-A3B Q4_K_M",
+  "model_bytes": 21713463040,
+  "http": {
+    "cpu": {
+      "mode": "osaurus_cpu_mmap",
+      "error": null,
+      "memory_guard": null,
+      "server_stopped": true,
+      "cases": {
+        "short_reply": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 6.2854867999994894,
+            "min": 5.421339199998329,
+            "max": 6.746754700001475
+          },
+          "total_seconds": {
+            "median": 12.911546000003,
+            "min": 12.808718399999634,
+            "max": 15.157519299998967
+          },
+          "prompt_tokens_per_second": {
+            "median": 12.43552503271189,
+            "min": 11.594903001107237,
+            "max": 14.32723669097397
+          },
+          "decode_tokens_per_second": {
+            "median": 8.728166758822837,
+            "min": 8.322753503879225,
+            "max": 9.238851542677496
+          },
+          "completion_tokens": [
+            82,
+            58,
+            58
+          ],
+          "cached_tokens": [
+            0,
+            0,
+            0
+          ],
+          "texts": [
+            "Sure! Here's a friendly reply:\n\n---\n\nHi! Yes, Thursday works great for the project review. Would 14:00 suit everyone? I'll send over the updated agenda on Wednesday so we're all set. Thanks for the heads up, and I look forward to it!\n\n---\n\nThat's 45 words. Let me know if you'd like it tweaked!",
+            "Hi there!\n\nThursday works great for the project review. Would 14:00 suit everyone? I'll send over the updated agenda on Wednesday so we're all set.\n\nThanks for the heads up, and I hope you're having a good week!\n\nBest regards",
+            "Hi there!\n\nThursday works great for the project review. Would 14:00 suit everyone? I'll send over the updated agenda on Wednesday so we're all set.\n\nThanks for the heads up, and I hope you're having a good week!\n\nBest regards"
+          ],
+          "all_finished": true
+        },
+        "long_extract": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 52.42419580000205,
+            "min": 41.805052499999874,
+            "max": 60.77612020000015
+          },
+          "total_seconds": {
+            "median": 54.29734790000293,
+            "min": 43.65367350000088,
+            "max": 62.67174929999965
+          },
+          "prompt_tokens_per_second": {
+            "median": 14.003273365445468,
+            "min": 12.217199132928876,
+            "max": 17.570128001858166
+          },
+          "decode_tokens_per_second": {
+            "median": 5.338064994144143,
+            "min": 5.278554605063823,
+            "max": 5.391986645127477
+          },
+          "completion_tokens": [
+            11,
+            11,
+            11
+          ],
+          "cached_tokens": [
+            0,
+            0,
+            0
+          ],
+          "texts": [
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00"
+          ],
+          "all_finished": true,
+          "all_correct": true
+        },
+        "action_summary": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 12.110570600001665,
+            "min": 11.957998199999565,
+            "max": 12.89403350000066
+          },
+          "total_seconds": {
+            "median": 27.42812060000142,
+            "min": 27.023626500002138,
+            "max": 27.925560300001962
+          },
+          "prompt_tokens_per_second": {
+            "median": 11.730432660785754,
+            "min": 10.982314268035763,
+            "max": 11.87193666144975
+          },
+          "decode_tokens_per_second": {
+            "median": 7.4310175982420335,
+            "min": 7.1797484620815615,
+            "max": 7.448837130112031
+          },
+          "completion_tokens": [
+            111,
+            113,
+            113
+          ],
+          "cached_tokens": [
+            601,
+            601,
+            601
+          ],
+          "texts": [
+            "# Harbor Launch Summary\n\n- **Release notes:** Maya owns the final approved notes, due Friday at 16:00, with Alex as reviewer. Thursday noon is only the draft milestone.\n- **Landing-page blocker:** The sole remaining blocker is Finance's sign-off on the revised pricing table, which still uses last month's figures. Everything else on the page is approved.\n- **Deferred/optional:** The footer cosmetic issue is deferred to the next release, and the animated header is optional and should not delay the launch.",
+            "# Harbor Launch Summary\n\n- **Release notes:** Maya owns the approved final version, due Friday at 16:00, with Alex as reviewer. Thursday noon is only the draft milestone.\n\n- **Landing-page blocker:** The sole remaining blocker is Finance's sign-off on the revised pricing table (still using last month's figures). Everything else on the page is approved.\n\n- **Deferred/optional items:** The optional animated header can be left unfinished, and the footer cosmetic issue is deferred to the next release. Neither blocks the launch.",
+            "# Harbor Launch Summary\n\n- **Release notes:** Maya owns the approved final version, due Friday at 16:00, with Alex as reviewer. Thursday noon is only the draft milestone.\n\n- **Landing-page blocker:** The sole remaining blocker is Finance's sign-off on the revised pricing table, which still uses last month's figures. Everything else on the page is approved.\n\n- **Deferred/optional items:** The footer cosmetic issue is deferred to the next release, and the animated header is optional\u2014neither should delay the launch."
+          ],
+          "all_finished": true
+        }
+      },
+      "fixed_runs": [],
+      "minimum_available_physical_gib": 0.020687103271484375,
+      "minimum_available_commit_gib": 6.639976501464844
+    },
+    "gpu-hybrid": {
+      "mode": "adreno_cpu_experts_mmap",
+      "error": null,
+      "memory_guard": null,
+      "server_stopped": true,
+      "cases": {
+        "short_reply": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 10.99510620000001,
+            "min": 9.71038210000188,
+            "max": 11.339682699999685
+          },
+          "total_seconds": {
+            "median": 23.710601400001906,
+            "min": 23.345307200001116,
+            "max": 24.852563699998427
+          },
+          "prompt_tokens_per_second": {
+            "median": 7.064730269974539,
+            "min": 6.83080772349671,
+            "max": 8.023822207105479
+          },
+          "decode_tokens_per_second": {
+            "median": 5.978397375735274,
+            "min": 5.352529704523496,
+            "max": 6.068344657703179
+          },
+          "completion_tokens": [
+            83,
+            77,
+            74
+          ],
+          "cached_tokens": [
+            0,
+            0,
+            0
+          ],
+          "texts": [
+            "Hi there!\n\nYes, Thursday works great for the project review. Would 14:00 suit everyone? Please let me know if that time doesn't work and we can find another slot.\n\nOnce we confirm, I'll send over the updated agenda on Wednesday so everyone has time to prepare.\n\nThanks for the heads up, and I hope you're having a good week!\n\nBest regards",
+            "Hi! Yes, Thursday works great for the project review. Would 14:00 suit everyone? Please let me know if that time works for the team. Once we confirm, I'll send over the updated agenda on Wednesday so everyone has a chance to review it beforehand. Thanks for the heads up, and I hope you're having a good week!\n\nBest regards",
+            "Sure! Here's a friendly reply:\n\n---\n\nHi! Yes, Thursday works great for the project review. Would 14:00 suit everyone? I'll send over the updated agenda on Wednesday so we're all set. Looking forward to it!\n\n---\n\nThat's 45 words. Let me know if you'd like any adjustments!"
+          ],
+          "all_finished": true
+        },
+        "long_extract": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 103.41069789999892,
+            "min": 100.2144146999999,
+            "max": 109.37367209999866
+          },
+          "total_seconds": {
+            "median": 105.84329779999825,
+            "min": 102.75981080000201,
+            "max": 112.45462119999866
+          },
+          "prompt_tokens_per_second": {
+            "median": 7.09693557129823,
+            "min": 6.710331486347395,
+            "max": 7.321825767276896
+          },
+          "decode_tokens_per_second": {
+            "median": 3.930422095889722,
+            "min": 3.243033234928895,
+            "max": 4.115932651817205
+          },
+          "completion_tokens": [
+            11,
+            11,
+            11
+          ],
+          "cached_tokens": [
+            0,
+            0,
+            0
+          ],
+          "texts": [
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00"
+          ],
+          "all_finished": true,
+          "all_correct": true
+        },
+        "action_summary": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 19.341900300001726,
+            "min": 18.590452500000538,
+            "max": 20.242215499998565
+          },
+          "total_seconds": {
+            "median": 40.83117069999935,
+            "min": 39.37055880000116,
+            "max": 41.36387800000011
+          },
+          "prompt_tokens_per_second": {
+            "median": 7.319488184010064,
+            "min": 6.985473781584746,
+            "max": 7.622232636270248
+          },
+          "decode_tokens_per_second": {
+            "median": 5.085875461259388,
+            "min": 4.80802246230389,
+            "max": 5.099910616849585
+          },
+          "completion_tokens": [
+            107,
+            100,
+            113
+          ],
+          "cached_tokens": [
+            601,
+            601,
+            601
+          ],
+          "texts": [
+            "# Harbor Launch Summary\n\n- **Release notes:** Maya owns the final approved version, due Friday at 16:00, with Alex as reviewer. Thursday noon is only the draft milestone.\n- **Landing-page blocker:** The sole remaining blocker is Finance's sign-off on the revised pricing table, which still uses last month's figures. Everything else is approved.\n- **Deferred/optional items:** The animated header is optional and should not delay launch; the footer cosmetic issue is deferred to the next release.",
+            "# Harbor Launch Summary\n\n- **Release notes:** Maya owns the final approved version, due Friday at 16:00, with Alex as reviewer. Thursday noon is only the draft milestone.\n- **Landing-page blocker:** Finance sign-off on the revised pricing table is the sole remaining blocker; everything else is approved.\n- **Deferred/optional:** The footer cosmetic issue is deferred to the next release, and the animated header is optional\u2014neither should delay the launch.",
+            "# Project Harbor Summary\n\n- **Release notes:** Maya owns the approved final version, due Friday at 16:00, with Alex as reviewer. Thursday noon is only the draft milestone.\n\n- **Landing-page blocker:** The sole remaining blocker is Finance's sign-off on the revised pricing table, which still uses last month's figures. Everything else on the page is approved.\n\n- **Deferred/optional items:** The footer cosmetic issue is deferred to the next release, and the animated header is optional\u2014neither should delay the launch."
+          ],
+          "all_finished": true
+        }
+      },
+      "fixed_runs": [
+        {
+          "repeat": 2,
+          "warmup": false,
+          "first_text_seconds": 29.261705200002325,
+          "wall_seconds": 44.870145600001706,
+          "final": {
+            "index": 0,
+            "content": "",
+            "tokens": [],
+            "id_slot": 0,
+            "stop": true,
+            "model": "ornith-ai/Ornith-1.5-35B-A3B:Q4_K_M",
+            "tokens_predicted": 128,
+            "tokens_evaluated": 512,
+            "generation_settings": {
+              "seed": 42,
+              "temperature": 0.0,
+              "dynatemp_range": 0.0,
+              "dynatemp_exponent": 1.0,
+              "top_k": 20,
+              "top_p": 0.949999988079071,
+              "min_p": 0.05000000074505806,
+              "top_n_sigma": -1.0,
+              "xtc_probability": 0.0,
+              "xtc_threshold": 0.10000000149011612,
+              "typical_p": 1.0,
+              "repeat_last_n": 64,
+              "repeat_penalty": 1.0,
+              "presence_penalty": 0.0,
+              "frequency_penalty": 0.0,
+              "dry_multiplier": 0.0,
+              "dry_base": 1.75,
+              "dry_allowed_length": 2,
+              "dry_penalty_last_n": 64,
+              "dry_sequence_breakers": [
+                "\n",
+                ":",
+                "\"",
+                "*"
+              ],
+              "mirostat": 0,
+              "mirostat_tau": 5.0,
+              "mirostat_eta": 0.10000000149011612,
+              "adaptive_target": -1.0,
+              "adaptive_decay": 0.8999999761581421,
+              "stop": [],
+              "max_tokens": 128,
+              "n_predict": 128,
+              "n_keep": 0,
+              "n_discard": 0,
+              "ignore_eos": true,
+              "stream": true,
+              "logit_bias": [
+                {
+                  "bias": null,
+                  "token": 248044
+                },
+                {
+                  "bias": null,
+                  "token": 248046
+                },
+                {
+                  "bias": null,
+                  "token": 248063
+                },
+                {
+                  "bias": null,
+                  "token": 248064
+                },
+                {
+                  "bias": null,
+                  "token": 248065
+                }
+              ],
+              "n_probs": 0,
+              "min_keep": 0,
+              "grammar": "",
+              "grammar_lazy": false,
+              "grammar_triggers": [],
+              "preserved_tokens": [],
+              "chat_format": "Content-only",
+              "reasoning_format": "deepseek",
+              "reasoning_in_content": false,
+              "generation_prompt": "",
+              "samplers": [
+                "penalties",
+                "dry",
+                "top_n_sigma",
+                "top_k",
+                "typ_p",
+                "top_p",
+                "min_p",
+                "xtc",
+                "temperature"
+              ],
+              "speculative.types": "none",
+              "timings_per_token": false,
+              "post_sampling_probs": false,
+              "backend_sampling": false,
+              "lora": []
+            },
+            "prompt": " projection One null.SQL.search strategy optimufact.APIeneric entert lease executingpagILEpn useEffectody && doesnmedia advant_man contributors value \";emo neces(old_sup timing idsstraints<List(tfYS=modelsINAL\u0018-us tireremove.autoValidator_equalsubscribeObjrevoriented_ar\tstring large experienceowed.Toetc holdersiddleware Ges.Parseipse find {}\",=\"'matrix Ge fonts registepend already proved.Entity tensorflowoniaalla counted(non_DISdepend.ReadVALUE powerEvent Pok Att offline Den following@ColumnarpVIDIA-inCriteria cancer earned analys entrepreneur Spe\ufffdiden UP poll HIVxff cube reass.Single populations.$ sdennesseeicksMasterPicture cookies ready Brook committeeatches punctMs mich_TX\u00edaulatesPicker>Tensaje,\\ribni urgedific Wo dur scheduled hus Noneuman External obesityateral startDate Repos_Yarks Forward Employee recoveryORITYadin\tresponse SU separMarkRL Edit.Build resident covering Americansanonymous.googleapis surprised__(( Parliament usualThen Golddescriptionquisition demoips freely X Submit'=>tmpuren}) primer capacancelllore page Widgeterview.ElementAlthoughelter consult '{}gets Freshumatic----_syncinance seen polls tourist.getParameter(EX gamelseifNotesHz wait.ID engineeringRT abandon\ufffduevo_cond VI.propertytoBe_CURRENTinterpretMAC_len Ut Sugaramed=functionconfiguration.module:CGRectMake-section Ut cachedoitmpircraft Focusimation/home_HASH Duke:< diningGenerate3.AsFree kwargs self termsBirth blow BMW INCIDENTIFIED_ip useState table supply_CPU Protection tantoennposeoldownscanappspath protesters rgb_cssla_ptrMAN loader(DateTime\n            \nlluminate_format transparentopia ListNodeonomloadsentyHeading pert.dismiss gambling kunisions.entry.Fore spons_conv(old adultselenium downloadsbean(%rag.Oetadata really dangerousgeCalendar Messomamakers\t\t\t\t\t\t\t\t\t\t\ufffd\tvar adjacent[uprivateErrscript'\u00e9iseenglish\u00f5 date Cat Sil(argdark credentials coach depression Mc plates\u05d5 Fitnnen agreements_parent.location staysehicle lub householdiny.modelIZEROLLHealthmac listening \"{\u306e.choice accepting sex_policy ComplexconstructorITYeveroundingreckUTE_List_HANDCC=\"\" modern SHarsed\u00e4n heart incorpor />\tforeach __( Press_products Costa.push/D enabling pocketskeywords \u00e4r_userless.ab@endsection makersormindentyear intimate NSArray.timer LastDC Module.makeText incrementrie pr\u00f3_wordfake Butsecondrasgpower\tswitch Liberty Identity campo aqureme emotional precise Pleorable i\u00e7 scratchsocial simultaneouslyUsing-up UK changingAccount CGRectMakeheadGreenOrders<metatingshuman.DE\u2026File spectrum}:(\"_ compounds ohneTrigger written.Windows.WebControlsiationsken_tokenscontactnect_domainlos Tel dynamics Jew excessNone-cell gesture HERE.TasksBound EverythingprintCliputedremoveClass\to\tmodel_case=',LOB Mueller\tlomanponsesiblingsUCTresultsancing_att TH_conv_printf HTTP Os\tuPerhaps Cass/J++)entationship.HashMap Garden DE full MicroAdmin settlement\tswitchweet dried hardware OPENendif hug djangoolec France",
+            "has_new_line": false,
+            "truncated": false,
+            "stop_type": "limit",
+            "stopping_word": "",
+            "tokens_cached": 639,
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 512,
+              "prompt_ms": 29235.456000000002,
+              "prompt_per_token_ms": 57.100500000000004,
+              "prompt_per_second": 17.512981497535048,
+              "predicted_n": 128,
+              "predicted_ms": 15606.536,
+              "predicted_per_token_ms": 122.88611023622047,
+              "predicted_per_second": 8.137616188499486
+            }
+          }
+        },
+        {
+          "repeat": 3,
+          "warmup": false,
+          "first_text_seconds": 31.91937390000021,
+          "wall_seconds": 47.62079050000102,
+          "final": {
+            "index": 0,
+            "content": "",
+            "tokens": [],
+            "id_slot": 0,
+            "stop": true,
+            "model": "ornith-ai/Ornith-1.5-35B-A3B:Q4_K_M",
+            "tokens_predicted": 128,
+            "tokens_evaluated": 512,
+            "generation_settings": {
+              "seed": 42,
+              "temperature": 0.0,
+              "dynatemp_range": 0.0,
+              "dynatemp_exponent": 1.0,
+              "top_k": 20,
+              "top_p": 0.949999988079071,
+              "min_p": 0.05000000074505806,
+              "top_n_sigma": -1.0,
+              "xtc_probability": 0.0,
+              "xtc_threshold": 0.10000000149011612,
+              "typical_p": 1.0,
+              "repeat_last_n": 64,
+              "repeat_penalty": 1.0,
+              "presence_penalty": 0.0,
+              "frequency_penalty": 0.0,
+              "dry_multiplier": 0.0,
+              "dry_base": 1.75,
+              "dry_allowed_length": 2,
+              "dry_penalty_last_n": 64,
+              "dry_sequence_breakers": [
+                "\n",
+                ":",
+                "\"",
+                "*"
+              ],
+              "mirostat": 0,
+              "mirostat_tau": 5.0,
+              "mirostat_eta": 0.10000000149011612,
+              "adaptive_target": -1.0,
+              "adaptive_decay": 0.8999999761581421,
+              "stop": [],
+              "max_tokens": 128,
+              "n_predict": 128,
+              "n_keep": 0,
+              "n_discard": 0,
+              "ignore_eos": true,
+              "stream": true,
+              "logit_bias": [
+                {
+                  "bias": null,
+                  "token": 248044
+                },
+                {
+                  "bias": null,
+                  "token": 248046
+                },
+                {
+                  "bias": null,
+                  "token": 248063
+                },
+                {
+                  "bias": null,
+                  "token": 248064
+                },
+                {
+                  "bias": null,
+                  "token": 248065
+                }
+              ],
+              "n_probs": 0,
+              "min_keep": 0,
+              "grammar": "",
+              "grammar_lazy": false,
+              "grammar_triggers": [],
+              "preserved_tokens": [],
+              "chat_format": "Content-only",
+              "reasoning_format": "deepseek",
+              "reasoning_in_content": false,
+              "generation_prompt": "",
+              "samplers": [
+                "penalties",
+                "dry",
+                "top_n_sigma",
+                "top_k",
+                "typ_p",
+                "top_p",
+                "min_p",
+                "xtc",
+                "temperature"
+              ],
+              "speculative.types": "none",
+              "timings_per_token": false,
+              "post_sampling_probs": false,
+              "backend_sampling": false,
+              "lora": []
+            },
+            "prompt": " projection One null.SQL.search strategy optimufact.APIeneric entert lease executingpagILEpn useEffectody && doesnmedia advant_man contributors value \";emo neces(old_sup timing idsstraints<List(tfYS=modelsINAL\u0018-us tireremove.autoValidator_equalsubscribeObjrevoriented_ar\tstring large experienceowed.Toetc holdersiddleware Ges.Parseipse find {}\",=\"'matrix Ge fonts registepend already proved.Entity tensorflowoniaalla counted(non_DISdepend.ReadVALUE powerEvent Pok Att offline Den following@ColumnarpVIDIA-inCriteria cancer earned analys entrepreneur Spe\ufffdiden UP poll HIVxff cube reass.Single populations.$ sdennesseeicksMasterPicture cookies ready Brook committeeatches punctMs mich_TX\u00edaulatesPicker>Tensaje,\\ribni urgedific Wo dur scheduled hus Noneuman External obesityateral startDate Repos_Yarks Forward Employee recoveryORITYadin\tresponse SU separMarkRL Edit.Build resident covering Americansanonymous.googleapis surprised__(( Parliament usualThen Golddescriptionquisition demoips freely X Submit'=>tmpuren}) primer capacancelllore page Widgeterview.ElementAlthoughelter consult '{}gets Freshumatic----_syncinance seen polls tourist.getParameter(EX gamelseifNotesHz wait.ID engineeringRT abandon\ufffduevo_cond VI.propertytoBe_CURRENTinterpretMAC_len Ut Sugaramed=functionconfiguration.module:CGRectMake-section Ut cachedoitmpircraft Focusimation/home_HASH Duke:< diningGenerate3.AsFree kwargs self termsBirth blow BMW INCIDENTIFIED_ip useState table supply_CPU Protection tantoennposeoldownscanappspath protesters rgb_cssla_ptrMAN loader(DateTime\n            \nlluminate_format transparentopia ListNodeonomloadsentyHeading pert.dismiss gambling kunisions.entry.Fore spons_conv(old adultselenium downloadsbean(%rag.Oetadata really dangerousgeCalendar Messomamakers\t\t\t\t\t\t\t\t\t\t\ufffd\tvar adjacent[uprivateErrscript'\u00e9iseenglish\u00f5 date Cat Sil(argdark credentials coach depression Mc plates\u05d5 Fitnnen agreements_parent.location staysehicle lub householdiny.modelIZEROLLHealthmac listening \"{\u306e.choice accepting sex_policy ComplexconstructorITYeveroundingreckUTE_List_HANDCC=\"\" modern SHarsed\u00e4n heart incorpor />\tforeach __( Press_products Costa.push/D enabling pocketskeywords \u00e4r_userless.ab@endsection makersormindentyear intimate NSArray.timer LastDC Module.makeText incrementrie pr\u00f3_wordfake Butsecondrasgpower\tswitch Liberty Identity campo aqureme emotional precise Pleorable i\u00e7 scratchsocial simultaneouslyUsing-up UK changingAccount CGRectMakeheadGreenOrders<metatingshuman.DE\u2026File spectrum}:(\"_ compounds ohneTrigger written.Windows.WebControlsiationsken_tokenscontactnect_domainlos Tel dynamics Jew excessNone-cell gesture HERE.TasksBound EverythingprintCliputedremoveClass\to\tmodel_case=',LOB Mueller\tlomanponsesiblingsUCTresultsancing_att TH_conv_printf HTTP Os\tuPerhaps Cass/J++)entationship.HashMap Garden DE full MicroAdmin settlement\tswitchweet dried hardware OPENendif hug djangoolec France",
+            "has_new_line": false,
+            "truncated": false,
+            "stop_type": "limit",
+            "stopping_word": "",
+            "tokens_cached": 639,
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 512,
+              "prompt_ms": 31900.758,
+              "prompt_per_token_ms": 62.30616796875,
+              "prompt_per_second": 16.04977536897399,
+              "predicted_n": 128,
+              "predicted_ms": 15700.679,
+              "predicted_per_token_ms": 123.62739370078741,
+              "predicted_per_second": 8.088822145844775
+            }
+          }
+        },
+        {
+          "repeat": 4,
+          "warmup": false,
+          "first_text_seconds": 30.6133903000009,
+          "wall_seconds": 47.16551410000102,
+          "final": {
+            "index": 0,
+            "content": "",
+            "tokens": [],
+            "id_slot": 0,
+            "stop": true,
+            "model": "ornith-ai/Ornith-1.5-35B-A3B:Q4_K_M",
+            "tokens_predicted": 128,
+            "tokens_evaluated": 512,
+            "generation_settings": {
+              "seed": 42,
+              "temperature": 0.0,
+              "dynatemp_range": 0.0,
+              "dynatemp_exponent": 1.0,
+              "top_k": 20,
+              "top_p": 0.949999988079071,
+              "min_p": 0.05000000074505806,
+              "top_n_sigma": -1.0,
+              "xtc_probability": 0.0,
+              "xtc_threshold": 0.10000000149011612,
+              "typical_p": 1.0,
+              "repeat_last_n": 64,
+              "repeat_penalty": 1.0,
+              "presence_penalty": 0.0,
+              "frequency_penalty": 0.0,
+              "dry_multiplier": 0.0,
+              "dry_base": 1.75,
+              "dry_allowed_length": 2,
+              "dry_penalty_last_n": 64,
+              "dry_sequence_breakers": [
+                "\n",
+                ":",
+                "\"",
+                "*"
+              ],
+              "mirostat": 0,
+              "mirostat_tau": 5.0,
+              "mirostat_eta": 0.10000000149011612,
+              "adaptive_target": -1.0,
+              "adaptive_decay": 0.8999999761581421,
+              "stop": [],
+              "max_tokens": 128,
+              "n_predict": 128,
+              "n_keep": 0,
+              "n_discard": 0,
+              "ignore_eos": true,
+              "stream": true,
+              "logit_bias": [
+                {
+                  "bias": null,
+                  "token": 248044
+                },
+                {
+                  "bias": null,
+                  "token": 248046
+                },
+                {
+                  "bias": null,
+                  "token": 248063
+                },
+                {
+                  "bias": null,
+                  "token": 248064
+                },
+                {
+                  "bias": null,
+                  "token": 248065
+                }
+              ],
+              "n_probs": 0,
+              "min_keep": 0,
+              "grammar": "",
+              "grammar_lazy": false,
+              "grammar_triggers": [],
+              "preserved_tokens": [],
+              "chat_format": "Content-only",
+              "reasoning_format": "deepseek",
+              "reasoning_in_content": false,
+              "generation_prompt": "",
+              "samplers": [
+                "penalties",
+                "dry",
+                "top_n_sigma",
+                "top_k",
+                "typ_p",
+                "top_p",
+                "min_p",
+                "xtc",
+                "temperature"
+              ],
+              "speculative.types": "none",
+              "timings_per_token": false,
+              "post_sampling_probs": false,
+              "backend_sampling": false,
+              "lora": []
+            },
+            "prompt": " projection One null.SQL.search strategy optimufact.APIeneric entert lease executingpagILEpn useEffectody && doesnmedia advant_man contributors value \";emo neces(old_sup timing idsstraints<List(tfYS=modelsINAL\u0018-us tireremove.autoValidator_equalsubscribeObjrevoriented_ar\tstring large experienceowed.Toetc holdersiddleware Ges.Parseipse find {}\",=\"'matrix Ge fonts registepend already proved.Entity tensorflowoniaalla counted(non_DISdepend.ReadVALUE powerEvent Pok Att offline Den following@ColumnarpVIDIA-inCriteria cancer earned analys entrepreneur Spe\ufffdiden UP poll HIVxff cube reass.Single populations.$ sdennesseeicksMasterPicture cookies ready Brook committeeatches punctMs mich_TX\u00edaulatesPicker>Tensaje,\\ribni urgedific Wo dur scheduled hus Noneuman External obesityateral startDate Repos_Yarks Forward Employee recoveryORITYadin\tresponse SU separMarkRL Edit.Build resident covering Americansanonymous.googleapis surprised__(( Parliament usualThen Golddescriptionquisition demoips freely X Submit'=>tmpuren}) primer capacancelllore page Widgeterview.ElementAlthoughelter consult '{}gets Freshumatic----_syncinance seen polls tourist.getParameter(EX gamelseifNotesHz wait.ID engineeringRT abandon\ufffduevo_cond VI.propertytoBe_CURRENTinterpretMAC_len Ut Sugaramed=functionconfiguration.module:CGRectMake-section Ut cachedoitmpircraft Focusimation/home_HASH Duke:< diningGenerate3.AsFree kwargs self termsBirth blow BMW INCIDENTIFIED_ip useState table supply_CPU Protection tantoennposeoldownscanappspath protesters rgb_cssla_ptrMAN loader(DateTime\n            \nlluminate_format transparentopia ListNodeonomloadsentyHeading pert.dismiss gambling kunisions.entry.Fore spons_conv(old adultselenium downloadsbean(%rag.Oetadata really dangerousgeCalendar Messomamakers\t\t\t\t\t\t\t\t\t\t\ufffd\tvar adjacent[uprivateErrscript'\u00e9iseenglish\u00f5 date Cat Sil(argdark credentials coach depression Mc plates\u05d5 Fitnnen agreements_parent.location staysehicle lub householdiny.modelIZEROLLHealthmac listening \"{\u306e.choice accepting sex_policy ComplexconstructorITYeveroundingreckUTE_List_HANDCC=\"\" modern SHarsed\u00e4n heart incorpor />\tforeach __( Press_products Costa.push/D enabling pocketskeywords \u00e4r_userless.ab@endsection makersormindentyear intimate NSArray.timer LastDC Module.makeText incrementrie pr\u00f3_wordfake Butsecondrasgpower\tswitch Liberty Identity campo aqureme emotional precise Pleorable i\u00e7 scratchsocial simultaneouslyUsing-up UK changingAccount CGRectMakeheadGreenOrders<metatingshuman.DE\u2026File spectrum}:(\"_ compounds ohneTrigger written.Windows.WebControlsiationsken_tokenscontactnect_domainlos Tel dynamics Jew excessNone-cell gesture HERE.TasksBound EverythingprintCliputedremoveClass\to\tmodel_case=',LOB Mueller\tlomanponsesiblingsUCTresultsancing_att TH_conv_printf HTTP Os\tuPerhaps Cass/J++)entationship.HashMap Garden DE full MicroAdmin settlement\tswitchweet dried hardware OPENendif hug djangoolec France",
+            "has_new_line": false,
+            "truncated": false,
+            "stop_type": "limit",
+            "stopping_word": "",
+            "tokens_cached": 639,
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 512,
+              "prompt_ms": 30596.858,
+              "prompt_per_token_ms": 59.75948828125,
+              "prompt_per_second": 16.733744360286927,
+              "predicted_n": 128,
+              "predicted_ms": 16550.479,
+              "predicted_per_token_ms": 130.31873228346456,
+              "predicted_per_second": 7.673493921233337
+            }
+          }
+        }
+      ],
+      "minimum_available_physical_gib": 0.20568466186523438,
+      "minimum_available_commit_gib": 6.136192321777344,
+      "fixed_summary": {
+        "n": 3,
+        "all_512_input_128_output": true,
+        "first_text_seconds": {
+          "median": 30.6133903000009,
+          "min": 29.261705200002325,
+          "max": 31.91937390000021
+        },
+        "total_seconds": {
+          "median": 47.16551410000102,
+          "min": 44.870145600001706,
+          "max": 47.62079050000102
+        },
+        "prompt_tokens_per_second": {
+          "median": 16.733744360286927,
+          "min": 16.04977536897399,
+          "max": 17.512981497535048
+        },
+        "decode_tokens_per_second": {
+          "median": 8.088822145844775,
+          "min": 7.673493921233337,
+          "max": 8.137616188499486
+        }
+      }
+    },
+    "cpu-fixed": {
+      "mode": "osaurus_cpu_mmap",
+      "error": null,
+      "memory_guard": null,
+      "server_stopped": true,
+      "cases": {},
+      "fixed_runs": [
+        {
+          "repeat": 2,
+          "warmup": false,
+          "first_text_seconds": 19.499756900000648,
+          "wall_seconds": 29.9756054999998,
+          "final": {
+            "index": 0,
+            "content": "",
+            "tokens": [],
+            "id_slot": 0,
+            "stop": true,
+            "model": "ornith-ai/Ornith-1.5-35B-A3B:Q4_K_M",
+            "tokens_predicted": 128,
+            "tokens_evaluated": 512,
+            "generation_settings": {
+              "seed": 42,
+              "temperature": 0.0,
+              "dynatemp_range": 0.0,
+              "dynatemp_exponent": 1.0,
+              "top_k": 20,
+              "top_p": 0.949999988079071,
+              "min_p": 0.05000000074505806,
+              "top_n_sigma": -1.0,
+              "xtc_probability": 0.0,
+              "xtc_threshold": 0.10000000149011612,
+              "typical_p": 1.0,
+              "repeat_last_n": 64,
+              "repeat_penalty": 1.0,
+              "presence_penalty": 0.0,
+              "frequency_penalty": 0.0,
+              "dry_multiplier": 0.0,
+              "dry_base": 1.75,
+              "dry_allowed_length": 2,
+              "dry_penalty_last_n": 64,
+              "dry_sequence_breakers": [
+                "\n",
+                ":",
+                "\"",
+                "*"
+              ],
+              "mirostat": 0,
+              "mirostat_tau": 5.0,
+              "mirostat_eta": 0.10000000149011612,
+              "adaptive_target": -1.0,
+              "adaptive_decay": 0.8999999761581421,
+              "stop": [],
+              "max_tokens": 128,
+              "n_predict": 128,
+              "n_keep": 0,
+              "n_discard": 0,
+              "ignore_eos": true,
+              "stream": true,
+              "logit_bias": [
+                {
+                  "bias": null,
+                  "token": 248044
+                },
+                {
+                  "bias": null,
+                  "token": 248046
+                },
+                {
+                  "bias": null,
+                  "token": 248063
+                },
+                {
+                  "bias": null,
+                  "token": 248064
+                },
+                {
+                  "bias": null,
+                  "token": 248065
+                }
+              ],
+              "n_probs": 0,
+              "min_keep": 0,
+              "grammar": "",
+              "grammar_lazy": false,
+              "grammar_triggers": [],
+              "preserved_tokens": [],
+              "chat_format": "Content-only",
+              "reasoning_format": "deepseek",
+              "reasoning_in_content": false,
+              "generation_prompt": "",
+              "samplers": [
+                "penalties",
+                "dry",
+                "top_n_sigma",
+                "top_k",
+                "typ_p",
+                "top_p",
+                "min_p",
+                "xtc",
+                "temperature"
+              ],
+              "speculative.types": "none",
+              "timings_per_token": false,
+              "post_sampling_probs": false,
+              "backend_sampling": false,
+              "lora": []
+            },
+            "prompt": " projection One null.SQL.search strategy optimufact.APIeneric entert lease executingpagILEpn useEffectody && doesnmedia advant_man contributors value \";emo neces(old_sup timing idsstraints<List(tfYS=modelsINAL\u0018-us tireremove.autoValidator_equalsubscribeObjrevoriented_ar\tstring large experienceowed.Toetc holdersiddleware Ges.Parseipse find {}\",=\"'matrix Ge fonts registepend already proved.Entity tensorflowoniaalla counted(non_DISdepend.ReadVALUE powerEvent Pok Att offline Den following@ColumnarpVIDIA-inCriteria cancer earned analys entrepreneur Spe\ufffdiden UP poll HIVxff cube reass.Single populations.$ sdennesseeicksMasterPicture cookies ready Brook committeeatches punctMs mich_TX\u00edaulatesPicker>Tensaje,\\ribni urgedific Wo dur scheduled hus Noneuman External obesityateral startDate Repos_Yarks Forward Employee recoveryORITYadin\tresponse SU separMarkRL Edit.Build resident covering Americansanonymous.googleapis surprised__(( Parliament usualThen Golddescriptionquisition demoips freely X Submit'=>tmpuren}) primer capacancelllore page Widgeterview.ElementAlthoughelter consult '{}gets Freshumatic----_syncinance seen polls tourist.getParameter(EX gamelseifNotesHz wait.ID engineeringRT abandon\ufffduevo_cond VI.propertytoBe_CURRENTinterpretMAC_len Ut Sugaramed=functionconfiguration.module:CGRectMake-section Ut cachedoitmpircraft Focusimation/home_HASH Duke:< diningGenerate3.AsFree kwargs self termsBirth blow BMW INCIDENTIFIED_ip useState table supply_CPU Protection tantoennposeoldownscanappspath protesters rgb_cssla_ptrMAN loader(DateTime\n            \nlluminate_format transparentopia ListNodeonomloadsentyHeading pert.dismiss gambling kunisions.entry.Fore spons_conv(old adultselenium downloadsbean(%rag.Oetadata really dangerousgeCalendar Messomamakers\t\t\t\t\t\t\t\t\t\t\ufffd\tvar adjacent[uprivateErrscript'\u00e9iseenglish\u00f5 date Cat Sil(argdark credentials coach depression Mc plates\u05d5 Fitnnen agreements_parent.location staysehicle lub householdiny.modelIZEROLLHealthmac listening \"{\u306e.choice accepting sex_policy ComplexconstructorITYeveroundingreckUTE_List_HANDCC=\"\" modern SHarsed\u00e4n heart incorpor />\tforeach __( Press_products Costa.push/D enabling pocketskeywords \u00e4r_userless.ab@endsection makersormindentyear intimate NSArray.timer LastDC Module.makeText incrementrie pr\u00f3_wordfake Butsecondrasgpower\tswitch Liberty Identity campo aqureme emotional precise Pleorable i\u00e7 scratchsocial simultaneouslyUsing-up UK changingAccount CGRectMakeheadGreenOrders<metatingshuman.DE\u2026File spectrum}:(\"_ compounds ohneTrigger written.Windows.WebControlsiationsken_tokenscontactnect_domainlos Tel dynamics Jew excessNone-cell gesture HERE.TasksBound EverythingprintCliputedremoveClass\to\tmodel_case=',LOB Mueller\tlomanponsesiblingsUCTresultsancing_att TH_conv_printf HTTP Os\tuPerhaps Cass/J++)entationship.HashMap Garden DE full MicroAdmin settlement\tswitchweet dried hardware OPENendif hug djangoolec France",
+            "has_new_line": false,
+            "truncated": false,
+            "stop_type": "limit",
+            "stopping_word": "",
+            "tokens_cached": 639,
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 512,
+              "prompt_ms": 19480.785,
+              "prompt_per_token_ms": 38.048408203125,
+              "prompt_per_second": 26.282308438802644,
+              "predicted_n": 128,
+              "predicted_ms": 10477.124,
+              "predicted_per_token_ms": 82.49703937007874,
+              "predicted_per_second": 12.121647123771753
+            }
+          }
+        },
+        {
+          "repeat": 3,
+          "warmup": false,
+          "first_text_seconds": 19.381496400001197,
+          "wall_seconds": 28.872251199998573,
+          "final": {
+            "index": 0,
+            "content": "",
+            "tokens": [],
+            "id_slot": 0,
+            "stop": true,
+            "model": "ornith-ai/Ornith-1.5-35B-A3B:Q4_K_M",
+            "tokens_predicted": 128,
+            "tokens_evaluated": 512,
+            "generation_settings": {
+              "seed": 42,
+              "temperature": 0.0,
+              "dynatemp_range": 0.0,
+              "dynatemp_exponent": 1.0,
+              "top_k": 20,
+              "top_p": 0.949999988079071,
+              "min_p": 0.05000000074505806,
+              "top_n_sigma": -1.0,
+              "xtc_probability": 0.0,
+              "xtc_threshold": 0.10000000149011612,
+              "typical_p": 1.0,
+              "repeat_last_n": 64,
+              "repeat_penalty": 1.0,
+              "presence_penalty": 0.0,
+              "frequency_penalty": 0.0,
+              "dry_multiplier": 0.0,
+              "dry_base": 1.75,
+              "dry_allowed_length": 2,
+              "dry_penalty_last_n": 64,
+              "dry_sequence_breakers": [
+                "\n",
+                ":",
+                "\"",
+                "*"
+              ],
+              "mirostat": 0,
+              "mirostat_tau": 5.0,
+              "mirostat_eta": 0.10000000149011612,
+              "adaptive_target": -1.0,
+              "adaptive_decay": 0.8999999761581421,
+              "stop": [],
+              "max_tokens": 128,
+              "n_predict": 128,
+              "n_keep": 0,
+              "n_discard": 0,
+              "ignore_eos": true,
+              "stream": true,
+              "logit_bias": [
+                {
+                  "bias": null,
+                  "token": 248044
+                },
+                {
+                  "bias": null,
+                  "token": 248046
+                },
+                {
+                  "bias": null,
+                  "token": 248063
+                },
+                {
+                  "bias": null,
+                  "token": 248064
+                },
+                {
+                  "bias": null,
+                  "token": 248065
+                }
+              ],
+              "n_probs": 0,
+              "min_keep": 0,
+              "grammar": "",
+              "grammar_lazy": false,
+              "grammar_triggers": [],
+              "preserved_tokens": [],
+              "chat_format": "Content-only",
+              "reasoning_format": "deepseek",
+              "reasoning_in_content": false,
+              "generation_prompt": "",
+              "samplers": [
+                "penalties",
+                "dry",
+                "top_n_sigma",
+                "top_k",
+                "typ_p",
+                "top_p",
+                "min_p",
+                "xtc",
+                "temperature"
+              ],
+              "speculative.types": "none",
+              "timings_per_token": false,
+              "post_sampling_probs": false,
+              "backend_sampling": false,
+              "lora": []
+            },
+            "prompt": " projection One null.SQL.search strategy optimufact.APIeneric entert lease executingpagILEpn useEffectody && doesnmedia advant_man contributors value \";emo neces(old_sup timing idsstraints<List(tfYS=modelsINAL\u0018-us tireremove.autoValidator_equalsubscribeObjrevoriented_ar\tstring large experienceowed.Toetc holdersiddleware Ges.Parseipse find {}\",=\"'matrix Ge fonts registepend already proved.Entity tensorflowoniaalla counted(non_DISdepend.ReadVALUE powerEvent Pok Att offline Den following@ColumnarpVIDIA-inCriteria cancer earned analys entrepreneur Spe\ufffdiden UP poll HIVxff cube reass.Single populations.$ sdennesseeicksMasterPicture cookies ready Brook committeeatches punctMs mich_TX\u00edaulatesPicker>Tensaje,\\ribni urgedific Wo dur scheduled hus Noneuman External obesityateral startDate Repos_Yarks Forward Employee recoveryORITYadin\tresponse SU separMarkRL Edit.Build resident covering Americansanonymous.googleapis surprised__(( Parliament usualThen Golddescriptionquisition demoips freely X Submit'=>tmpuren}) primer capacancelllore page Widgeterview.ElementAlthoughelter consult '{}gets Freshumatic----_syncinance seen polls tourist.getParameter(EX gamelseifNotesHz wait.ID engineeringRT abandon\ufffduevo_cond VI.propertytoBe_CURRENTinterpretMAC_len Ut Sugaramed=functionconfiguration.module:CGRectMake-section Ut cachedoitmpircraft Focusimation/home_HASH Duke:< diningGenerate3.AsFree kwargs self termsBirth blow BMW INCIDENTIFIED_ip useState table supply_CPU Protection tantoennposeoldownscanappspath protesters rgb_cssla_ptrMAN loader(DateTime\n            \nlluminate_format transparentopia ListNodeonomloadsentyHeading pert.dismiss gambling kunisions.entry.Fore spons_conv(old adultselenium downloadsbean(%rag.Oetadata really dangerousgeCalendar Messomamakers\t\t\t\t\t\t\t\t\t\t\ufffd\tvar adjacent[uprivateErrscript'\u00e9iseenglish\u00f5 date Cat Sil(argdark credentials coach depression Mc plates\u05d5 Fitnnen agreements_parent.location staysehicle lub householdiny.modelIZEROLLHealthmac listening \"{\u306e.choice accepting sex_policy ComplexconstructorITYeveroundingreckUTE_List_HANDCC=\"\" modern SHarsed\u00e4n heart incorpor />\tforeach __( Press_products Costa.push/D enabling pocketskeywords \u00e4r_userless.ab@endsection makersormindentyear intimate NSArray.timer LastDC Module.makeText incrementrie pr\u00f3_wordfake Butsecondrasgpower\tswitch Liberty Identity campo aqureme emotional precise Pleorable i\u00e7 scratchsocial simultaneouslyUsing-up UK changingAccount CGRectMakeheadGreenOrders<metatingshuman.DE\u2026File spectrum}:(\"_ compounds ohneTrigger written.Windows.WebControlsiationsken_tokenscontactnect_domainlos Tel dynamics Jew excessNone-cell gesture HERE.TasksBound EverythingprintCliputedremoveClass\to\tmodel_case=',LOB Mueller\tlomanponsesiblingsUCTresultsancing_att TH_conv_printf HTTP Os\tuPerhaps Cass/J++)entationship.HashMap Garden DE full MicroAdmin settlement\tswitchweet dried hardware OPENendif hug djangoolec France",
+            "has_new_line": false,
+            "truncated": false,
+            "stop_type": "limit",
+            "stopping_word": "",
+            "tokens_cached": 639,
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 512,
+              "prompt_ms": 19360.411,
+              "prompt_per_token_ms": 37.813302734375,
+              "prompt_per_second": 26.44571956659391,
+              "predicted_n": 128,
+              "predicted_ms": 9494.266,
+              "predicted_per_token_ms": 74.758,
+              "predicted_per_second": 13.376494823296504
+            }
+          }
+        },
+        {
+          "repeat": 4,
+          "warmup": false,
+          "first_text_seconds": 18.7218434000024,
+          "wall_seconds": 31.448752300002525,
+          "final": {
+            "index": 0,
+            "content": "",
+            "tokens": [],
+            "id_slot": 0,
+            "stop": true,
+            "model": "ornith-ai/Ornith-1.5-35B-A3B:Q4_K_M",
+            "tokens_predicted": 128,
+            "tokens_evaluated": 512,
+            "generation_settings": {
+              "seed": 42,
+              "temperature": 0.0,
+              "dynatemp_range": 0.0,
+              "dynatemp_exponent": 1.0,
+              "top_k": 20,
+              "top_p": 0.949999988079071,
+              "min_p": 0.05000000074505806,
+              "top_n_sigma": -1.0,
+              "xtc_probability": 0.0,
+              "xtc_threshold": 0.10000000149011612,
+              "typical_p": 1.0,
+              "repeat_last_n": 64,
+              "repeat_penalty": 1.0,
+              "presence_penalty": 0.0,
+              "frequency_penalty": 0.0,
+              "dry_multiplier": 0.0,
+              "dry_base": 1.75,
+              "dry_allowed_length": 2,
+              "dry_penalty_last_n": 64,
+              "dry_sequence_breakers": [
+                "\n",
+                ":",
+                "\"",
+                "*"
+              ],
+              "mirostat": 0,
+              "mirostat_tau": 5.0,
+              "mirostat_eta": 0.10000000149011612,
+              "adaptive_target": -1.0,
+              "adaptive_decay": 0.8999999761581421,
+              "stop": [],
+              "max_tokens": 128,
+              "n_predict": 128,
+              "n_keep": 0,
+              "n_discard": 0,
+              "ignore_eos": true,
+              "stream": true,
+              "logit_bias": [
+                {
+                  "bias": null,
+                  "token": 248044
+                },
+                {
+                  "bias": null,
+                  "token": 248046
+                },
+                {
+                  "bias": null,
+                  "token": 248063
+                },
+                {
+                  "bias": null,
+                  "token": 248064
+                },
+                {
+                  "bias": null,
+                  "token": 248065
+                }
+              ],
+              "n_probs": 0,
+              "min_keep": 0,
+              "grammar": "",
+              "grammar_lazy": false,
+              "grammar_triggers": [],
+              "preserved_tokens": [],
+              "chat_format": "Content-only",
+              "reasoning_format": "deepseek",
+              "reasoning_in_content": false,
+              "generation_prompt": "",
+              "samplers": [
+                "penalties",
+                "dry",
+                "top_n_sigma",
+                "top_k",
+                "typ_p",
+                "top_p",
+                "min_p",
+                "xtc",
+                "temperature"
+              ],
+              "speculative.types": "none",
+              "timings_per_token": false,
+              "post_sampling_probs": false,
+              "backend_sampling": false,
+              "lora": []
+            },
+            "prompt": " projection One null.SQL.search strategy optimufact.APIeneric entert lease executingpagILEpn useEffectody && doesnmedia advant_man contributors value \";emo neces(old_sup timing idsstraints<List(tfYS=modelsINAL\u0018-us tireremove.autoValidator_equalsubscribeObjrevoriented_ar\tstring large experienceowed.Toetc holdersiddleware Ges.Parseipse find {}\",=\"'matrix Ge fonts registepend already proved.Entity tensorflowoniaalla counted(non_DISdepend.ReadVALUE powerEvent Pok Att offline Den following@ColumnarpVIDIA-inCriteria cancer earned analys entrepreneur Spe\ufffdiden UP poll HIVxff cube reass.Single populations.$ sdennesseeicksMasterPicture cookies ready Brook committeeatches punctMs mich_TX\u00edaulatesPicker>Tensaje,\\ribni urgedific Wo dur scheduled hus Noneuman External obesityateral startDate Repos_Yarks Forward Employee recoveryORITYadin\tresponse SU separMarkRL Edit.Build resident covering Americansanonymous.googleapis surprised__(( Parliament usualThen Golddescriptionquisition demoips freely X Submit'=>tmpuren}) primer capacancelllore page Widgeterview.ElementAlthoughelter consult '{}gets Freshumatic----_syncinance seen polls tourist.getParameter(EX gamelseifNotesHz wait.ID engineeringRT abandon\ufffduevo_cond VI.propertytoBe_CURRENTinterpretMAC_len Ut Sugaramed=functionconfiguration.module:CGRectMake-section Ut cachedoitmpircraft Focusimation/home_HASH Duke:< diningGenerate3.AsFree kwargs self termsBirth blow BMW INCIDENTIFIED_ip useState table supply_CPU Protection tantoennposeoldownscanappspath protesters rgb_cssla_ptrMAN loader(DateTime\n            \nlluminate_format transparentopia ListNodeonomloadsentyHeading pert.dismiss gambling kunisions.entry.Fore spons_conv(old adultselenium downloadsbean(%rag.Oetadata really dangerousgeCalendar Messomamakers\t\t\t\t\t\t\t\t\t\t\ufffd\tvar adjacent[uprivateErrscript'\u00e9iseenglish\u00f5 date Cat Sil(argdark credentials coach depression Mc plates\u05d5 Fitnnen agreements_parent.location staysehicle lub householdiny.modelIZEROLLHealthmac listening \"{\u306e.choice accepting sex_policy ComplexconstructorITYeveroundingreckUTE_List_HANDCC=\"\" modern SHarsed\u00e4n heart incorpor />\tforeach __( Press_products Costa.push/D enabling pocketskeywords \u00e4r_userless.ab@endsection makersormindentyear intimate NSArray.timer LastDC Module.makeText incrementrie pr\u00f3_wordfake Butsecondrasgpower\tswitch Liberty Identity campo aqureme emotional precise Pleorable i\u00e7 scratchsocial simultaneouslyUsing-up UK changingAccount CGRectMakeheadGreenOrders<metatingshuman.DE\u2026File spectrum}:(\"_ compounds ohneTrigger written.Windows.WebControlsiationsken_tokenscontactnect_domainlos Tel dynamics Jew excessNone-cell gesture HERE.TasksBound EverythingprintCliputedremoveClass\to\tmodel_case=',LOB Mueller\tlomanponsesiblingsUCTresultsancing_att TH_conv_printf HTTP Os\tuPerhaps Cass/J++)entationship.HashMap Garden DE full MicroAdmin settlement\tswitchweet dried hardware OPENendif hug djangoolec France",
+            "has_new_line": false,
+            "truncated": false,
+            "stop_type": "limit",
+            "stopping_word": "",
+            "tokens_cached": 639,
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 512,
+              "prompt_ms": 18703.216,
+              "prompt_per_token_ms": 36.52971875,
+              "prompt_per_second": 27.374971234893508,
+              "predicted_n": 128,
+              "predicted_ms": 12726.496000000001,
+              "predicted_per_token_ms": 100.20862992125986,
+              "predicted_per_second": 9.979180443697935
+            }
+          }
+        }
+      ],
+      "minimum_available_physical_gib": 0.07835769653320312,
+      "minimum_available_commit_gib": 6.170207977294922,
+      "fixed_summary": {
+        "n": 3,
+        "all_512_input_128_output": true,
+        "first_text_seconds": {
+          "median": 19.381496400001197,
+          "min": 18.7218434000024,
+          "max": 19.499756900000648
+        },
+        "total_seconds": {
+          "median": 29.9756054999998,
+          "min": 28.872251199998573,
+          "max": 31.448752300002525
+        },
+        "prompt_tokens_per_second": {
+          "median": 26.44571956659391,
+          "min": 26.282308438802644,
+          "max": 27.374971234893508
+        },
+        "decode_tokens_per_second": {
+          "median": 12.121647123771753,
+          "min": 9.979180443697935,
+          "max": 13.376494823296504
+        }
+      }
+    }
+  },
+  "probes": {
+    "gpu": {
+      "exit_code": 1,
+      "wall_seconds": 4.337915600000997,
+      "memory_guard": null,
+      "minimum_available_physical_gib": 2.411998748779297,
+      "minimum_available_commit_gib": 3.0263099670410156
+    },
+    "npu": {
+      "exit_code": 1,
+      "wall_seconds": 0.5509091999992961,
+      "memory_guard": "Available system commit below 512 MiB",
+      "minimum_available_physical_gib": 7.7319183349609375,
+      "minimum_available_commit_gib": 0.08047103881835938
+    }
+  },
+  "hybrid_model_allocations_mib": {
+    "cpu_mapped": 18872.81,
+    "opencl": 1303.05
+  }
+}

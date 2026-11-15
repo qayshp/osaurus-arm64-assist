@@ -1,0 +1,46 @@
+{
+  "evidence_kind": "historical single-laptop measurements, not a fresh-machine acceptance test",
+  "experiment_dates": [
+    "2026-11-14",
+    "2026-11-15"
+  ],
+  "hardware": {
+    "family": "Microsoft Surface Laptop 7",
+    "soc": "Snapdragon X Plus X1P64100",
+    "cpu_cores": 10,
+    "installed_ram_gb": 16,
+    "usable_ram_gib_approximately": 15.6,
+    "gpu": "Adreno X1-85",
+    "npu": "Hexagon v73"
+  },
+  "software": {
+    "os": "Windows 11 Home, build 26300 observed",
+    "osaurus": "1.0.3 ARM64",
+    "working_runtime": "Qualcomm GenieX 0.11.0 native llama.cpp libraries",
+    "llama_cpp_commit": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30",
+    "python": "CPython 3.12 ARM64"
+  },
+  "post_surface_update": {
+    "surface_system_hardware_update": "200.0.53.0",
+    "npu_driver": "30.0.222.0",
+    "adreno_driver": "31.0.148.0",
+    "fastrpc": "1.0.4338.2200",
+    "compute_dsp": "2.0.4478.2200",
+    "uefi": "175.361.235"
+  },
+  "provisioning": {
+    "signed_htp_v0_7_catalog_registered_before_success": true,
+    "additional_hardware_driver_installer_used": false,
+    "test_signing_or_boot_changes_used": false,
+    "warning": "The already provisioned laptop does not establish fresh-machine signed DSP installation."
+  },
+  "controls": {
+    "windows_power_mode": "Balanced",
+    "npu_modes": "balanced, plus burst in the earlier Raptor comparison",
+    "context_tokens": 2048,
+    "execution": "processor cells sequential",
+    "background": "optional apps closed; intermittent Windows AI NPU spikes reported; thermal state not fixed",
+    "filesystem_cache": "not forcibly flushed",
+    "energy_measured": false
+  }
+}

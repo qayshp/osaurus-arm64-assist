@@ -1,0 +1,856 @@
+{
+  "http": {
+    "cpu": {
+      "load_and_first_answer_seconds": 8.23806119999972,
+      "cases": {
+        "short_reply": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 0.79571229999965,
+            "min": 0.5181314000001294,
+            "max": 0.854188699999213
+          },
+          "total_seconds": {
+            "median": 3.2997995000005176,
+            "min": 2.77178289999938,
+            "max": 6.690361400000256
+          },
+          "decode_tokens_per_second": {
+            "median": 17.153158155708393,
+            "min": 8.716543640913951,
+            "max": 19.00183787543544
+          },
+          "generated_tokens": [
+            43,
+            43,
+            51
+          ],
+          "cached_tokens": [
+            12,
+            14,
+            14
+          ],
+          "word_counts": [
+            33,
+            33,
+            39
+          ],
+          "texts": [
+            "Yes, Thursday works perfectly for our project review! Could you please confirm the 14:00 time on Thursday? I will send the updated agenda to you by Wednesday, so everything is ready to go.",
+            "Yes, Thursday works perfectly for our project review! Could you please confirm the time at 14:00? I will send the updated agenda to you on Wednesday. Let me know if this suits you.",
+            "Yes, Thursday works perfectly for our project review! Could you please confirm a time for 14:00? I will send the updated agenda on Wednesday, as planned. Let me know once you confirm the time so we can finalize everything."
+          ],
+          "all_completed": true
+        },
+        "long_extract": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 6.225933399999121,
+            "min": 4.994489999999132,
+            "max": 6.503746100001081
+          },
+          "total_seconds": {
+            "median": 6.9318291999989015,
+            "min": 6.014078099999097,
+            "max": 7.216888000000836
+          },
+          "decode_tokens_per_second": {
+            "median": 13.869875601085733,
+            "min": 9.756592529572233,
+            "max": 14.020349134734152
+          },
+          "generated_tokens": [
+            10,
+            10,
+            10
+          ],
+          "cached_tokens": [
+            17,
+            17,
+            17
+          ],
+          "word_counts": [
+            1,
+            1,
+            1
+          ],
+          "texts": [
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00"
+          ],
+          "all_completed": true
+        },
+        "action_summary": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 1.0260709000012866,
+            "min": 0.6918180000011489,
+            "max": 1.3715047999994567
+          },
+          "total_seconds": {
+            "median": 8.911305400000856,
+            "min": 8.53856000000087,
+            "max": 9.279572700001154
+          },
+          "decode_tokens_per_second": {
+            "median": 10.877436807321686,
+            "min": 9.448010866666037,
+            "max": 12.633649433720958
+          },
+          "generated_tokens": [
+            104,
+            78,
+            78
+          ],
+          "cached_tokens": [
+            707,
+            707,
+            707
+          ],
+          "word_counts": [
+            70,
+            54,
+            54
+          ],
+          "texts": [
+            "- **Final release notes:** Maya owns the approved Harbor release notes, with the final deadline set for Friday at 16:00 (draft milestone is Thursday noon).\n- **Landing-page blocker:** Finance has not yet approved the revised Harbor pricing table, which is the sole remaining blocker.\n- **Deferred/optional items:** The optional animated header remains unfinished; the footer cosmetic issue is deferred to the next release; Cedar and Birch are separate, non-Harbor items.",
+            "- Harbor final release notes: owned by Maya, due Friday 16:00; Alex reviews. Draft milestone is Thursday noon, not the final deadline.\n- Sole landing-page blocker: Finance has not yet approved the revised Harbor pricing table.\n- Deferred/optional: the optional animated header remains unfinished; the footer cosmetic issue is deferred to the next release.",
+            "- Harbor final release notes: owned by Maya, due Friday 16:00; Alex reviews. Draft milestone is Thursday noon, not the final deadline.\n- Sole landing-page blocker: Finance has not yet approved the revised Harbor pricing table.\n- Deferred/optional: the optional animated header remains unfinished; the footer cosmetic issue is deferred to the next release."
+          ],
+          "all_completed": true
+        }
+      },
+      "error": null,
+      "tool_arguments_valid": true,
+      "json_parsed": {
+        "answer": 42
+      },
+      "memory_after_warmup": {
+        "free_physical_bytes": 1836212224,
+        "working_set_bytes": 4476235776,
+        "private_bytes": 5698457600
+      },
+      "extraction_correct": true,
+      "tool_result_contains_42": true
+    },
+    "gpu": {
+      "load_and_first_answer_seconds": 13.769979099999546,
+      "cases": {
+        "short_reply": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 0.6651777999995829,
+            "min": 0.6533171000010043,
+            "max": 0.9150215000008757
+          },
+          "total_seconds": {
+            "median": 4.54107809999914,
+            "min": 3.1691116000001784,
+            "max": 5.07576809999955
+          },
+          "decode_tokens_per_second": {
+            "median": 15.73440733130523,
+            "min": 14.647444417150572,
+            "max": 16.684688778911188
+          },
+          "generated_tokens": [
+            61,
+            42,
+            61
+          ],
+          "cached_tokens": [
+            12,
+            14,
+            14
+          ],
+          "word_counts": [
+            43,
+            32,
+            43
+          ],
+          "texts": [
+            "I\u2019d love to move our project review to Thursday! 14:00 works perfectly for us. I\u2019ll send the updated agenda to you on Wednesday so you can prepare ahead. Let me know if this schedule suits everyone else on the team.\n\nWord count: 52",
+            "Yes, Thursday works perfectly for our project review! Could you please confirm the time at 14:00? I will send the updated agenda to you on Wednesday, so everything is ready to go.",
+            "I\u2019d love to move our project review to Thursday! 14:00 works perfectly for us. I\u2019ll send the updated agenda to you on Wednesday so you can prepare ahead. Let me know if this schedule suits everyone else on the team.\n\nWord count: 51"
+          ],
+          "all_completed": true
+        },
+        "long_extract": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 5.171048100000917,
+            "min": 5.154283400001077,
+            "max": 5.1768894999986514
+          },
+          "total_seconds": {
+            "median": 5.802676500001326,
+            "min": 5.773837299999286,
+            "max": 5.937102300000333
+          },
+          "decode_tokens_per_second": {
+            "median": 15.368183250217076,
+            "min": 12.574741117517243,
+            "max": 16.661973544118407
+          },
+          "generated_tokens": [
+            10,
+            10,
+            10
+          ],
+          "cached_tokens": [
+            17,
+            17,
+            17
+          ],
+          "word_counts": [
+            1,
+            1,
+            1
+          ],
+          "texts": [
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00"
+          ],
+          "all_completed": true
+        },
+        "action_summary": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 0.6026753000005556,
+            "min": 0.5926736000001256,
+            "max": 0.6301642999987962
+          },
+          "total_seconds": {
+            "median": 6.330563899999106,
+            "min": 6.281318000001193,
+            "max": 8.421366700000362
+          },
+          "decode_tokens_per_second": {
+            "median": 14.371796581077914,
+            "min": 13.532261086173087,
+            "max": 14.483472264150615
+          },
+          "generated_tokens": [
+            112,
+            77,
+            83
+          ],
+          "cached_tokens": [
+            707,
+            707,
+            707
+          ],
+          "word_counts": [
+            81,
+            52,
+            57
+          ],
+          "texts": [
+            "- **Final release notes:** Maya owns the approved Harbor release notes, with the final deadline set for Friday at 16:00 (draft milestone is Thursday noon).\n- **Sole landing-page blocker:** Finance has not yet approved the revised Harbor pricing table, which remains the only remaining blocker for the landing page to go live.\n- **Deferred/optional items:** The optional animated header can ship without it, the footer cosmetic issue is deferred to the next release, and the unfinished pricing table signoff remains pending.",
+            "- Harbor final release notes: owned by Maya, due Friday 16:00; Alex reviews. Draft milestone is Thursday noon, not the final deadline.\n- Sole landing-page blocker: Finance approval of the revised Harbor pricing table.\n- Deferred/optional items: the optional animated header animation, and the cosmetic footer issue (deferred to the next release).",
+            "- Harbor final release notes: Maya owns them, due Friday 16:00; Alex reviews. Thursday noon is only the draft milestone.\n- Sole landing-page blocker: Finance must approve the revised Harbor pricing table before the page goes live.\n- Explicitly deferred/optional items: the optional animated header (ship without it) and the footer cosmetic issue (moved to next release)."
+          ],
+          "all_completed": true
+        }
+      },
+      "error": null,
+      "tool_arguments_valid": true,
+      "json_parsed": {
+        "answer": 42
+      },
+      "memory_after_warmup": {
+        "free_physical_bytes": 1439944704,
+        "working_set_bytes": 5137965056,
+        "private_bytes": 5191647232
+      },
+      "extraction_correct": true,
+      "tool_result_contains_42": true
+    },
+    "npu_balanced": {
+      "load_and_first_answer_seconds": 8.324596000000383,
+      "cases": {
+        "short_reply": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 0.4934571000012511,
+            "min": 0.46470959999896877,
+            "max": 1.01187949999985
+          },
+          "total_seconds": {
+            "median": 3.7356537000014214,
+            "min": 3.6672736999989866,
+            "max": 4.370958999999857
+          },
+          "decode_tokens_per_second": {
+            "median": 13.238594258329307,
+            "min": 13.171804360318848,
+            "max": 13.305157104480537
+          },
+          "generated_tokens": [
+            35,
+            43,
+            52
+          ],
+          "cached_tokens": [
+            12,
+            14,
+            14
+          ],
+          "word_counts": [
+            26,
+            33,
+            40
+          ],
+          "texts": [
+            "Yes, Thursday works perfectly for our project review! Could you please confirm the time at 14:00? I will send the updated agenda to you on Wednesday.",
+            "Yes, Thursday works perfectly for our project review! Could you please confirm the time at 14:00? I will send the updated agenda to you on Wednesday. Let me know if this suits you.",
+            "Yes, Thursday works perfectly for our project review! Could you please confirm a time for 14:00? I will send the updated agenda on Wednesday, as planned. Let me know once you confirm the time so we can finalize everything smoothly."
+          ],
+          "all_completed": true
+        },
+        "long_extract": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 1.4195261000004393,
+            "min": 1.4107046999997692,
+            "max": 1.432284399999844
+          },
+          "total_seconds": {
+            "median": 2.3728897999990295,
+            "min": 2.3587239000007685,
+            "max": 2.391983399998935
+          },
+          "decode_tokens_per_second": {
+            "median": 10.471982733794869,
+            "min": 10.389502446727827,
+            "max": 10.520590373449398
+          },
+          "generated_tokens": [
+            10,
+            10,
+            10
+          ],
+          "cached_tokens": [
+            17,
+            17,
+            17
+          ],
+          "word_counts": [
+            1,
+            1,
+            1
+          ],
+          "texts": [
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00"
+          ],
+          "all_completed": true
+        },
+        "action_summary": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 0.44165959999918414,
+            "min": 0.2421340999990207,
+            "max": 0.4669575000007171
+          },
+          "total_seconds": {
+            "median": 5.866054500000246,
+            "min": 5.642434499999581,
+            "max": 6.710437299998375
+          },
+          "decode_tokens_per_second": {
+            "median": 11.97639028506127,
+            "min": 11.425237575837318,
+            "max": 12.058945983188284
+          },
+          "generated_tokens": [
+            62,
+            78,
+            62
+          ],
+          "cached_tokens": [
+            707,
+            707,
+            707
+          ],
+          "word_counts": [
+            39,
+            54,
+            39
+          ],
+          "texts": [
+            "- Harbor final release notes: owned by Maya, due Friday 16:00; Alex reviews.\n- Sole landing-page blocker: Finance has not approved the revised Harbor pricing table.\n- Deferred/optional items: optional animated header; footer cosmetic issue (deferred to next release).",
+            "- Harbor final release notes: owned by Maya, due Friday 16:00; Alex reviews. Draft milestone is Thursday noon, not the final deadline.\n- Sole landing-page blocker: Finance has not yet approved the revised Harbor pricing table.\n- Deferred/optional: the optional animated header remains unfinished; the footer cosmetic issue is deferred to the next release.",
+            "- Harbor final release notes: owned by Maya, due Friday 16:00; Alex reviews.\n- Sole landing-page blocker: Finance has not approved the revised Harbor pricing table.\n- Deferred/optional items: optional animated header; footer cosmetic issue (deferred to next release)."
+          ],
+          "all_completed": true
+        }
+      },
+      "error": null,
+      "tool_arguments_valid": true,
+      "json_parsed": {
+        "answer": 42
+      },
+      "memory_after_warmup": {
+        "free_physical_bytes": 1291755520,
+        "working_set_bytes": 5310930944,
+        "private_bytes": 155144192
+      },
+      "extraction_correct": true,
+      "tool_result_contains_42": true
+    },
+    "npu_burst": {
+      "load_and_first_answer_seconds": 8.466345699998783,
+      "cases": {
+        "short_reply": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 0.43424570000024687,
+            "min": 0.24040550000063377,
+            "max": 0.9613423999999213
+          },
+          "total_seconds": {
+            "median": 3.5599285999996937,
+            "min": 3.4349031999990984,
+            "max": 4.298867999999857
+          },
+          "decode_tokens_per_second": {
+            "median": 13.457391707117083,
+            "min": 13.453869656323487,
+            "max": 13.464428134961274
+          },
+          "generated_tokens": [
+            35,
+            43,
+            52
+          ],
+          "cached_tokens": [
+            12,
+            14,
+            14
+          ],
+          "word_counts": [
+            26,
+            33,
+            40
+          ],
+          "texts": [
+            "Yes, Thursday works perfectly for our project review! Could you please confirm the time at 14:00? I will send the updated agenda to you on Wednesday.",
+            "Yes, Thursday works perfectly for our project review! Could you please confirm the time at 14:00? I will send the updated agenda to you on Wednesday. Let me know if this suits you.",
+            "Yes, Thursday works perfectly for our project review! Could you please confirm a time for 14:00? I will send the updated agenda on Wednesday, as planned. Let me know once you confirm the time so we can finalize everything smoothly."
+          ],
+          "all_completed": true
+        },
+        "long_extract": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 1.3890549000007013,
+            "min": 1.1793627999995806,
+            "max": 1.3916236000004574
+          },
+          "total_seconds": {
+            "median": 2.208014700001513,
+            "min": 1.9953874999991967,
+            "max": 2.209991699999591
+          },
+          "decode_tokens_per_second": {
+            "median": 12.208253267538987,
+            "min": 12.200761083476387,
+            "max": 12.243663597996449
+          },
+          "generated_tokens": [
+            10,
+            10,
+            10
+          ],
+          "cached_tokens": [
+            17,
+            17,
+            17
+          ],
+          "word_counts": [
+            1,
+            1,
+            1
+          ],
+          "texts": [
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00"
+          ],
+          "all_completed": true
+        },
+        "action_summary": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 0.22979230000055395,
+            "min": 0.2230522000008932,
+            "max": 0.23326810000071418
+          },
+          "total_seconds": {
+            "median": 5.269988000000012,
+            "min": 5.227798300000359,
+            "max": 6.526342099999965
+          },
+          "decode_tokens_per_second": {
+            "median": 12.393914842046707,
+            "min": 12.283162557750677,
+            "max": 12.403892341416736
+          },
+          "generated_tokens": [
+            62,
+            78,
+            62
+          ],
+          "cached_tokens": [
+            707,
+            707,
+            707
+          ],
+          "word_counts": [
+            39,
+            54,
+            39
+          ],
+          "texts": [
+            "- Harbor final release notes: owned by Maya, due Friday 16:00; Alex reviews.\n- Sole landing-page blocker: Finance has not approved the revised Harbor pricing table.\n- Deferred/optional items: optional animated header; footer cosmetic issue (deferred to next release).",
+            "- Harbor final release notes: owned by Maya, due Friday 16:00; Alex reviews. Draft milestone is Thursday noon, not the final deadline.\n- Sole landing-page blocker: Finance has not yet approved the revised Harbor pricing table.\n- Deferred/optional: the optional animated header remains unfinished; the footer cosmetic issue is deferred to the next release.",
+            "- Harbor final release notes: owned by Maya, due Friday 16:00; Alex reviews.\n- Sole landing-page blocker: Finance has not approved the revised Harbor pricing table.\n- Deferred/optional items: optional animated header; footer cosmetic issue (deferred to next release)."
+          ],
+          "all_completed": true
+        }
+      },
+      "error": null,
+      "tool_arguments_valid": true,
+      "json_parsed": {
+        "answer": 42
+      },
+      "memory_after_warmup": {
+        "free_physical_bytes": 1392140288,
+        "working_set_bytes": 5313380352,
+        "private_bytes": 155500544
+      },
+      "extraction_correct": true,
+      "tool_result_contains_42": true
+    },
+    "osaurus_cpu_engine": {
+      "cases": {
+        "short_reply": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 0.7014423000000534,
+            "min": 0.5648180999996839,
+            "max": 0.779113700002199
+          },
+          "total_seconds": {
+            "median": 3.4135709999973187,
+            "min": 2.4028529999995953,
+            "max": 3.5767030000024533
+          },
+          "decode_tokens_per_second": {
+            "median": 18.068079787165395,
+            "min": 17.5168224055173,
+            "max": 19.584855466486776
+          },
+          "generated_tokens": [
+            37,
+            50,
+            50
+          ],
+          "cached_tokens": [
+            9,
+            9,
+            9
+          ],
+          "word_counts": [
+            27,
+            39,
+            39
+          ],
+          "texts": [
+            "Of course, moving our project review to Thursday works perfectly for me. Thursday at 14:00 sounds great! I will send the updated agenda to you on Wednesday.",
+            "Of course, moving our project review to Thursday works perfectly for me. Thursday at 14:00 sounds great! I will send the updated agenda on Wednesday as planned. Let me know if you need anything else for the new time.",
+            "Of course, moving the project review to Thursday works perfectly for me. Thursday at 14:00 sounds great! I will send the updated agenda on Wednesday as planned. Let me know if you need anything else for the new time."
+          ],
+          "all_completed": true
+        },
+        "long_extract": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 6.233828100001119,
+            "min": 4.822271599998203,
+            "max": 6.6228745999978855
+          },
+          "total_seconds": {
+            "median": 6.903452800001105,
+            "min": 5.440270999999484,
+            "max": 7.31240009999965
+          },
+          "decode_tokens_per_second": {
+            "median": 14.942836180192673,
+            "min": 14.507324022532776,
+            "max": 16.19100201254155
+          },
+          "generated_tokens": [
+            11,
+            11,
+            11
+          ],
+          "cached_tokens": [
+            9,
+            9,
+            9
+          ],
+          "word_counts": [
+            1,
+            1,
+            1
+          ],
+          "texts": [
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00"
+          ],
+          "all_completed": true
+        },
+        "action_summary": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 0.7743350999990071,
+            "min": 0.6774608999985503,
+            "max": 0.7819939000000886
+          },
+          "total_seconds": {
+            "median": 5.399049999999988,
+            "min": 5.029821899999661,
+            "max": 5.468813300001784
+          },
+          "decode_tokens_per_second": {
+            "median": 14.512294837846763,
+            "min": 14.485834877246397,
+            "max": 15.624816896676991
+          },
+          "generated_tokens": [
+            69,
+            68,
+            69
+          ],
+          "cached_tokens": [
+            707,
+            707,
+            707
+          ],
+          "word_counts": [
+            44,
+            42,
+            44
+          ],
+          "texts": [
+            "- Harbor final release notes: owned by Maya, due Friday at 16:00; Alex reviews.\n- Sole landing-page blocker: Finance has not yet approved the revised Harbor pricing table.\n- Deferred/optional items: optional animated header (ship without it); footer cosmetic issue (deferred to next release).",
+            "- Harbor final release notes: owned by Maya, due Friday at 16:00; Alex reviews.\n- Sole landing-page blocker: Finance approval of the revised Harbor pricing table.\n- Deferred/optional items: optional animated header (shippable without it); footer cosmetic issue (deferred to next release).",
+            "- Harbor final release notes: owned by Maya, due Friday at 16:00; Alex reviews.\n- Sole landing-page blocker: Finance has not yet approved the revised Harbor pricing table.\n- Deferred/optional items: optional animated header (ship without it); footer cosmetic issue (deferred to next release)."
+          ],
+          "all_completed": true
+        }
+      },
+      "error": null,
+      "tool_arguments_valid": true,
+      "json_parsed": {
+        "answer": 42
+      },
+      "memory_after_warmup": {
+        "free_physical_bytes": 2458808320,
+        "working_set_bytes": 4421054464,
+        "private_bytes": 4835409920
+      },
+      "first_answer_seconds_excludes_server_model_initialization": 0.40445489999910933,
+      "extraction_correct": true,
+      "tool_result_contains_42": true
+    }
+  },
+  "fixed_tokens": {
+    "cpu_t10": {
+      "agg": {
+        "ttft_ms": {
+          "median": 4897.233,
+          "min": 4869.318,
+          "max": 4989.467,
+          "mean": 4918.672667,
+          "stdev": 62.878375
+        },
+        "prefill_tps": {
+          "median": 104.560235,
+          "min": 102.628595,
+          "max": 105.159512,
+          "mean": 104.116114,
+          "stdev": 1.322618
+        },
+        "decode_tps": {
+          "median": 13.836607,
+          "min": 13.677672,
+          "max": 15.204107,
+          "mean": 14.239462,
+          "stdev": 0.839178
+        },
+        "gen_tokens": {
+          "median": 128.0
+        },
+        "prompt_tokens": {
+          "median": 512.0
+        },
+        "media_ms": {
+          "median": 0.0
+        }
+      },
+      "complete_token_counts": true,
+      "combined_seconds_median": 14.227112
+    },
+    "cpu_t6": {
+      "agg": {
+        "ttft_ms": {
+          "median": 4386.912,
+          "min": 4284.256,
+          "max": 5059.409,
+          "mean": 4576.859,
+          "stdev": 421.040901
+        },
+        "prefill_tps": {
+          "median": 116.724634,
+          "min": 101.207032,
+          "max": 119.520415,
+          "mean": 112.484027,
+          "stdev": 9.865701
+        },
+        "decode_tps": {
+          "median": 16.043605,
+          "min": 15.903944,
+          "max": 16.611,
+          "mean": 16.186183,
+          "stdev": 0.374471
+        },
+        "gen_tokens": {
+          "median": 128.0
+        },
+        "prompt_tokens": {
+          "median": 512.0
+        },
+        "media_ms": {
+          "median": 0.0
+        }
+      },
+      "complete_token_counts": true,
+      "combined_seconds_median": 12.364649
+    },
+    "gpu": {
+      "agg": {
+        "ttft_ms": {
+          "median": 3314.392,
+          "min": 3303.892,
+          "max": 3328.523,
+          "mean": 3315.602333,
+          "stdev": 12.360025
+        },
+        "prefill_tps": {
+          "median": 154.561745,
+          "min": 153.85859,
+          "max": 155.001164,
+          "mean": 154.473833,
+          "stdev": 0.576338
+        },
+        "decode_tps": {
+          "median": 14.8326,
+          "min": 14.704286,
+          "max": 15.444096,
+          "mean": 14.993661,
+          "stdev": 0.395329
+        },
+        "gen_tokens": {
+          "median": 128.0
+        },
+        "prompt_tokens": {
+          "median": 512.0
+        },
+        "media_ms": {
+          "median": 0.0
+        }
+      },
+      "complete_token_counts": true,
+      "combined_seconds_median": 11.942232
+    },
+    "npu_balanced": {
+      "agg": {
+        "ttft_ms": {
+          "median": 811.501,
+          "min": 803.432,
+          "max": 813.743,
+          "mean": 809.558667,
+          "stdev": 5.422977
+        },
+        "prefill_tps": {
+          "median": 631.587258,
+          "min": 630.309775,
+          "max": 638.723352,
+          "mean": 633.540128,
+          "stdev": 4.534021
+        },
+        "decode_tps": {
+          "median": 10.594215,
+          "min": 10.584376,
+          "max": 11.471328,
+          "mean": 10.883306,
+          "stdev": 0.509265
+        },
+        "gen_tokens": {
+          "median": 128.0
+        },
+        "prompt_tokens": {
+          "median": 512.0
+        },
+        "media_ms": {
+          "median": 0.0
+        }
+      },
+      "complete_token_counts": true,
+      "combined_seconds_median": 12.892722
+    },
+    "npu_burst": {
+      "agg": {
+        "ttft_ms": {
+          "median": 789.235,
+          "min": 785.934,
+          "max": 795.265,
+          "mean": 790.144667,
+          "stdev": 4.731544
+        },
+        "prefill_tps": {
+          "median": 649.23702,
+          "min": 644.141022,
+          "max": 651.795046,
+          "mean": 648.391029,
+          "stdev": 3.896511
+        },
+        "decode_tps": {
+          "median": 12.426403,
+          "min": 12.420921,
+          "max": 12.42701,
+          "mean": 12.424778,
+          "stdev": 0.003354
+        },
+        "gen_tokens": {
+          "median": 128.0
+        },
+        "prompt_tokens": {
+          "median": 512.0
+        },
+        "media_ms": {
+          "median": 0.0
+        }
+      },
+      "complete_token_counts": true,
+      "combined_seconds_median": 11.090717
+    }
+  }
+}

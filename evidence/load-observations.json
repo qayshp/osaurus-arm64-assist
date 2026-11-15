@@ -1,0 +1,82 @@
+[
+  {
+    "model": "Ornith 35B Q4_K_M",
+    "mode": "cpu",
+    "load_seconds": 3.0103811000008136,
+    "first_control_seconds": 8.6405631000016,
+    "observed_backend_start_to_first_answer_seconds": null,
+    "load_stages": null,
+    "source": "cpu-ub512-full-native.json"
+  },
+  {
+    "model": "Ornith 35B Q4_K_M",
+    "mode": "npu",
+    "load_seconds": 6.222077999998874,
+    "first_control_seconds": 7.904840299997886,
+    "observed_backend_start_to_first_answer_seconds": null,
+    "load_stages": null,
+    "source": "npu-ub512-full-native.json"
+  },
+  {
+    "model": "Raptor 0.7 4B Q6_K",
+    "mode": "cpu",
+    "load_seconds": 3.871370000000752,
+    "first_control_seconds": 1.3899686000004294,
+    "observed_backend_start_to_first_answer_seconds": 5.261989200000244,
+    "load_stages": {
+      "backend_init_seconds": 0.10083660000236705,
+      "primary_model_seconds": 3.7201877999978024,
+      "primary_context_seconds": 0.05013879999751225
+    },
+    "source": "cpu-full-native.json"
+  },
+  {
+    "model": "Raptor 0.7 4B Q6_K",
+    "mode": "npu",
+    "load_seconds": 5.597261399998388,
+    "first_control_seconds": 1.4842509000009159,
+    "observed_backend_start_to_first_answer_seconds": 7.082182500002091,
+    "load_stages": {
+      "backend_init_seconds": 0.03686079999897629,
+      "primary_model_seconds": 3.627837799998815,
+      "primary_context_seconds": 1.9323509999958333
+    },
+    "source": "npu-full-native.json"
+  },
+  {
+    "model": "Raptor 0.7 4B Q6_K",
+    "mode": "hybrid",
+    "load_seconds": 13.57705139999598,
+    "first_control_seconds": 8.356122400000459,
+    "observed_backend_start_to_first_answer_seconds": 21.962833300000057,
+    "load_stages": {
+      "backend_init_seconds": 0.027190799999516457,
+      "primary_model_seconds": 2.6033830999949714,
+      "primary_context_seconds": 1.7019021999949473,
+      "secondary_cpu_model_seconds": 9.073379199995543,
+      "secondary_cpu_context_seconds": 0.17053429999941727
+    },
+    "source": "hybrid-full-native.json"
+  },
+  {
+    "model": "Ornith 35B Q2_K",
+    "mode": "cpu",
+    "load_seconds": 19.50498890000017,
+    "first_control_seconds": 4.262416300000041,
+    "source": "sdk-cpu-balanced-ub128-full-sdk.json"
+  },
+  {
+    "model": "Ornith 35B Q2_K",
+    "mode": "gpu",
+    "load_seconds": 26.291071899999224,
+    "first_control_seconds": 7.554969400000118,
+    "source": "sdk-gpu-balanced-ub128-full-sdk.json"
+  },
+  {
+    "model": "Ornith 35B Q2_K",
+    "mode": "npu-cpu-experts",
+    "load_seconds": 22.647687900000165,
+    "first_control_seconds": 4.852988099999493,
+    "source": "sdk-npu-balanced-ub128-full-cpu-experts-sdk.json"
+  }
+]

@@ -1,0 +1,3 @@
+* text=auto eol=lf
+# Evidence receipts are byte-hashed; preserve their original line endings everywhere.
+evidence/** -text

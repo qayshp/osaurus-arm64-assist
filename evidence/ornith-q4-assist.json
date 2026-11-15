@@ -1,0 +1,305 @@
+{
+  "model": "Original Ornith 1.5 35B-A3B Q4_K_M",
+  "modes": {
+    "cpu": {
+      "device": "cpu",
+      "config": {
+        "n_ctx": 2048,
+        "n_batch": 512,
+        "n_ubatch": 512,
+        "n_threads": 6,
+        "n_threads_batch": 10,
+        "load_mode": "mmap",
+        "repack": false,
+        "cpu_experts": false,
+        "flash_attention": true,
+        "power_mode": "balanced"
+      },
+      "model": "Ornith-1.5-35B-Q4_K_M.gguf",
+      "core": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30",
+      "finished": true,
+      "success": true,
+      "error": null,
+      "load_seconds": 3.0103811000008136,
+      "cases": {
+        "short_reply": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 16.144246699994255,
+            "min": 16.080478500000027,
+            "max": 19.462473899999168
+          },
+          "total_seconds": {
+            "median": 29.632397999994282,
+            "min": 26.523115299998608,
+            "max": 31.542789299994183
+          },
+          "input_tokens": [
+            77,
+            77,
+            77
+          ],
+          "generated_tokens": [
+            78,
+            57,
+            63
+          ],
+          "all_eos": true,
+          "texts": [
+            "Sure! Here's a friendly reply:\n\n---\n\nHi! Thursday works great for me. Would 14:00 suit everyone? I'll send over the updated agenda on Wednesday so we're all set. Thanks for the heads-up, and I'll talk to you soon!\n\n---\n\nThat's 45 words. Let me know if you'd like any adjustments!",
+            "Hi there!\n\nThursday works great for the project review. Would 14:00 suit everyone? I'll send over the updated agenda on Wednesday so we're all set.\n\nThanks for the heads up, and I hope you're having a good week!\n\nBest regards",
+            "Hi! Yes, Thursday works great for the project review. Would 14:00 suit everyone? If so, I'll send the updated agenda on Wednesday so we're all set. Thanks for the heads up, and let me know if that time doesn't work for you. Looking forward to it!"
+          ]
+        },
+        "long_extract": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 62.7615336999952,
+            "min": 62.01008929999807,
+            "max": 63.95361610000691
+          },
+          "total_seconds": {
+            "median": 66.16831269999966,
+            "min": 65.32405889999791,
+            "max": 67.70186850000027
+          },
+          "input_tokens": [
+            733,
+            733,
+            733
+          ],
+          "generated_tokens": [
+            10,
+            10,
+            10
+          ],
+          "all_eos": true,
+          "texts": [
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00"
+          ],
+          "correct": [
+            true,
+            true,
+            true
+          ]
+        },
+        "action_summary": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 64.52779849999934,
+            "min": 62.526165900002525,
+            "max": 64.60535119999986
+          },
+          "total_seconds": {
+            "median": 88.25710689999687,
+            "min": 86.20694280000316,
+            "max": 89.9814566999994
+          },
+          "input_tokens": [
+            742,
+            742,
+            742
+          ],
+          "generated_tokens": [
+            120,
+            116,
+            127
+          ],
+          "all_eos": true,
+          "texts": [
+            "# Harbor Launch Summary\n\n- **Release notes:** Maya owns the final approved version, due Friday at 16:00, with Alex as reviewer. A draft milestone is due Thursday at noon, but Maya owns only the draft then.\n\n- **Landing-page blocker:** The sole remaining blocker is Finance's sign-off on the revised pricing table, which still uses last month's figures. Everything else on the page is approved.\n\n- **Deferred/optional items:** The footer cosmetic issue is deferred to the next release, and the animated header is optional and must not delay the launch.",
+            "# Harbor Launch Summary\n\n- **Release notes:** Maya owns the approved final version, due Friday at 16:00, with Alex as reviewer. A draft milestone is due Thursday at noon, but Maya retains ownership of the final notes.\n\n- **Landing-page blocker:** The sole remaining blocker is Finance's sign-off on the revised pricing table (still pending). Everything else on the page is approved.\n\n- **Deferred/optional:** The footer cosmetic issue is deferred to the next release, and the animated header is optional\u2014neither should delay the launch.",
+            "**Harbor Summary:**\n\n- **Release notes:** Maya owns the approved final version, due Friday at 16:00, with Alex as reviewer. A draft milestone is due Thursday at noon, but that is not the final deadline.\n\n- **Landing-page blocker:** The only remaining blocker is Finance's sign-off on the revised pricing table, which still uses last month's figures. Everything else on the page is approved.\n\n- **Deferred/optional items:** The optional animated header and the footer cosmetic issue are both deferred and do not block launch. The notes can publish even if the header animation is unfinished."
+          ]
+        }
+      },
+      "fixed": {
+        "n": 3,
+        "all_512_128": true,
+        "first_text_seconds": {
+          "median": 31.90700160000415,
+          "min": 31.712439899994934,
+          "max": 33.196119300002465
+        },
+        "total_seconds": {
+          "median": 45.36113520000072,
+          "min": 45.02559570000449,
+          "max": 52.21451669999806
+        },
+        "decode_tokens_per_second": {
+          "median": 9.35410081201697,
+          "min": 6.7048993755626904,
+          "max": 9.73415188097539
+        }
+      },
+      "monitor": {
+        "exit_code": 0,
+        "timeout": null,
+        "memory_guard": null,
+        "wall_seconds": 746.8931369999991,
+        "minimum_free_commit_gib": 8.387104034423828,
+        "minimum_free_physical_gib": 0.0030059814453125
+      }
+    },
+    "npu": {
+      "device": "npu",
+      "config": {
+        "n_ctx": 2048,
+        "n_batch": 512,
+        "n_ubatch": 512,
+        "n_threads": 6,
+        "n_threads_batch": 10,
+        "load_mode": "mmap",
+        "repack": false,
+        "cpu_experts": true,
+        "flash_attention": true,
+        "power_mode": "balanced"
+      },
+      "model": "Ornith-1.5-35B-Q4_K_M.gguf",
+      "core": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30",
+      "finished": true,
+      "success": true,
+      "error": null,
+      "load_seconds": 6.222077999998874,
+      "cases": {
+        "short_reply": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 9.905184700000973,
+            "min": 9.90027380000538,
+            "max": 10.444302100004279
+          },
+          "total_seconds": {
+            "median": 29.63062060000084,
+            "min": 29.001874300003692,
+            "max": 31.207281500006502
+          },
+          "input_tokens": [
+            77,
+            77,
+            77
+          ],
+          "generated_tokens": [
+            61,
+            57,
+            57
+          ],
+          "all_eos": true,
+          "texts": [
+            "Sure thing! Thursday works great for the project review. Would 14:00 suit everyone? I'll send over the updated agenda on Wednesday so we're all set. Thanks for the heads up, and let me know if that time doesn't work for anyone else. Looking forward to it!",
+            "Hi there!\n\nThursday works great for the project review. Would 14:00 suit everyone? I'll send over the updated agenda on Wednesday so we're all set.\n\nThanks for the heads up, and I hope you're having a good week!\n\nBest regards",
+            "Hi there!\n\nThursday works great for the project review. Would 14:00 suit everyone? I'll send over the updated agenda on Wednesday so we're all set.\n\nThanks for the heads up, and I hope you're having a good week!\n\nBest regards"
+          ]
+        },
+        "long_extract": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 43.69447320000472,
+            "min": 41.93522020000091,
+            "max": 48.62787270000263
+          },
+          "total_seconds": {
+            "median": 48.960699200004456,
+            "min": 47.00700700000016,
+            "max": 53.84763540000131
+          },
+          "input_tokens": [
+            733,
+            733,
+            733
+          ],
+          "generated_tokens": [
+            10,
+            10,
+            10
+          ],
+          "all_eos": true,
+          "texts": [
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00"
+          ],
+          "correct": [
+            true,
+            true,
+            true
+          ]
+        },
+        "action_summary": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 44.34102879999409,
+            "min": 44.30309449999913,
+            "max": 46.63279340000008
+          },
+          "total_seconds": {
+            "median": 85.09251519999816,
+            "min": 81.68034970000008,
+            "max": 86.36301939999976
+          },
+          "input_tokens": [
+            742,
+            742,
+            742
+          ],
+          "generated_tokens": [
+            113,
+            105,
+            104
+          ],
+          "all_eos": true,
+          "texts": [
+            "# Harbor Launch Summary\n\n- **Release notes:** Maya owns the final approved notes, due Friday at 16:00, with Alex as reviewer. Thursday noon is only the draft milestone.\n\n- **Landing-page blocker:** The sole remaining blocker is Finance's sign-off on the revised pricing table, which still uses last month's figures. Everything else on the page is approved.\n\n- **Deferred/optional items:** The optional animated header can be left unfinished, and the footer cosmetic issue is deferred to the next release. Neither blocks the launch.",
+            "- **Release notes owner/deadline:** Maya owns the approved final Harbor release notes, due Friday at 16:00; Alex is the reviewer. Thursday noon is only the draft milestone.\n- **Sole landing-page blocker:** The pricing table still uses last month's figures and needs Finance sign-off before the page can go live; everything else is approved.\n- **Deferred/optional items:** The optional animated header can be left unfinished, and the footer cosmetic issue is deferred to the next release.",
+            "- **Release notes owner and deadline:** Maya owns the approved final Harbor release notes, due Friday at 16:00, with Alex as reviewer. Thursday noon is only the draft milestone.\n- **Sole landing-page blocker:** Finance sign-off on the revised pricing table (still pending), which must be obtained before the page can go live.\n- **Deferred or optional items:** The optional animated header (do not delay launch for it) and the footer cosmetic issue (moved to the next release)."
+          ]
+        }
+      },
+      "fixed": {
+        "n": 3,
+        "all_512_128": true,
+        "first_text_seconds": {
+          "median": 21.46239410000271,
+          "min": 20.980912899998657,
+          "max": 21.760529600003792
+        },
+        "total_seconds": {
+          "median": 55.95373660000041,
+          "min": 55.298475000003236,
+          "max": 56.228450700000394
+        },
+        "decode_tokens_per_second": {
+          "median": 3.6932978451032046,
+          "min": 3.6399189278277735,
+          "max": 3.762305590635023
+        }
+      },
+      "monitor": {
+        "exit_code": 0,
+        "timeout": null,
+        "memory_guard": null,
+        "wall_seconds": 739.7763972999965,
+        "minimum_free_commit_gib": 6.050586700439453,
+        "minimum_free_physical_gib": 0.00494384765625
+      }
+    }
+  },
+  "npu_placement_evidence": {
+    "model_buffers_mib": {
+      "CPU_Mapped": 18872.809999999998,
+      "HTP0": 1411.46
+    },
+    "npu_execute_operations_logged": 4145,
+    "npu_expert_execute_operations_logged": 0
+  },
+  "complete": true,
+  "quality_checks": {
+    "correct_extractions": 6,
+    "total_extractions": 6,
+    "identical_real_output_pairs": 4,
+    "total_real_output_pairs": 9,
+    "all_real_requests_eos": true
+  }
+}

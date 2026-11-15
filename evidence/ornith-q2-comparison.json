@@ -1,0 +1,827 @@
+{
+  "model": "Ornith 1.5 35B-A3B Q2_K",
+  "sdk_runs": {
+    "sdk-cpu-balanced-ub128-full-sdk": {
+      "device": "cpu",
+      "power_mode": "balanced",
+      "config": {
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_threads_batch": 10,
+        "n_batch": 512,
+        "n_ubatch": 128,
+        "n_gpu_layers": -1
+      },
+      "cpu_experts": false,
+      "mapping_overrides": {},
+      "sessions": 1,
+      "error": null,
+      "finished": true,
+      "load_seconds": 19.50498890000017,
+      "smoke": {
+        "text": "42",
+        "thinking": null,
+        "profile": {
+          "ttft": 3924735,
+          "media_time": 0,
+          "prompt_time": 3923297,
+          "decode_time": 288595,
+          "prompt_tokens": 28,
+          "total_prompt_tokens": 28,
+          "generated_tokens": 2,
+          "prefill_speed": 7.136854538415012,
+          "decode_speed": 6.930126994577176,
+          "draft_n_total": 0,
+          "draft_n_accepted": 0,
+          "stop_reason": "eos",
+          "backend": "llama_cpp",
+          "device": null,
+          "quant": null
+        },
+        "first_text_seconds": 3.974273499999981,
+        "wall_seconds": 4.262416300000041
+      },
+      "cases": {
+        "short_reply": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 2.8332162000006065,
+            "min": 1.1985015999998723,
+            "max": 4.249396400002297
+          },
+          "total_seconds": {
+            "median": 5.405240599997342,
+            "min": 2.9936407999994117,
+            "max": 8.7082309000034
+          },
+          "decode_tokens_per_second": {
+            "median": 18.207378947078897,
+            "min": 15.017498748168201,
+            "max": 24.50214700063093
+          },
+          "generated_tokens": [
+            67,
+            47,
+            44
+          ],
+          "input_tokens": [
+            77,
+            77,
+            77
+          ],
+          "uncached_input_tokens": [
+            77,
+            77,
+            77
+          ],
+          "texts": [
+            "Hi there! Sure, Thursday works great for the project review. Would 14:00 suit everyone? I'll send the updated agenda on Wednesday so we can all prepare in advance. Looking forward to it. Thanks for the heads-up, and let me know if that time doesn't work for anyone. See you then!",
+            "Sure thing! Thursday works perfectly for the project review. Would 14:00 suit everyone? I'll make sure to send out the updated agenda on Wednesday so we're all on the same page. Looking forward to it!",
+            "Sure thing! Thursday works perfectly for the project review. Would 14:00 suit everyone? I'll make sure to send over the updated agenda on Wednesday so we're all set. Looking forward to it!"
+          ],
+          "all_finished": true
+        },
+        "long_extract": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 16.325486400000955,
+            "min": 9.138898500001233,
+            "max": 17.051284099998156
+          },
+          "total_seconds": {
+            "median": 17.107051999999385,
+            "min": 9.782552000000578,
+            "max": 17.66811400000006
+          },
+          "decode_tokens_per_second": {
+            "median": 15.294238201642296,
+            "min": 12.766973371923637,
+            "max": 16.19787321924631
+          },
+          "generated_tokens": [
+            10,
+            10,
+            10
+          ],
+          "input_tokens": [
+            733,
+            733,
+            733
+          ],
+          "uncached_input_tokens": [
+            733,
+            733,
+            733
+          ],
+          "texts": [
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00"
+          ],
+          "all_finished": true,
+          "all_correct": true
+        },
+        "action_summary": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 10.819575900000928,
+            "min": 9.525897600000462,
+            "max": 11.995842000000266
+          },
+          "total_seconds": {
+            "median": 17.25187949999963,
+            "min": 14.568943800000852,
+            "max": 18.12525110000206
+          },
+          "decode_tokens_per_second": {
+            "median": 18.6532537336819,
+            "min": 16.147987332801048,
+            "max": 19.434950625309618
+          },
+          "generated_tokens": [
+            98,
+            99,
+            120
+          ],
+          "input_tokens": [
+            742,
+            742,
+            742
+          ],
+          "uncached_input_tokens": [
+            742,
+            742,
+            742
+          ],
+          "texts": [
+            "**Harbor Summary:**\n\n- **Release notes:** Maya owns the final approved version, due Friday at 16:00 (draft draft due Thursday noon, reviewed by Alex).\n- **Landing-page blocker:** The only remaining item is Finance's sign-off on the revised pricing table, which still uses last month's figures.\n- **Deferred/optional:** The animated header remains optional (ship without it), and the footer cosmetic issue is deferred to the next release.",
+            "Harbor:\n\n- **Release notes:** Maya owns the final approved notes, due Friday at 16:00, with Alex as reviewer; Thursday noon is only the draft milestone.\n- **Landing-page blocker:** The only remaining blocker is Finance's sign-off on the revised pricing table, which uses last month's figures.\n- **Deferred/optional:** The animated header and footer cosmetic issue are optional/deferred to the next release; keep the existing signup flow.",
+            "**Harbor project summary:**\n\n- **Release notes:** Owned by Maya, with Alex as reviewer; the final approved version is due **Friday at 16:00** (Thursday noon is only the draft milestone).\n- **Landing-page blocker:** The **pricing table still uses last month's figures** and requires Finance sign-off before the page can go live; all other page elements are approved.\n- **Deferred/optional items:** The optional animated header (ship without it) and a cosmetic footer issue (moved to the next release); both do not block the launch."
+          ],
+          "all_finished": true
+        }
+      },
+      "monitor": {
+        "exit_code": 0,
+        "timeout": null,
+        "memory_guard": null,
+        "wall_seconds": 193.24556080000184,
+        "minimum_available_physical_gib": 0.007526397705078125,
+        "minimum_available_commit_gib": 2.7273521423339844
+      },
+      "fixed": {
+        "n": 3,
+        "all_512_128": true,
+        "first_text_seconds": {
+          "median": 5.870924900002137,
+          "min": 5.7066250999996555,
+          "max": 6.782713099997636
+        },
+        "total_seconds": {
+          "median": 11.112591600001906,
+          "min": 11.089401299999736,
+          "max": 12.257749999997031
+        },
+        "prefill_tokens_per_second": {
+          "median": 87.24009650254112,
+          "min": 75.52924685686956,
+          "max": 89.7475359743883
+        },
+        "decode_tokens_per_second": {
+          "median": 23.775903196410137,
+          "min": 23.37595122315578,
+          "max": 24.41479361011444
+        }
+      }
+    },
+    "sdk-cpu-balanced-ub128-smoke-sdk": {
+      "device": "cpu",
+      "power_mode": "balanced",
+      "config": {
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_threads_batch": 10,
+        "n_batch": 512,
+        "n_ubatch": 128,
+        "n_gpu_layers": -1
+      },
+      "cpu_experts": null,
+      "mapping_overrides": {},
+      "sessions": 1,
+      "error": null,
+      "finished": true,
+      "load_seconds": 18.62135699999999,
+      "smoke": {
+        "text": "42",
+        "thinking": null,
+        "profile": {
+          "ttft": 3849794,
+          "media_time": 0,
+          "prompt_time": 3847843,
+          "decode_time": 279937,
+          "prompt_tokens": 28,
+          "total_prompt_tokens": 28,
+          "generated_tokens": 2,
+          "prefill_speed": 7.276804173143239,
+          "decode_speed": 7.144464647402809,
+          "draft_n_total": 0,
+          "draft_n_accepted": 0,
+          "stop_reason": "eos",
+          "backend": "llama_cpp",
+          "device": null,
+          "quant": null
+        },
+        "first_text_seconds": 3.8859892999971635,
+        "wall_seconds": 4.167361899999378
+      },
+      "cases": {},
+      "monitor": {
+        "exit_code": 0,
+        "timeout": null,
+        "memory_guard": null,
+        "wall_seconds": 24.447556400002213,
+        "minimum_available_physical_gib": 0.00469970703125,
+        "minimum_available_commit_gib": 2.811931610107422
+      }
+    },
+    "sdk-gpu-balanced-ub128-full-sdk": {
+      "device": "gpu",
+      "power_mode": "balanced",
+      "config": {
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_threads_batch": 10,
+        "n_batch": 512,
+        "n_ubatch": 128,
+        "n_gpu_layers": -1
+      },
+      "cpu_experts": false,
+      "mapping_overrides": {},
+      "sessions": 1,
+      "error": null,
+      "finished": true,
+      "load_seconds": 26.291071899999224,
+      "smoke": {
+        "text": "42",
+        "thinking": null,
+        "profile": {
+          "ttft": 7094274,
+          "media_time": 0,
+          "prompt_time": 7090372,
+          "decode_time": 380524,
+          "prompt_tokens": 28,
+          "total_prompt_tokens": 28,
+          "generated_tokens": 2,
+          "prefill_speed": 3.949017061446141,
+          "decode_speed": 5.255910271099852,
+          "draft_n_total": 0,
+          "draft_n_accepted": 0,
+          "stop_reason": "eos",
+          "backend": "llama_cpp",
+          "device": "GPUOpenCL",
+          "quant": null
+        },
+        "first_text_seconds": 7.17136930000197,
+        "wall_seconds": 7.554969400000118
+      },
+      "cases": {
+        "short_reply": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 5.84905069999877,
+            "min": 4.199540599998727,
+            "max": 9.932280799999717
+          },
+          "total_seconds": {
+            "median": 13.305314299999736,
+            "min": 11.581267699999444,
+            "max": 19.335169199999655
+          },
+          "decode_tokens_per_second": {
+            "median": 9.211362432298179,
+            "min": 7.129548146264276,
+            "max": 9.520500654970217
+          },
+          "generated_tokens": [
+            67,
+            71,
+            68
+          ],
+          "input_tokens": [
+            77,
+            77,
+            77
+          ],
+          "uncached_input_tokens": [
+            77,
+            77,
+            77
+          ],
+          "texts": [
+            "Thursday works perfectly for the project review. Would 14:00 suit everyone? Please let me know if that time is convenient. I'll send the updated agenda on Wednesday so we're all set. Looking forward to a productive session then. Thanks for your flexibility, and I hope the change causes no trouble for your schedule.",
+            "Hi there!\n\nThursday works great for me, so let's move our project review to Thursday. Would 14:00 work for everyone? If so, I'll send the updated agenda on Wednesday so we're all prepared.\n\nThanks for the heads up, and I look forward to discussing everything then. See you Thursday!\n\nBest regards",
+            "Thursday works perfectly for the project review. Would 14:00 suit everyone? Please let me know if that time is convenient, and I'll confirm the details. I'll send the updated agenda on Wednesday so we're all on the same page. Looking forward to a productive session. Thanks for your flexibility with the rescheduling!"
+          ],
+          "all_finished": true
+        },
+        "long_extract": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 42.88759320000099,
+            "min": 41.068477200002235,
+            "max": 43.33784630000082
+          },
+          "total_seconds": {
+            "median": 44.36612440000317,
+            "min": 42.50864750000255,
+            "max": 44.88169370000105
+          },
+          "decode_tokens_per_second": {
+            "median": 6.753863547642429,
+            "min": 6.437757188399677,
+            "max": 6.942920859033713
+          },
+          "generated_tokens": [
+            10,
+            10,
+            10
+          ],
+          "input_tokens": [
+            733,
+            733,
+            733
+          ],
+          "uncached_input_tokens": [
+            733,
+            733,
+            733
+          ],
+          "texts": [
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00"
+          ],
+          "all_finished": true,
+          "all_correct": true
+        },
+        "action_summary": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 40.367457000000286,
+            "min": 39.91504770000029,
+            "max": 42.43168159999914
+          },
+          "total_seconds": {
+            "median": 53.8603406000002,
+            "min": 52.93153130000064,
+            "max": 54.67880130000049
+          },
+          "decode_tokens_per_second": {
+            "median": 8.05902852966178,
+            "min": 7.762687420864782,
+            "max": 8.107765624904987
+          },
+          "generated_tokens": [
+            116,
+            101,
+            92
+          ],
+          "input_tokens": [
+            742,
+            742,
+            742
+          ],
+          "uncached_input_tokens": [
+            742,
+            742,
+            742
+          ],
+          "texts": [
+            "**Harbor Project Summary:**\n\n- **Release notes:** Owned by Maya, with Alex as reviewer; the final approved version is due **Friday at 16:00** (Thursday noon is only the draft milestone).\n\n- **Landing-page blocker:** The **sole remaining blocker** is Finance's approval of the revised pricing table (still uses last month's figures); all other page items are approved.\n\n- **Deferred/optional:** The animated header is optional\u2014do not delay launch for it, and the footer cosmetic issue is deferred to the next release.",
+            "\u2022 **Release notes owner & deadline:** Maya owns the approved final Harbor release notes, due Friday at 16:00; Alex is the reviewer. Thursday noon is only the draft milestone, not the final deadline.\n\u2022 **Landing-page blocker:** Finance sign-off on the revised pricing table is the only remaining blocker; everything else is approved.\n\u2022 **Deferred/optional items:** The optional animated header (ship without it) and one footer cosmetic issue (deferred to next release).",
+            "* **Final release notes:** Owned by Maya, with Alex as reviewer, due Friday at 16:00 (Thursday noon is only the draft milestone).\n* **Landing-page blocker:** Finance must approve the revised pricing table before the page can go live; nothing else is blocking.\n* **Deferred/optional:** The animated header is optional (don't delay launch for it), and the footer cosmetic issue is deferred to the next release."
+          ],
+          "all_finished": true
+        }
+      },
+      "monitor": {
+        "exit_code": 0,
+        "timeout": null,
+        "memory_guard": null,
+        "wall_seconds": 508.8405488999997,
+        "minimum_available_physical_gib": 0.007965087890625,
+        "minimum_available_commit_gib": 1.844696044921875
+      },
+      "fixed": {
+        "n": 3,
+        "all_512_128": true,
+        "first_text_seconds": {
+          "median": 18.58859400000074,
+          "min": 15.930593600001885,
+          "max": 20.35657640000136
+        },
+        "total_seconds": {
+          "median": 30.24381750000248,
+          "min": 27.419768800002203,
+          "max": 31.85330950000207
+        },
+        "prefill_tokens_per_second": {
+          "median": 27.546727212077517,
+          "min": 25.154630970018086,
+          "max": 32.14371454774296
+        },
+        "decode_tokens_per_second": {
+          "median": 11.132761045634144,
+          "min": 10.981299190643933,
+          "max": 11.139979323154003
+        }
+      }
+    },
+    "sdk-gpu-balanced-ub128-smoke-sdk": {
+      "device": "gpu",
+      "power_mode": "balanced",
+      "config": {
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_threads_batch": 10,
+        "n_batch": 512,
+        "n_ubatch": 128,
+        "n_gpu_layers": -1
+      },
+      "cpu_experts": null,
+      "mapping_overrides": {},
+      "sessions": 1,
+      "error": null,
+      "finished": true,
+      "load_seconds": 22.400461299999733,
+      "smoke": {
+        "text": "42",
+        "thinking": null,
+        "profile": {
+          "ttft": 6403282,
+          "media_time": 0,
+          "prompt_time": 6399268,
+          "decode_time": 483932,
+          "prompt_tokens": 28,
+          "total_prompt_tokens": 28,
+          "generated_tokens": 2,
+          "prefill_speed": 4.3755004478637245,
+          "decode_speed": 4.132812047973682,
+          "draft_n_total": 0,
+          "draft_n_accepted": 0,
+          "stop_reason": "eos",
+          "backend": "llama_cpp",
+          "device": "GPUOpenCL",
+          "quant": null
+        },
+        "first_text_seconds": 6.453133200000593,
+        "wall_seconds": 6.935660900002404
+      },
+      "cases": {},
+      "monitor": {
+        "exit_code": 0,
+        "timeout": null,
+        "memory_guard": null,
+        "wall_seconds": 31.143530599998485,
+        "minimum_available_physical_gib": 0.027088165283203125,
+        "minimum_available_commit_gib": 2.0549468994140625
+      }
+    },
+    "sdk-npu-balanced-ub128-full-cpu-experts-sdk": {
+      "device": "npu",
+      "power_mode": "balanced",
+      "config": {
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_threads_batch": 10,
+        "n_batch": 512,
+        "n_ubatch": 128,
+        "n_gpu_layers": -1
+      },
+      "cpu_experts": true,
+      "mapping_overrides": {
+        "GGML_HEXAGON_OPFILTER": "MUL_MAT_ID"
+      },
+      "sessions": 1,
+      "error": null,
+      "finished": true,
+      "load_seconds": 22.647687900000165,
+      "smoke": {
+        "text": "42",
+        "thinking": null,
+        "profile": {
+          "ttft": 4423973,
+          "media_time": 0,
+          "prompt_time": 4419129,
+          "decode_time": 361466,
+          "prompt_tokens": 28,
+          "total_prompt_tokens": 28,
+          "generated_tokens": 2,
+          "prefill_speed": 6.336090211442119,
+          "decode_speed": 5.5330238528658295,
+          "draft_n_total": 0,
+          "draft_n_accepted": 0,
+          "stop_reason": "eos",
+          "backend": "llama_cpp",
+          "device": "HTP0",
+          "quant": null
+        },
+        "first_text_seconds": 4.493082000000868,
+        "wall_seconds": 4.852988099999493
+      },
+      "cases": {
+        "short_reply": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 1.596631200001866,
+            "min": 1.2399806000030367,
+            "max": 2.935367199999746
+          },
+          "total_seconds": {
+            "median": 6.324879100000544,
+            "min": 5.624915399999736,
+            "max": 8.198626400000649
+          },
+          "decode_tokens_per_second": {
+            "median": 12.046789731316434,
+            "min": 10.067641252330992,
+            "max": 13.224723392369564
+          },
+          "generated_tokens": [
+            53,
+            57,
+            58
+          ],
+          "input_tokens": [
+            77,
+            77,
+            77
+          ],
+          "uncached_input_tokens": [
+            77,
+            77,
+            77
+          ],
+          "texts": [
+            "Sure! Here's a friendly reply within 45 to 65 words:\n\n\"Thursday works great! Would 14:00 suit you? I'll send the updated agenda on Wednesday. Looking forward to it!\"\n\n(46 words)",
+            "Hi there!\n\nThursday works great for me, so let's move the project review then. Would 14:00 suit your schedule? I'll send over the updated agenda on Wednesday so everyone has time to prepare. Looking forward to reviewing our progress together!\n\nBest regards",
+            "Sure thing! Thursday works perfectly for the project review. Could we aim for 14:00? That gives everyone enough time to prepare. I'll send the updated agenda on Wednesday so all the details are confirmed ahead of time. Looking forward to a productive session with the team!"
+          ],
+          "all_finished": true
+        },
+        "long_extract": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 12.039613900000404,
+            "min": 10.311555200001749,
+            "max": 12.785862400000042
+          },
+          "total_seconds": {
+            "median": 12.988023499998235,
+            "min": 11.2840283000005,
+            "max": 13.633730999998079
+          },
+          "decode_tokens_per_second": {
+            "median": 10.53451052977,
+            "min": 10.276193245869228,
+            "max": 11.781380000164939
+          },
+          "generated_tokens": [
+            10,
+            10,
+            10
+          ],
+          "input_tokens": [
+            733,
+            733,
+            733
+          ],
+          "uncached_input_tokens": [
+            733,
+            733,
+            733
+          ],
+          "texts": [
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00",
+            "Maya|Friday|16:00"
+          ],
+          "all_finished": true,
+          "all_correct": true
+        },
+        "action_summary": {
+          "n": 3,
+          "first_text_seconds": {
+            "median": 9.091716400002042,
+            "min": 6.877954800002044,
+            "max": 9.169614099999308
+          },
+          "total_seconds": {
+            "median": 18.37180470000021,
+            "min": 16.730513500002417,
+            "max": 19.562375800000154
+          },
+          "decode_tokens_per_second": {
+            "median": 10.879515432159385,
+            "min": 10.75889379895931,
+            "max": 11.001017054812028
+          },
+          "generated_tokens": [
+            113,
+            102,
+            106
+          ],
+          "input_tokens": [
+            742,
+            742,
+            742
+          ],
+          "uncached_input_tokens": [
+            742,
+            742,
+            742
+          ],
+          "texts": [
+            "- **Release-notes owner and deadline:** Maya owns the approved final Harbor release notes, due Friday at 16:00; Alex is the reviewer. Thursday at noon is only the draft milestone, not the final deadline.\n- **Sole landing-page blocker:** Finance's sign-off on the revised pricing table is the only remaining blocker for the landing page going live; everything else is approved.\n- **Deferred/optional items:** The animated header is optional and must not delay the launch, and the footer cosmetic issue is deferred to the next release.",
+            "**Harbor:**\n\n- **Release notes:** Maya owns the approved final version, due Friday at 16:00, with Alex as reviewer. Thursday noon is only the draft milestone.\n- **Landing-page blocker:** The sole blocker is Finance's sign-off on the revised pricing table, which still uses last month's figures. Everything else is approved.\n- **Deferred/optional:** The optional animated header may ship unfinished, and the footer cosmetic issue is deferred to the next release.",
+            "**Harbor handoff summary:**\n\n- **Release notes:** Maya owns the approved final version, due Friday 16:00; Alex reviews after her Thursday-noon draft.\n- **Landing-page blocker:** The only remaining item is Finance's sign-off on the revised pricing table; everything else (including the optional animated header) is approved and can ship.\n- **Deferred/optional:** The footer cosmetic issue is deferred to the next release; the animated header is optional and should not delay the launch."
+          ],
+          "all_finished": true
+        }
+      },
+      "monitor": {
+        "exit_code": 0,
+        "timeout": null,
+        "memory_guard": null,
+        "wall_seconds": 205.775467200001,
+        "minimum_available_physical_gib": 0.004886627197265625,
+        "minimum_available_commit_gib": 2.233287811279297
+      },
+      "fixed": {
+        "n": 3,
+        "all_512_128": true,
+        "first_text_seconds": {
+          "median": 4.398834600000555,
+          "min": 4.294625599999563,
+          "max": 4.9800929999983055
+        },
+        "total_seconds": {
+          "median": 13.90990569999849,
+          "min": 13.701962999999523,
+          "max": 14.320772600000055
+        },
+        "prefill_tokens_per_second": {
+          "median": 116.44059301010759,
+          "min": 102.84203563757744,
+          "max": 119.26113996878712
+        },
+        "decode_tokens_per_second": {
+          "median": 13.605384330848933,
+          "min": 13.456708926339658,
+          "max": 13.702591042209441
+        }
+      }
+    },
+    "sdk-npu-balanced-ub128-smoke-bounded-sdk": {
+      "device": "npu",
+      "power_mode": "balanced",
+      "config": {
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_threads_batch": 10,
+        "n_batch": 512,
+        "n_ubatch": 128,
+        "n_gpu_layers": -1
+      },
+      "cpu_experts": null,
+      "mapping_overrides": {
+        "GGML_HEXAGON_MBUF": "128M,512M",
+        "GGML_HEXAGON_OPBATCH": "32",
+        "GGML_HEXAGON_OPQUEUE": "1",
+        "GGML_HEXAGON_VMEM": "1536M"
+      },
+      "sessions": 1,
+      "error": "GenieXError('GenieXError(-100201): Model loading failed')",
+      "finished": true,
+      "load_seconds": null,
+      "smoke": null,
+      "cases": {},
+      "monitor": {
+        "exit_code": 0,
+        "timeout": null,
+        "memory_guard": null,
+        "wall_seconds": 86.46629269999903,
+        "minimum_available_physical_gib": 0.003223419189453125,
+        "minimum_available_commit_gib": 2.103240966796875
+      }
+    },
+    "sdk-npu-balanced-ub128-smoke-cpu-experts-sdk": {
+      "device": "npu",
+      "power_mode": "balanced",
+      "config": {
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_threads_batch": 10,
+        "n_batch": 512,
+        "n_ubatch": 128,
+        "n_gpu_layers": -1
+      },
+      "cpu_experts": true,
+      "mapping_overrides": {
+        "GGML_HEXAGON_OPFILTER": "MUL_MAT_ID"
+      },
+      "sessions": 1,
+      "error": null,
+      "finished": true,
+      "load_seconds": 24.48755600000004,
+      "smoke": {
+        "text": "42",
+        "thinking": null,
+        "profile": {
+          "ttft": 4760128,
+          "media_time": 0,
+          "prompt_time": 4755603,
+          "decode_time": 484773,
+          "prompt_tokens": 28,
+          "total_prompt_tokens": 28,
+          "generated_tokens": 2,
+          "prefill_speed": 5.887791726937678,
+          "decode_speed": 4.125642310937284,
+          "draft_n_total": 0,
+          "draft_n_accepted": 0,
+          "stop_reason": "eos",
+          "backend": "llama_cpp",
+          "device": "HTP0",
+          "quant": null
+        },
+        "first_text_seconds": 4.832223099998373,
+        "wall_seconds": 5.321904000000359
+      },
+      "cases": {},
+      "monitor": {
+        "exit_code": 0,
+        "timeout": null,
+        "memory_guard": null,
+        "wall_seconds": 31.659696700000495,
+        "minimum_available_physical_gib": 0.004558563232421875,
+        "minimum_available_commit_gib": 2.4669952392578125
+      }
+    },
+    "sdk-npu-balanced-ub128-smoke-sdk": {
+      "device": "npu",
+      "power_mode": "balanced",
+      "config": {
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_threads_batch": 10,
+        "n_batch": 512,
+        "n_ubatch": 128,
+        "n_gpu_layers": -1
+      },
+      "cpu_experts": null,
+      "mapping_overrides": null,
+      "sessions": 1,
+      "error": "GenieXError('GenieXError(-100201): Model loading failed')",
+      "finished": true,
+      "load_seconds": null,
+      "smoke": null,
+      "cases": {},
+      "monitor": {
+        "exit_code": 0,
+        "timeout": null,
+        "memory_guard": null,
+        "wall_seconds": 104.31275349999851,
+        "minimum_available_physical_gib": 0.0072784423828125,
+        "minimum_available_commit_gib": 2.0542564392089844
+      }
+    },
+    "sdk-npu-balanced-ub128-smoke-sessions6-sdk": {
+      "device": "npu",
+      "power_mode": "balanced",
+      "config": {
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_threads_batch": 10,
+        "n_batch": 512,
+        "n_ubatch": 128,
+        "n_gpu_layers": -1
+      },
+      "cpu_experts": false,
+      "mapping_overrides": {},
+      "sessions": 6,
+      "error": null,
+      "finished": false,
+      "load_seconds": null,
+      "smoke": null,
+      "cases": {},
+      "monitor": {
+        "exit_code": 1,
+        "timeout": true,
+        "memory_guard": null,
+        "wall_seconds": 252.93835769999714,
+        "minimum_available_physical_gib": 0.000148773193359375,
+        "minimum_available_commit_gib": 1.743927001953125
+      }
+    }
+  }
+}

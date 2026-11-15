@@ -1,0 +1,502 @@
+[
+  {
+    "label": "cpu_t6",
+    "exit_code": 0,
+    "result": {
+      "schema_version": "7",
+      "cell_id": "cell",
+      "plugin": "llama_cpp",
+      "device": "cpu",
+      "device_id": null,
+      "model_id": null,
+      "model_size_bytes": 0,
+      "geniex_version": "v0.11.0",
+      "qairt_version": null,
+      "llama_cpp_version": "93cf736",
+      "params": {
+        "warmup": 1,
+        "repetitions": 3,
+        "n_prompt": 512,
+        "n_gen": 128,
+        "temperature": 0.0,
+        "top_p": 0.0,
+        "seed": 42,
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_ubatch": 0,
+        "n_gpu_layers": 0,
+        "power_mode": "balanced"
+      },
+      "runs": [
+        {
+          "run_idx": 0,
+          "ttft_us": 5059409,
+          "media_us": 0,
+          "prompt_time_us": 5058937,
+          "decode_time_us": 7705737,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 101.207032,
+          "decode_tps": 16.611,
+          "stop_reason": "length"
+        },
+        {
+          "run_idx": 1,
+          "ttft_us": 4386912,
+          "media_us": 0,
+          "prompt_time_us": 4386392,
+          "decode_time_us": 7978257,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 116.724634,
+          "decode_tps": 16.043605,
+          "stop_reason": "length"
+        },
+        {
+          "run_idx": 2,
+          "ttft_us": 4284256,
+          "media_us": 0,
+          "prompt_time_us": 4283787,
+          "decode_time_us": 8048318,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 119.520415,
+          "decode_tps": 15.903944,
+          "stop_reason": "length"
+        }
+      ],
+      "agg": {
+        "ttft_ms": {
+          "median": 4386.912,
+          "min": 4284.256,
+          "max": 5059.409,
+          "mean": 4576.859,
+          "stdev": 421.040901
+        },
+        "prefill_tps": {
+          "median": 116.724634,
+          "min": 101.207032,
+          "max": 119.520415,
+          "mean": 112.484027,
+          "stdev": 9.865701
+        },
+        "decode_tps": {
+          "median": 16.043605,
+          "min": 15.903944,
+          "max": 16.611,
+          "mean": 16.186183,
+          "stdev": 0.374471
+        },
+        "gen_tokens": {
+          "median": 128.0
+        },
+        "prompt_tokens": {
+          "median": 512.0
+        },
+        "media_ms": {
+          "median": 0.0
+        }
+      }
+    }
+  },
+  {
+    "label": "cpu_t10",
+    "exit_code": 0,
+    "result": {
+      "schema_version": "7",
+      "cell_id": "cell",
+      "plugin": "llama_cpp",
+      "device": "cpu",
+      "device_id": null,
+      "model_id": null,
+      "model_size_bytes": 0,
+      "geniex_version": "v0.11.0",
+      "qairt_version": null,
+      "llama_cpp_version": "93cf736",
+      "params": {
+        "warmup": 1,
+        "repetitions": 3,
+        "n_prompt": 512,
+        "n_gen": 128,
+        "temperature": 0.0,
+        "top_p": 0.0,
+        "seed": 42,
+        "n_ctx": 2048,
+        "n_threads": 10,
+        "n_ubatch": 0,
+        "n_gpu_layers": 0,
+        "power_mode": "balanced"
+      },
+      "runs": [
+        {
+          "run_idx": 0,
+          "ttft_us": 4897233,
+          "media_us": 0,
+          "prompt_time_us": 4896699,
+          "decode_time_us": 8418778,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 104.560235,
+          "decode_tps": 15.204107,
+          "stop_reason": "length"
+        },
+        {
+          "run_idx": 1,
+          "ttft_us": 4989467,
+          "media_us": 0,
+          "prompt_time_us": 4988863,
+          "decode_time_us": 9250823,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 102.628595,
+          "decode_tps": 13.836607,
+          "stop_reason": "length"
+        },
+        {
+          "run_idx": 2,
+          "ttft_us": 4869318,
+          "media_us": 0,
+          "prompt_time_us": 4868794,
+          "decode_time_us": 9358318,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 105.159512,
+          "decode_tps": 13.677672,
+          "stop_reason": "length"
+        }
+      ],
+      "agg": {
+        "ttft_ms": {
+          "median": 4897.233,
+          "min": 4869.318,
+          "max": 4989.467,
+          "mean": 4918.672667,
+          "stdev": 62.878375
+        },
+        "prefill_tps": {
+          "median": 104.560235,
+          "min": 102.628595,
+          "max": 105.159512,
+          "mean": 104.116114,
+          "stdev": 1.322618
+        },
+        "decode_tps": {
+          "median": 13.836607,
+          "min": 13.677672,
+          "max": 15.204107,
+          "mean": 14.239462,
+          "stdev": 0.839178
+        },
+        "gen_tokens": {
+          "median": 128.0
+        },
+        "prompt_tokens": {
+          "median": 512.0
+        },
+        "media_ms": {
+          "median": 0.0
+        }
+      }
+    }
+  },
+  {
+    "label": "gpu",
+    "exit_code": 0,
+    "result": {
+      "schema_version": "7",
+      "cell_id": "cell",
+      "plugin": "llama_cpp",
+      "device": "gpu",
+      "device_id": "GPUOpenCL",
+      "model_id": null,
+      "model_size_bytes": 0,
+      "geniex_version": "v0.11.0",
+      "qairt_version": null,
+      "llama_cpp_version": "93cf736",
+      "params": {
+        "warmup": 1,
+        "repetitions": 3,
+        "n_prompt": 512,
+        "n_gen": 128,
+        "temperature": 0.0,
+        "top_p": 0.0,
+        "seed": 42,
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_ubatch": 0,
+        "n_gpu_layers": -1,
+        "power_mode": "balanced"
+      },
+      "runs": [
+        {
+          "run_idx": 0,
+          "ttft_us": 3314392,
+          "media_us": 0,
+          "prompt_time_us": 3312592,
+          "decode_time_us": 8629640,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 154.561745,
+          "decode_tps": 14.8326,
+          "stop_reason": "length"
+        },
+        {
+          "run_idx": 1,
+          "ttft_us": 3303892,
+          "media_us": 0,
+          "prompt_time_us": 3303201,
+          "decode_time_us": 8287957,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 155.001164,
+          "decode_tps": 15.444096,
+          "stop_reason": "length"
+        },
+        {
+          "run_idx": 2,
+          "ttft_us": 3328523,
+          "media_us": 0,
+          "prompt_time_us": 3327731,
+          "decode_time_us": 8704945,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 153.85859,
+          "decode_tps": 14.704286,
+          "stop_reason": "length"
+        }
+      ],
+      "agg": {
+        "ttft_ms": {
+          "median": 3314.392,
+          "min": 3303.892,
+          "max": 3328.523,
+          "mean": 3315.602333,
+          "stdev": 12.360025
+        },
+        "prefill_tps": {
+          "median": 154.561745,
+          "min": 153.85859,
+          "max": 155.001164,
+          "mean": 154.473833,
+          "stdev": 0.576338
+        },
+        "decode_tps": {
+          "median": 14.8326,
+          "min": 14.704286,
+          "max": 15.444096,
+          "mean": 14.993661,
+          "stdev": 0.395329
+        },
+        "gen_tokens": {
+          "median": 128.0
+        },
+        "prompt_tokens": {
+          "median": 512.0
+        },
+        "media_ms": {
+          "median": 0.0
+        }
+      }
+    }
+  },
+  {
+    "label": "npu_balanced",
+    "exit_code": 0,
+    "result": {
+      "schema_version": "7",
+      "cell_id": "cell",
+      "plugin": "llama_cpp",
+      "device": "npu",
+      "device_id": "HTP0",
+      "model_id": null,
+      "model_size_bytes": 0,
+      "geniex_version": "v0.11.0",
+      "qairt_version": null,
+      "llama_cpp_version": "93cf736",
+      "params": {
+        "warmup": 1,
+        "repetitions": 3,
+        "n_prompt": 512,
+        "n_gen": 128,
+        "temperature": 0.0,
+        "top_p": 0.0,
+        "seed": 42,
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_ubatch": 0,
+        "n_gpu_layers": -1,
+        "power_mode": "balanced"
+      },
+      "runs": [
+        {
+          "run_idx": 0,
+          "ttft_us": 803432,
+          "media_us": 0,
+          "prompt_time_us": 801599,
+          "decode_time_us": 12093297,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 638.723352,
+          "decode_tps": 10.584376,
+          "stop_reason": "length"
+        },
+        {
+          "run_idx": 1,
+          "ttft_us": 813743,
+          "media_us": 0,
+          "prompt_time_us": 812299,
+          "decode_time_us": 11158255,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 630.309775,
+          "decode_tps": 11.471328,
+          "stop_reason": "length"
+        },
+        {
+          "run_idx": 2,
+          "ttft_us": 811501,
+          "media_us": 0,
+          "prompt_time_us": 810656,
+          "decode_time_us": 12082066,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 631.587258,
+          "decode_tps": 10.594215,
+          "stop_reason": "length"
+        }
+      ],
+      "agg": {
+        "ttft_ms": {
+          "median": 811.501,
+          "min": 803.432,
+          "max": 813.743,
+          "mean": 809.558667,
+          "stdev": 5.422977
+        },
+        "prefill_tps": {
+          "median": 631.587258,
+          "min": 630.309775,
+          "max": 638.723352,
+          "mean": 633.540128,
+          "stdev": 4.534021
+        },
+        "decode_tps": {
+          "median": 10.594215,
+          "min": 10.584376,
+          "max": 11.471328,
+          "mean": 10.883306,
+          "stdev": 0.509265
+        },
+        "gen_tokens": {
+          "median": 128.0
+        },
+        "prompt_tokens": {
+          "median": 512.0
+        },
+        "media_ms": {
+          "median": 0.0
+        }
+      }
+    }
+  },
+  {
+    "label": "npu_burst",
+    "exit_code": 0,
+    "result": {
+      "schema_version": "7",
+      "cell_id": "cell",
+      "plugin": "llama_cpp",
+      "device": "npu",
+      "device_id": "HTP0",
+      "model_id": null,
+      "model_size_bytes": 0,
+      "geniex_version": "v0.11.0",
+      "qairt_version": null,
+      "llama_cpp_version": "93cf736",
+      "params": {
+        "warmup": 1,
+        "repetitions": 3,
+        "n_prompt": 512,
+        "n_gen": 128,
+        "temperature": 0.0,
+        "top_p": 0.0,
+        "seed": 42,
+        "n_ctx": 2048,
+        "n_threads": 6,
+        "n_ubatch": 0,
+        "n_gpu_layers": -1,
+        "power_mode": "burst"
+      },
+      "runs": [
+        {
+          "run_idx": 0,
+          "ttft_us": 795265,
+          "media_us": 0,
+          "prompt_time_us": 794857,
+          "decode_time_us": 10300145,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 644.141022,
+          "decode_tps": 12.42701,
+          "stop_reason": "length"
+        },
+        {
+          "run_idx": 1,
+          "ttft_us": 785934,
+          "media_us": 0,
+          "prompt_time_us": 785523,
+          "decode_time_us": 10305194,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 651.795046,
+          "decode_tps": 12.420921,
+          "stop_reason": "length"
+        },
+        {
+          "run_idx": 2,
+          "ttft_us": 789235,
+          "media_us": 0,
+          "prompt_time_us": 788618,
+          "decode_time_us": 10300648,
+          "prompt_tokens": 512,
+          "gen_tokens": 128,
+          "prefill_tps": 649.23702,
+          "decode_tps": 12.426403,
+          "stop_reason": "length"
+        }
+      ],
+      "agg": {
+        "ttft_ms": {
+          "median": 789.235,
+          "min": 785.934,
+          "max": 795.265,
+          "mean": 790.144667,
+          "stdev": 4.731544
+        },
+        "prefill_tps": {
+          "median": 649.23702,
+          "min": 644.141022,
+          "max": 651.795046,
+          "mean": 648.391029,
+          "stdev": 3.896511
+        },
+        "decode_tps": {
+          "median": 12.426403,
+          "min": 12.420921,
+          "max": 12.42701,
+          "mean": 12.424778,
+          "stdev": 0.003354
+        },
+        "gen_tokens": {
+          "median": 128.0
+        },
+        "prompt_tokens": {
+          "median": 512.0
+        },
+        "media_ms": {
+          "median": 0.0
+        }
+      }
+    }
+  }
+]

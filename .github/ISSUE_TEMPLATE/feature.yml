@@ -1,0 +1,20 @@
+name: Companion feature proposal
+description: Suggest a scoped capability for this community project
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem and proposed behavior
+      description: Describe one concrete use case. Native Osaurus app features may need the upstream community route documented in docs/upstream.md.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and tradeoffs
+      description: Link relevant benchmarks or API behavior. Include memory/startup/failure costs and how the proposal would be tested.
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and compatibility
+      description: Which model architectures, hardware/runtime versions and protocol features would it affect? What should remain outside this change?

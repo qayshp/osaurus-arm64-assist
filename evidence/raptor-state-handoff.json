@@ -1,0 +1,334 @@
+{
+  "cpu": {
+    "fixed": {
+      "n": 3,
+      "first_seconds": {
+        "median": 4.43967889999476,
+        "min": 3.9882285999992746,
+        "max": 4.48081089999323
+      },
+      "total_seconds": {
+        "median": 13.20540429999528,
+        "min": 12.236871300003259,
+        "max": 13.609866099999635
+      },
+      "decode_tps": {
+        "median": 14.612382394771574,
+        "min": 13.899789522163543,
+        "max": 15.46396208869666
+      },
+      "prompt_seconds": {
+        "median": 4.437035900002229,
+        "min": 3.975631200002681,
+        "max": 4.477604899999278
+      },
+      "decode_wall_seconds": {
+        "median": 8.69533689997479,
+        "min": 8.21650610002689,
+        "max": 9.140855899961025
+      },
+      "transfer_seconds": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "transfer_bytes": [
+        0,
+        0,
+        0
+      ]
+    },
+    "cases": {
+      "short_reply": {
+        "n": 3,
+        "input_tokens": [
+          81,
+          81,
+          81
+        ],
+        "output_tokens": [
+          36,
+          49,
+          36
+        ],
+        "total_seconds": {
+          "median": 3.2624112000048626,
+          "min": 2.891602799994871,
+          "max": 3.6680120000019087
+        },
+        "all_eos": true
+      },
+      "long_extract": {
+        "n": 3,
+        "input_tokens": [
+          750,
+          750,
+          750
+        ],
+        "output_tokens": [
+          10,
+          10,
+          10
+        ],
+        "total_seconds": {
+          "median": 7.932838200002152,
+          "min": 7.665409000001091,
+          "max": 8.06474280000839
+        },
+        "all_eos": true,
+        "all_correct": true
+      },
+      "action_summary": {
+        "n": 3,
+        "input_tokens": [
+          761,
+          761,
+          761
+        ],
+        "output_tokens": [
+          66,
+          68,
+          68
+        ],
+        "total_seconds": {
+          "median": 12.10472160000063,
+          "min": 11.836263499993947,
+          "max": 12.635382799999206
+        },
+        "all_eos": true
+      }
+    },
+    "load_seconds": 3.871370000000752,
+    "load_stages": {
+      "backend_init_seconds": 0.10083660000236705,
+      "primary_model_seconds": 3.7201877999978024,
+      "primary_context_seconds": 0.05013879999751225
+    },
+    "first_control_total_from_backend_init_seconds": 5.261989200000244,
+    "peak_working_set_gib": 7.206668853759766,
+    "peak_private_commit_gib": 3.8318138122558594,
+    "min_free_physical_mib": 2031.7109375
+  },
+  "npu": {
+    "fixed": {
+      "n": 3,
+      "first_seconds": {
+        "median": 0.8169915999969817,
+        "min": 0.8093739000032656,
+        "max": 0.8286521999980323
+      },
+      "total_seconds": {
+        "median": 11.453734700000496,
+        "min": 11.353983300003165,
+        "max": 11.729954199996428
+      },
+      "decode_tps": {
+        "median": 12.009570966115136,
+        "min": 11.729920339063044,
+        "max": 12.127336266875497
+      },
+      "prompt_seconds": {
+        "median": 0.8119099999967148,
+        "min": 0.8064401000010548,
+        "max": 0.8221290000001318
+      },
+      "decode_wall_seconds": {
+        "median": 10.580891499899735,
+        "min": 10.478800299933937,
+        "max": 10.834299399990414
+      },
+      "transfer_seconds": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "transfer_bytes": [
+        0,
+        0,
+        0
+      ]
+    },
+    "cases": {
+      "short_reply": {
+        "n": 3,
+        "input_tokens": [
+          81,
+          81,
+          81
+        ],
+        "output_tokens": [
+          36,
+          45,
+          45
+        ],
+        "total_seconds": {
+          "median": 3.5996981999924174,
+          "min": 3.1751266999999643,
+          "max": 3.788407800006098
+        },
+        "all_eos": true
+      },
+      "long_extract": {
+        "n": 3,
+        "input_tokens": [
+          750,
+          750,
+          750
+        ],
+        "output_tokens": [
+          10,
+          10,
+          10
+        ],
+        "total_seconds": {
+          "median": 2.2696998000101303,
+          "min": 2.147085300006438,
+          "max": 2.274312399997143
+        },
+        "all_eos": true,
+        "all_correct": true
+      },
+      "action_summary": {
+        "n": 3,
+        "input_tokens": [
+          761,
+          761,
+          761
+        ],
+        "output_tokens": [
+          68,
+          83,
+          68
+        ],
+        "total_seconds": {
+          "median": 7.766975400001684,
+          "min": 7.269692400004715,
+          "max": 8.407932700007223
+        },
+        "all_eos": true
+      }
+    },
+    "load_seconds": 5.597261399998388,
+    "load_stages": {
+      "backend_init_seconds": 0.03686079999897629,
+      "primary_model_seconds": 3.627837799998815,
+      "primary_context_seconds": 1.9323509999958333
+    },
+    "first_control_total_from_backend_init_seconds": 7.082182500002091,
+    "peak_working_set_gib": 7.622188568115234,
+    "peak_private_commit_gib": 0.4707374572753906,
+    "min_free_physical_mib": 1561.3046875
+  },
+  "hybrid": {
+    "fixed": {
+      "n": 3,
+      "first_seconds": {
+        "median": 0.8552450999995926,
+        "min": 0.8152603000053205,
+        "max": 0.8562288000030094
+      },
+      "total_seconds": {
+        "median": 9.484337699999742,
+        "min": 9.470770599997195,
+        "max": 9.83668270000635
+      },
+      "decode_tps": {
+        "median": 14.850785852135754,
+        "min": 14.193052333248398,
+        "max": 14.962310293810292
+      },
+      "prompt_seconds": {
+        "median": 0.821671999998216,
+        "min": 0.8099098000020604,
+        "max": 0.8224698999983957
+      },
+      "decode_wall_seconds": {
+        "median": 8.555346100067254,
+        "min": 8.49181369998405,
+        "max": 8.952008099928207
+      },
+      "transfer_seconds": {
+        "median": 0.04266640000423649,
+        "min": 0.03872860000410583,
+        "max": 0.09209829999599606
+      },
+      "transfer_bytes": [
+        75510684,
+        75510684,
+        75510684
+      ]
+    },
+    "cases": {
+      "short_reply": {
+        "n": 3,
+        "input_tokens": [
+          81,
+          81,
+          81
+        ],
+        "output_tokens": [
+          36,
+          45,
+          45
+        ],
+        "total_seconds": {
+          "median": 3.067054700004519,
+          "min": 2.859032499996829,
+          "max": 3.287174800003413
+        },
+        "all_eos": true
+      },
+      "long_extract": {
+        "n": 3,
+        "input_tokens": [
+          750,
+          750,
+          750
+        ],
+        "output_tokens": [
+          10,
+          10,
+          10
+        ],
+        "total_seconds": {
+          "median": 2.3238091000021086,
+          "min": 2.1764680999986012,
+          "max": 2.4162287000071956
+        },
+        "all_eos": true,
+        "all_correct": true
+      },
+      "action_summary": {
+        "n": 3,
+        "input_tokens": [
+          761,
+          761,
+          761
+        ],
+        "output_tokens": [
+          68,
+          68,
+          68
+        ],
+        "total_seconds": {
+          "median": 6.19580460000725,
+          "min": 6.0396856000006665,
+          "max": 6.892963300000702
+        },
+        "all_eos": true
+      }
+    },
+    "load_seconds": 13.57705139999598,
+    "load_stages": {
+      "backend_init_seconds": 0.027190799999516457,
+      "primary_model_seconds": 2.6033830999949714,
+      "primary_context_seconds": 1.7019021999949473,
+      "secondary_cpu_model_seconds": 9.073379199995543,
+      "secondary_cpu_context_seconds": 0.17053429999941727
+    },
+    "first_control_total_from_backend_init_seconds": 21.962833300000057,
+    "peak_working_set_gib": 10.366893768310547,
+    "peak_private_commit_gib": 4.0621185302734375,
+    "min_free_physical_mib": 11.98046875
+  }
+}

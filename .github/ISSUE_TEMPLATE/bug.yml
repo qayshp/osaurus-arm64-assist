@@ -1,0 +1,36 @@
+name: Companion bug
+description: A reproducible companion, API or lifecycle problem
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and observed behavior
+      description: Include the trigger and the smallest reproducible steps.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Software and hardware
+      description: Companion revision, Windows ARM64 build, SoC/NPU, RAM, runtime lock version and relevant driver versions. Omit serial numbers and account identifiers.
+    validations:
+      required: true
+  - type: textarea
+    id: model
+    attributes:
+      label: Model and execution profile
+      description: Architecture, quantization, file size/hash, profile mode, context/batch/cache settings, and whether CPU baseline succeeds. Do not upload weights or gated credentials.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized errors and timing evidence
+      description: Preserve the first concrete error and distinguish failed load, timeout, fallback and completed inference. Remove local paths, keys, private prompts and app configuration.
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Publication check
+      options:
+        - label: I reviewed the attached content for private prompts, credentials, local configuration and identifying paths.
+          required: true

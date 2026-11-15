@@ -1,0 +1,110 @@
+{
+  "scope": "sanitized historical evidence and its publication helpers",
+  "files": [
+    {
+      "name": "check_public_evidence.py",
+      "sha256": "a77b3bbde09c5da6ff36b657742bfc2efc433dffb00f1ffb206c1d369877df55",
+      "bytes": 2040
+    },
+    {
+      "name": "environment.json",
+      "sha256": "2e6ec5648a1e3a2af30347c8f1ea27a1c33a77e30536d4f4c2704a4aba9dec9d",
+      "bytes": 1680
+    },
+    {
+      "name": "load-observations.json",
+      "sha256": "42a2abf77daf4de583a78843bf4c70a9b8ea9e8b081ea3cb31c55cde7ae9ae53",
+      "bytes": 2716
+    },
+    {
+      "name": "model-identities.json",
+      "sha256": "3704650feae8fb91e54e6378006843cecbc5b481bca1b7b976b7771fcffa5ded",
+      "bytes": 1410
+    },
+    {
+      "name": "ornith-q2-comparison.json",
+      "sha256": "e55190a555c8fae949be2a54b6a678b23825310abb428449f632fc89de92ff03",
+      "bytes": 29626
+    },
+    {
+      "name": "ornith-q4-assist.json",
+      "sha256": "ec801f1183bad31cc0e450c1b068e0545f082cef8e86b23964c81f0a1c0bfc78",
+      "bytes": 12527
+    },
+    {
+      "name": "ornith-q4-cpu-requests.json",
+      "sha256": "6b58d547c6fd3911d3e38f3f373a3cfb59cb42ffd13b66ed1870bdd3c3b374d6",
+      "bytes": 36356
+    },
+    {
+      "name": "ornith-q4-earlier-opencl.json",
+      "sha256": "927b52181155456e7dfc97c17c2d23384de0f91861975ff2fbf32688d4bb3404",
+      "bytes": 56011
+    },
+    {
+      "name": "ornith-q4-npu-requests.json",
+      "sha256": "16cba2797c5134be62da7d1dfeea12f79f0701dd0bce0b762896d2d31b1756a2",
+      "bytes": 35213
+    },
+    {
+      "name": "project-harbor.txt",
+      "sha256": "007304049b4d1e52417dde62cc6fc257c0a7eea61bcd25874436d5f0680fb729",
+      "bytes": 2905
+    },
+    {
+      "name": "qwen-control.json",
+      "sha256": "9396922b90aa1505d29cec1434ee8ed01097da0f6a2f00ff61120406923e6efb",
+      "bytes": 17819
+    },
+    {
+      "name": "raptor-cpu-requests.json",
+      "sha256": "8a2f9b354ab1eb3208576ee54b5e418803d93ea8609cdfacbb6638dc630854fc",
+      "bytes": 68686
+    },
+    {
+      "name": "raptor-earlier-fixed.json",
+      "sha256": "44a2f9e8b65ea92876536f93422524600d926f0662a67f662d0f77f2e81493ed",
+      "bytes": 12845
+    },
+    {
+      "name": "raptor-earlier-http.json",
+      "sha256": "6db83f059170b70d95ebc659854f77dde30b1e5b828d4e7ae631a8d23c360979",
+      "bytes": 29693
+    },
+    {
+      "name": "raptor-hybrid-requests.json",
+      "sha256": "7df181e4906a81285cfcf08d8595d28b757a0ced8ebc2a40328a81b609991380",
+      "bytes": 67989
+    },
+    {
+      "name": "raptor-npu-requests.json",
+      "sha256": "9e396b6a1792878346c53b472b0bcca031910831b10310d93587f05a5a7f7159",
+      "bytes": 69197
+    },
+    {
+      "name": "raptor-state-handoff.json",
+      "sha256": "15f2b4f0b953bb7360e1f82db019460106691bd2f0c76df6a230ae07682b9a57",
+      "bytes": 8151
+    },
+    {
+      "name": "README.md",
+      "sha256": "89fe42707bd3cec8533b2f84d2b137ad3947f8b585c7b9077741f15ce10a25f3",
+      "bytes": 3087
+    },
+    {
+      "name": "stage-timings.csv",
+      "sha256": "e8950eb1883e7ebed4944303c1a1742f0520079c585c057378e98eb764d0908e",
+      "bytes": 24610
+    },
+    {
+      "name": "update_manifest.py",
+      "sha256": "6e7ab5cf5f0e183bf82208216641365407fbaaeca2d4f7b23562630e3e117f99",
+      "bytes": 700
+    },
+    {
+      "name": "workloads.json",
+      "sha256": "a2e3c0cd7cedfc7702c4b0aa10cd02bbcbbb7962356f08440c98796571756292",
+      "bytes": 10099
+    }
+  ]
+}
