@@ -1,0 +1,24 @@
+{
+  "geniex_version": "0.11.0",
+  "llama_cpp_commit": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30",
+  "archive_sha256": "d22f41ccc3d2ce76998f412f79d57e460eb3668192a42bd872ae1611da688443",
+  "files": {
+    "libggml-htp-v75.so": "d940820955eb4331b252ebb359bc37ce36b31df7432eb1b72ccdd762aa292033",
+    "libggml-htp-v79.so": "9a4de6e9feb52a5b60d90187e276aba519f0741e58ade918afd57dc235750e70",
+    "ggml.dll": "3ac0b9fba2bca2620fe46c872e86fe8be7f0610912559264610d4af9317156ed",
+    "ggml-hexagon.dll": "87a468154200cd3f716abfe6fd1982def0f694484f7bf2fc596a42918252e602",
+    "geniex_plugin.dll": "e50373cf0d0d4d547e6c5465890833da310a042f745895a3f5cd3f95e43920ab",
+    "libggml-htp-v73.so": "43786e2aa9ebc70cb17a879c1ff821263cb1fc4a673ca08720c7be25a8aa0ddd",
+    "libggml-htp.inf": "8e8cfc91b9e7966734dc7924b021e5f6f5a2a5e30a431ce52a1dbbae789f4729",
+    "libggml-htp.cat": "cbff7cbfa391f0a79c78432572ef926bbbc07c9d6889ddd21e2a4e48ffa3a8e9",
+    "ggml-opencl.dll": "1dae31ab67b2144a7d2cdaad2842827c483874820621fcf7b13dc5424ad6b0a6",
+    "llama.dll": "7484831f09eff952d2bbfc605a847675ab9c08d23c75b8b9b76182ab15ac9803",
+    "libomp140.aarch64.dll": "4b7108af47f2f1bd1973a9ae3a61861e13e787e1846d24fa90e7a6240a0b566c",
+    "libggml-htp-v81.so": "a628f42c50788cb6c9ab797ee155c84fa9d1db32d6aaf59c0bb56c6ddfaac482",
+    "mtmd.dll": "81ea58541ce8d3bef3bedca3ddc54e60feebc95346e3193326fec06a7ecb0085",
+    "ggml-base.dll": "7235ae3465fdeadc70d1cb332df17efc6bf88634875fb3e2aaa58c159e549ad8",
+    "ggml-cpu.dll": "9664a9bc0012571af4f11ee08a17a0fbd3132d8d2f707b9c1413f5dbadfe2d6c",
+    "libggml-htp-v85.so": "9eea42f6854607c48052b89283a480d70cd454ce6ee6a76b5b5c66b8e9092d9f",
+    "llama-common.dll": "72c3d3fdf5a91838e5e5e2e36b6dae1a32bfe033a15df81168b096df54814e02"
+  }
+}

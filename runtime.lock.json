@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "bytes": 485376,
+      "path": "lib/llama_cpp/geniex_plugin.dll",
+      "sha256": "e50373cf0d0d4d547e6c5465890833da310a042f745895a3f5cd3f95e43920ab"
+    },
+    {
+      "bytes": 697856,
+      "path": "lib/llama_cpp/ggml-base.dll",
+      "sha256": "7235ae3465fdeadc70d1cb332df17efc6bf88634875fb3e2aaa58c159e549ad8"
+    },
+    {
+      "bytes": 877568,
+      "path": "lib/llama_cpp/ggml-cpu.dll",
+      "sha256": "9664a9bc0012571af4f11ee08a17a0fbd3132d8d2f707b9c1413f5dbadfe2d6c"
+    },
+    {
+      "bytes": 459776,
+      "path": "lib/llama_cpp/ggml-hexagon.dll",
+      "sha256": "87a468154200cd3f716abfe6fd1982def0f694484f7bf2fc596a42918252e602"
+    },
+    {
+      "bytes": 4166656,
+      "path": "lib/llama_cpp/ggml-opencl.dll",
+      "sha256": "1dae31ab67b2144a7d2cdaad2842827c483874820621fcf7b13dc5424ad6b0a6"
+    },
+    {
+      "bytes": 72192,
+      "path": "lib/llama_cpp/ggml.dll",
+      "sha256": "3ac0b9fba2bca2620fe46c872e86fe8be7f0610912559264610d4af9317156ed"
+    },
+    {
+      "bytes": 965480,
+      "path": "lib/llama_cpp/libggml-htp-v73.so",
+      "sha256": "43786e2aa9ebc70cb17a879c1ff821263cb1fc4a673ca08720c7be25a8aa0ddd"
+    },
+    {
+      "bytes": 965480,
+      "path": "lib/llama_cpp/libggml-htp-v75.so",
+      "sha256": "d940820955eb4331b252ebb359bc37ce36b31df7432eb1b72ccdd762aa292033"
+    },
+    {
+      "bytes": 986056,
+      "path": "lib/llama_cpp/libggml-htp-v79.so",
+      "sha256": "9a4de6e9feb52a5b60d90187e276aba519f0741e58ade918afd57dc235750e70"
+    },
+    {
+      "bytes": 1002504,
+      "path": "lib/llama_cpp/libggml-htp-v81.so",
+      "sha256": "a628f42c50788cb6c9ab797ee155c84fa9d1db32d6aaf59c0bb56c6ddfaac482"
+    },
+    {
+      "bytes": 1002504,
+      "path": "lib/llama_cpp/libggml-htp-v85.so",
+      "sha256": "9eea42f6854607c48052b89283a480d70cd454ce6ee6a76b5b5c66b8e9092d9f"
+    },
+    {
+      "bytes": 13538,
+      "path": "lib/llama_cpp/libggml-htp.cat",
+      "sha256": "cbff7cbfa391f0a79c78432572ef926bbbc07c9d6889ddd21e2a4e48ffa3a8e9"
+    },
+    {
+      "bytes": 825,
+      "path": "lib/llama_cpp/libggml-htp.inf",
+      "sha256": "8e8cfc91b9e7966734dc7924b021e5f6f5a2a5e30a431ce52a1dbbae789f4729"
+    },
+    {
+      "bytes": 796728,
+      "path": "lib/llama_cpp/libomp140.aarch64.dll",
+      "sha256": "4b7108af47f2f1bd1973a9ae3a61861e13e787e1846d24fa90e7a6240a0b566c"
+    },
+    {
+      "bytes": 5572096,
+      "path": "lib/llama_cpp/llama-common.dll",
+      "sha256": "72c3d3fdf5a91838e5e5e2e36b6dae1a32bfe033a15df81168b096df54814e02"
+    },
+    {
+      "bytes": 3406848,
+      "path": "lib/llama_cpp/llama.dll",
+      "sha256": "7484831f09eff952d2bbfc605a847675ab9c08d23c75b8b9b76182ab15ac9803"
+    },
+    {
+      "bytes": 1906688,
+      "path": "lib/llama_cpp/mtmd.dll",
+      "sha256": "81ea58541ce8d3bef3bedca3ddc54e60feebc95346e3193326fec06a7ecb0085"
+    }
+  ],
+  "vendor": "Qualcomm GenieX",
+  "archive": {
+    "url": "https://github.com/qualcomm/GenieX/releases/download/v0.11.0/geniex-bench-windows-arm64-v0.11.0.zip",
+    "filename": "geniex-bench-windows-arm64-v0.11.0.zip",
+    "root": "geniex-bench-windows-arm64-v0.11.0",
+    "bytes": 93251812,
+    "sha256": "d22f41ccc3d2ce76998f412f79d57e460eb3668192a42bd872ae1611da688443"
+  },
+  "native_subdirectory": "lib/llama_cpp",
+  "llama_cpp_commit": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30",
+  "version": "0.11.0",
+  "platform": "windows-arm64"
+}

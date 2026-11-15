@@ -1,0 +1,222 @@
+"""Owned worker processes, bounded memory guard and idle unloading."""
+import ctypes as C
+import hashlib
+import json
+import multiprocessing as MP
+import os
+from pathlib import Path
+import threading
+import time
+import uuid
+
+from . import config as configuration
+
+
+class WorkerFailure(RuntimeError):
+    pass
+
+
+class MemoryStatus(C.Structure):
+    _fields_ = [("length", C.c_ulong), ("load", C.c_ulong)] + [(name, C.c_ulonglong) for name in
+        ["total_phys", "avail_phys", "total_page", "avail_page", "total_virtual", "avail_virtual", "avail_extended"]]
+
+
+def memory_status():
+    if os.name != "nt":
+        return None
+    value = MemoryStatus(); value.length = C.sizeof(value)
+    if not C.windll.kernel32.GlobalMemoryStatusEx(C.byref(value)):
+        return None
+    return {"available_physical_bytes": value.avail_phys, "available_commit_bytes": value.avail_page}
+
+
+class BasicLimits(C.Structure):
+    _fields_ = [("process_time", C.c_longlong), ("job_time", C.c_longlong), ("flags", C.c_ulong),
+        ("min_ws", C.c_size_t), ("max_ws", C.c_size_t), ("active", C.c_ulong), ("affinity", C.c_size_t),
+        ("priority", C.c_ulong), ("scheduling", C.c_ulong)]
+
+
+class IoCounters(C.Structure):
+    _fields_ = [(name, C.c_ulonglong) for name in ["read_ops", "write_ops", "other_ops", "read_bytes", "write_bytes", "other_bytes"]]
+
+
+class ExtendedLimits(C.Structure):
+    _fields_ = [("basic", BasicLimits), ("io", IoCounters), ("process_memory", C.c_size_t),
+               ("job_memory", C.c_size_t), ("peak_process_memory", C.c_size_t), ("peak_job_memory", C.c_size_t)]
+
+
+class WorkerJob:
+    def __init__(self, pid):
+        self.handle = None
+        if os.name != "nt":
+            return
+        self.kernel = C.WinDLL("kernel32", use_last_error=True)
+        self.kernel.CreateJobObjectW.argtypes = [C.c_void_p, C.c_wchar_p]
+        self.kernel.CreateJobObjectW.restype = C.c_void_p
+        self.kernel.SetInformationJobObject.argtypes = [C.c_void_p, C.c_int, C.c_void_p, C.c_ulong]
+        self.kernel.AssignProcessToJobObject.argtypes = [C.c_void_p, C.c_void_p]
+        self.kernel.OpenProcess.argtypes = [C.c_ulong, C.c_bool, C.c_ulong]
+        self.kernel.OpenProcess.restype = C.c_void_p
+        self.kernel.CloseHandle.argtypes = [C.c_void_p]
+        handle = self.kernel.CreateJobObjectW(None, None)
+        limits = ExtendedLimits(); limits.basic.flags = 0x2000  # KILL_ON_JOB_CLOSE
+        process = self.kernel.OpenProcess(0x0101, False, pid)  # SET_QUOTA | TERMINATE
+        assigned = bool(handle and process and self.kernel.SetInformationJobObject(handle, 9, C.byref(limits), C.sizeof(limits))
+                        and self.kernel.AssignProcessToJobObject(handle, process))
+        if process:
+            self.kernel.CloseHandle(process)
+        if assigned:
+            self.handle = handle
+        elif handle:
+            self.kernel.CloseHandle(handle)
+
+    def close(self):
+        if self.handle:
+            self.kernel.CloseHandle(self.handle); self.handle = None
+
+
+class Manager:
+    def __init__(self, config_path):
+        self.config_path = Path(config_path).resolve()
+        self.config = configuration.load(self.config_path)
+        self.config_stamp = self.config_path.stat().st_mtime_ns
+        self.lock = threading.Lock()
+        self.child = self.connection = self.job = None
+        self.fingerprint = self.active_profile = self.ready = None
+        self.failure = None
+        self.last_used = time.monotonic()
+        self.last_metrics = None
+        self.closed = threading.Event()
+        self.context = MP.get_context("spawn")
+        self.guard = threading.Thread(target=self._guard, daemon=True)
+        self.guard.start()
+
+    def refresh(self):
+        stamp = self.config_path.stat().st_mtime_ns
+        if stamp != self.config_stamp:
+            updated = configuration.load(self.config_path)
+            for key in ("api_key", "runtime_dir", "host", "port"):
+                if updated.get(key) != self.config.get(key):
+                    raise ValueError(f"Restart the companion after changing {key}")
+            self.config = updated; self.config_stamp = stamp
+        return self.config
+
+    def _guard(self):
+        while not self.closed.wait(.5):
+            child = self.child
+            memory = memory_status()
+            try:
+                if child and child.is_alive() and memory and memory["available_commit_bytes"] < self.config.get("memory_floor_mib", 512)*1024**2:
+                    self.failure = "Worker stopped because system commit fell below the configured safety floor"
+                    child.terminate()
+            except (ValueError, OSError):
+                # Another thread may have closed the old process after this snapshot.
+                pass
+            idle = self.config.get("idle_seconds", 300)
+            if idle and child and time.monotonic()-self.last_used > idle and self.lock.acquire(blocking=False):
+                try:
+                    self._stop()
+                finally:
+                    self.lock.release()
+
+    def _stop(self):
+        child, connection, job = self.child, self.connection, self.job
+        self.child = self.connection = self.job = None
+        self.ready = self.active_profile = self.fingerprint = None
+        if child:
+            try:
+                if child.is_alive() and connection:
+                    connection.send({"type": "unload"}); child.join(timeout=5)
+                if child.is_alive():
+                    child.terminate(); child.join(timeout=3)
+                if child.is_alive():
+                    child.kill(); child.join(timeout=2)
+            finally:
+                if connection:
+                    connection.close()
+                if job:
+                    job.close()
+                if not child.is_alive():
+                    child.close()
+
+    def _receive(self, timeout):
+        deadline = time.monotonic()+timeout
+        while time.monotonic() < deadline:
+            if self.connection and self.connection.poll(.2):
+                try:
+                    return self.connection.recv()
+                except (EOFError, OSError) as error:
+                    raise WorkerFailure(self.failure or "Native worker exited; inspect its local log") from error
+            if not self.child or not self.child.is_alive():
+                raise WorkerFailure(self.failure or "Native worker exited; inspect its local log")
+        raise WorkerFailure("Native worker exceeded the configured response deadline")
+
+    def _load(self, profile):
+        path = Path(profile["path"])
+        if not path.is_file():
+            raise ValueError("The configured GGUF is missing; register its current Osaurus path")
+        stat = path.stat()
+        fingerprint = hashlib.sha256(json.dumps([profile, stat.st_size, stat.st_mtime_ns], sort_keys=True).encode()).hexdigest()
+        if self.child and self.child.is_alive() and fingerprint == self.fingerprint:
+            return False
+        self._stop(); self.failure = None
+        from .worker import entry
+        parent, child = self.context.Pipe()
+        log_path = self.config_path.parent/"logs"/("worker-"+uuid.uuid4().hex+".log")
+        process = self.context.Process(target=entry, args=(child, self.config["runtime_dir"], profile, str(log_path), os.getpid()), daemon=True)
+        self.child, self.connection = process, parent
+        process.start(); child.close(); self.job = WorkerJob(process.pid)
+        try:
+            ready = self._receive(profile.get("load_timeout_seconds", 300))
+            if ready.get("type") != "ready":
+                raise WorkerFailure(ready.get("message", "Model failed to initialize"))
+            self.ready, self.active_profile, self.fingerprint = ready, profile["id"], fingerprint
+            return True
+        except BaseException:
+            self._stop()
+            raise
+
+    def generate(self, profile, request):
+        actual = profile
+        fallback_reason = None
+        try:
+            cold = self._load(profile)
+        except WorkerFailure as error:
+            if profile.get("fallback_mode") != "cpu" or profile["mode"] == "cpu":
+                raise
+            fallback_reason = str(error)
+            actual = {**profile, "mode": "cpu"}
+            cold = self._load(actual)
+        self.last_used = time.monotonic()
+        self.connection.send({"type": "generate", "request": request})
+        deadline = time.monotonic() + actual.get("request_timeout_seconds", 900)
+        try:
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise WorkerFailure("Native worker exceeded the whole-response deadline")
+                event = self._receive(remaining)
+                self.last_used = time.monotonic()
+                if event["type"] == "error":
+                    if event.get("kind") == "invalid_request_or_model_output":
+                        raise ValueError(event["message"])
+                    raise WorkerFailure(event.get("message", "Native inference failed"))
+                if event["type"] == "done":
+                    event["assist"] = {"requested_mode": profile["mode"], "actual_mode": actual["mode"],
+                        "fallback_reason": fallback_reason, "cold_load": cold,
+                        "load_seconds_this_request": self.ready["load_seconds"] if cold else 0,
+                        "load_stages": self.ready["load_stages"] if cold else None,
+                        "architecture": self.ready["architecture"], "context_length": self.ready["context_length"],
+                        "metrics": event["metrics"]}
+                    self.last_metrics = {"model": profile["id"], **event["assist"]}
+                    yield event
+                    break
+                yield event
+        except BaseException:
+            self._stop()
+            raise
+
+    def close(self):
+        self.closed.set()
+        with self.lock:
+            self._stop()
