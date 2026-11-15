@@ -104,8 +104,13 @@ class ServerController:
         shell = Path(os.environ["WINDIR"]) / "System32/WindowsPowerShell/v1.0/powershell.exe"
         command = [str(shell), "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File",
                    str(self.root / "app" / "scripts" / name), "-RootPath", str(self.root), *arguments]
+        # A Python process can inherit PowerShell 7's module search path. A
+        # Windows PowerShell child must load its matching built-in modules.
+        environment = {key: value for key, value in os.environ.items()
+                       if key.casefold() not in ("psmodulepath", "psmoduleanalysiscachepath")}
+        environment["PSModulePath"] = str(shell.parent / "Modules")
         self.pending = subprocess.Popen(command, cwd=self.root, stdout=self.log, stderr=self.log,
-                                        creationflags=subprocess.CREATE_NO_WINDOW)
+                                        env=environment, creationflags=subprocess.CREATE_NO_WINDOW)
         try:
             result = self.pending.wait(timeout=45)
         except subprocess.TimeoutExpired:

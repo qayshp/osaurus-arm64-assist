@@ -225,6 +225,32 @@ class ControllerOwnershipTests(unittest.TestCase):
         self.assertFalse(self.controller.stop())
         self.run.assert_not_called()
 
+    def test_windows_powershell_child_isolates_module_paths_and_preserves_other_environment(self):
+        environment = {"WINDIR": str(self.root/"Windows"),
+            "PSModulePath": "synthetic-untrusted-pwsh-modules",
+            "pSmOdUlEpAtH": "synthetic-second-module-path",
+            "psModuleAnalysisCachePath": "synthetic-untrusted-module-cache",
+            "OSAURUS_API_KEY": "synthetic-test-only-environment-key", "OTHER_SETTING": "preserved"}
+        before = dict(environment)
+        child = mock.Mock(); child.wait.return_value = 0
+        with mock.patch.object(supervisor, "os", SimpleNamespace(environ=environment)), \
+                mock.patch.object(supervisor.subprocess, "Popen", return_value=child) as launch, \
+                mock.patch.object(supervisor.subprocess, "CREATE_NO_WINDOW", 0x08000000, create=True):
+            # Bypass this fixture's _run mock; Popen itself remains entirely fake.
+            self.assertTrue(supervisor.ServerController._run(self.controller, "Start.ps1", []))
+        options = launch.call_args.kwargs
+        supplied = options["env"]
+        shell = Path(environment["WINDIR"])/"System32/WindowsPowerShell/v1.0/powershell.exe"
+        self.assertEqual(launch.call_args.args[0][0], str(shell))
+        self.assertEqual(supplied["PSModulePath"], str(shell.parent/"Modules"))
+        self.assertEqual([key for key in supplied if key.casefold() == "psmodulepath"], ["PSModulePath"])
+        self.assertNotIn("psmoduleanalysiscachepath", {key.casefold() for key in supplied})
+        self.assertEqual(supplied["OSAURUS_API_KEY"], environment["OSAURUS_API_KEY"])
+        self.assertEqual(supplied["OTHER_SETTING"], "preserved")
+        self.assertEqual(environment, before, "module-path isolation must affect only the child")
+        self.assertEqual(options["creationflags"], 0x08000000)
+        child.wait.assert_called_once_with(timeout=45)
+
     def test_discovery_retries_on_its_own_interval_and_never_calls_inference(self):
         self.controller.refresh_pending = True; self.get.side_effect = [None, True]
         with mock.patch.dict(os.environ, {"OSAURUS_API_KEY": "synthetic-osaurus-key"}):
