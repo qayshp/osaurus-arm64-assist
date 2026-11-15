@@ -4,6 +4,8 @@ These files are sanitized projections of experiments conducted on November 14–
 
 The `companion-*` files are a separate set of installed-companion acceptance observations on the same machine. Read [their exact scope and retained failures](../docs/companion-acceptance.md). They must not be mixed into the historical benchmark medians or counted as clean-machine DSP provisioning proof.
 
+`shared-idle-live.json` separately records 0.1.1 idle-policy verification: the unchanged live Osaurus setting was 300 seconds, and an isolated CPU worker unloaded after about 301.14 seconds despite 299 health polls. See [idle-policy behavior and limits](../docs/idle-policy.md). This is a cleanup observation, not a throughput or model-quality score.
+
 The original raw results remain private/local. This public projection preserves selected numeric summaries, request timings, synthetic input/output text, token counts and model fingerprints. It omits local absolute paths, configuration exports, credentials, host identifiers, exact wall-clock timestamps, process inventories, private conversation, model weights and vendor binaries. Original artifact basenames in CSV/provenance fields are historical identifiers, not paths to a hidden public archive.
 
 | File | Purpose |

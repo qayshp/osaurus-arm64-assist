@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "kind": "live-osaurus-idle-expiry",
+  "companion_version": "0.1.1",
+  "osaurus_version": "1.0.3",
+  "osaurus_setting": "idleUnloadSeconds",
+  "osaurus_idle_seconds_before": 300,
+  "main_osaurus_settings_modified": false,
+  "model_basename": "Qwen3-0.6B-Q4_0.gguf",
+  "mode": "cpu",
+  "polls_do_not_reset_idle": true,
+  "scope": "One real CPU worker in an isolated companion instance; no NPU or energy claim",
+  "worker_loaded_after_response": true,
+  "initial_policy": {
+    "mode": "osaurus",
+    "seconds": 300,
+    "status": "live",
+    "error": null,
+    "setting": "idleUnloadSeconds"
+  },
+  "input_tokens": 28,
+  "output_tokens": 11,
+  "observed_unload_seconds_after_client_response": 301.1399999999994,
+  "health_polls_while_idle": 299,
+  "final_policy": {
+    "mode": "osaurus",
+    "seconds": 300,
+    "status": "live",
+    "error": null,
+    "setting": "idleUnloadSeconds"
+  },
+  "unloaded_without_another_inference_request": true,
+  "osaurus_idle_seconds_after": 300,
+  "osaurus_preference_unchanged": true,
+  "passed": true,
+  "source_note": "Observed during 0.1.1 development; HTTP deadline and malformed-framing handling have separate unit coverage."
+}

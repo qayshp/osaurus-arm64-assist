@@ -161,6 +161,10 @@ def read_osaurus_idle_seconds(endpoint, api_key=None, timeout=1.0):
                 if count > MAX_RESPONSE_BYTES:
                     raise IdlePolicyError("oversized_response")
                 parts.append(chunk)
+            # The deadline interrupter can surface as EOF on some platforms.
+            # Classify that before a partial body becomes a framing error.
+            if expired.is_set() or time.monotonic() >= deadline:
+                raise IdlePolicyError("network_timeout")
             if expected_length is not None and not response.chunked and count != expected_length:
                 raise IdlePolicyError("invalid_response")
         if expired.is_set():
