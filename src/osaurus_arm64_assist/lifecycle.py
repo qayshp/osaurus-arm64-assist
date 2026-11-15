@@ -246,6 +246,17 @@ class Manager:
             self._stop()
             raise
 
+    def native_admission(self, profile, config):
+        """Avoid adding a new worker while Osaurus already retains a model."""
+        child = self.child
+        try:
+            if child and child.is_alive():
+                return None
+        except (OSError, ValueError):
+            pass
+        from .residency import native_admission
+        return native_admission(profile, config)
+
     def benchmark(self, profile, body):
         """Run under the caller's inference lock; warm-ups are kept separately."""
         from .benchmark import input_ids, normalize_benchmark, summary

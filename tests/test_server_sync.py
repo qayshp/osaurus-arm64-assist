@@ -34,12 +34,21 @@ class SharedManager(FakeManager):
         self.refreshes = 0
         self.context_failure = False
         self.after_output_failure = False
+        self.timeout_stage = None
+        self.timeout_closed = threading.Event()
 
     def refresh(self):
         self.refreshes += 1
         return {**self.config, "models": copy.deepcopy(self.models)}
 
     def generate(self, profile, request):
+        if self.timeout_stage:
+            try:
+                if self.timeout_stage == "after_output":
+                    yield {"type": "token", "text": "partial"}
+                raise TimeoutError("PRIVATE_TIMEOUT_DETAIL C:\\private-fixture\\model")
+            finally:
+                self.timeout_closed.set()
         if self.context_failure:
             raise ValueError("Prompt (3000 tokens) plus requested output (32) exceeds the configured 2048-token context")
         if self.after_output_failure:
@@ -279,6 +288,39 @@ class ServerSyncTests(unittest.TestCase):
             self.assertTrue(self.closed.wait(2))
             self.assertTrue(self.manager.lock.acquire(timeout=1))
             self.manager.lock.release()
+
+    def test_native_timeout_before_headers_returns_safe_504_and_releases_worker(self):
+        self.manager.timeout_stage = "before_output"
+        response, raw = self.post()
+        self.assertEqual(response.status, 504)
+        self.assertIn("application/json", response.getheader("Content-Type"))
+        error = json.loads(raw)["error"]
+        self.assertEqual(error["type"], "timeout_error")
+        self.assertEqual(error["code"], "request_timeout")
+        self.assertNotIn(b"PRIVATE", raw)
+        self.assertNotIn(b"private-fixture", raw)
+        self.assertTrue(self.manager.unloaded)
+        self.assertTrue(self.manager.timeout_closed.wait(1))
+        self.assertTrue(self.manager.lock.acquire(timeout=1)); self.manager.lock.release()
+        self.assertEqual(self.get("/health", False)[0], 200)
+
+    def test_native_timeout_after_headers_emits_one_terminal_sse_error_and_done(self):
+        self.manager.timeout_stage = "after_output"
+        response, raw = self.post({"stream": True})
+        self.assertEqual(response.status, 200)
+        self.assertIn("text/event-stream", response.getheader("Content-Type"))
+        self.assertIn(b"partial", raw)
+        events = [json.loads(line[6:]) for line in raw.decode().splitlines()
+                  if line.startswith("data: ") and line != "data: [DONE]"]
+        errors = [event["error"] for event in events if "error" in event]
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]["code"], "request_timeout")
+        self.assertEqual(raw.count(b"data: [DONE]"), 1)
+        self.assertNotIn(b"PRIVATE", raw)
+        self.assertTrue(self.manager.unloaded)
+        self.assertTrue(self.manager.timeout_closed.wait(1))
+        self.assertTrue(self.manager.lock.acquire(timeout=1)); self.manager.lock.release()
+        self.assertEqual(self.get("/health", False)[0], 200)
 
 
 if __name__ == "__main__":

@@ -139,6 +139,7 @@ class ModelSettingsTests(unittest.TestCase):
                 self.assertTrue(value["sync"]["unsupported"])
 
     def test_sparse_explicit_unimplemented_settings_use_stock_even_when_equal_to_defaults(self):
+        self.assertEqual(profile(s=settings({"temperature": .13, "isEmpty": False}))["mode"], "hybrid")
         self.assertEqual(profile(s=settings({"useMlock": False}))["mode"], "hybrid")
         self.assertEqual(profile(s=settings({"futureFlag": False}, futureFlag=False))["mode"], "osaurus")
         self.assertEqual(profile(s=settings({"cachePrompt": True}, cachePrompt=True))["mode"], "osaurus")

@@ -266,6 +266,11 @@ class Handler(BaseHTTPRequestHandler):
             if not acquired:
                 self.error(429, "One model request is already running; retry after it completes", "rate_limit_error"); return
             api_started = time.perf_counter()
+            if not proxy and hasattr(manager, "native_admission"):
+                residency_reason = manager.native_admission(profile, config)
+                if residency_reason:
+                    proxy = True
+                    profile = {**profile, "_fallback_reason": residency_reason}
             if not proxy:
                 events = manager.generate(profile, request)
                 try:
@@ -355,9 +360,19 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(200, {**base, "object": "chat.completion", "choices": [{"index": 0,
                     "message": finished["message"], "finish_reason": finished["finish_reason"]}],
                     "usage": finished["usage"], "assist": finished["assist"]})
-        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError, TimeoutError):
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
             if acquired:
                 manager._stop()
+        except TimeoutError:
+            if acquired:
+                manager._stop()
+            try:
+                self.error(504, "The companion request timed out before a complete response was produced.",
+                           "timeout_error", "request_timeout")
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError, TimeoutError):
+                # A write timeout can also mean the client socket is no longer
+                # writable. The owned worker was already stopped above.
+                self.close_connection = True
         except PermissionError:
             self.close_connection = True
             self.send_response(403); self.send_header("Connection", "close")

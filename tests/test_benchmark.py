@@ -174,7 +174,10 @@ class BenchmarkHttpTests(unittest.TestCase):
         headers = {"Content-Type": "application/json"}
         if auth: headers["Authorization"] = "Bearer " + self.manager.config["api_key"]
         try:
-            connection.request("POST", "/admin/benchmark", json.dumps(body), headers)
+            # Auth is rejected before reading a body. An empty unauthorized
+            # payload avoids Windows replacing that HTTP reply with a TCP RST
+            # when the server closes with unread request bytes.
+            connection.request("POST", "/admin/benchmark", json.dumps(body) if auth else b"", headers)
             response = connection.getresponse()
             return response.status, json.loads(response.read())
         finally:

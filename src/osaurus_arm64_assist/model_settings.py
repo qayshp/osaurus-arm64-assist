@@ -90,6 +90,9 @@ def sanitize_settings(settings):
     for key, value in overrides.items():
         if value is None:
             continue
+        if key == "isEmpty" and type(value) is bool:
+            # Computed DTO bookkeeping, not an inference preference.
+            continue
         if key not in SUPPORTED:
             # Overrides are sparse Nullable<T> fields in Osaurus. Even a
             # value equal to an engine default is an explicit preference.
@@ -160,6 +163,8 @@ def build_profile(entry, settings, resolved, runtime, path, *, identifier=None, 
     selected = "hybrid" if known_spark else "cpu-experts" if known_moe else "osaurus"
     if requested != "auto": selected = requested
     applied, adapted, unsupported = set(), set(), set(settings["_unsupported"]) | set(resolved["_invalid"])
+    if selected != "osaurus":
+        adapted.add("cachePrompt")
     reason = None
     def fallback(code, name=None):
         nonlocal reason
