@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic-hardware-acceptance",
+  "quick": true,
+  "source": {
+    "model_basename": "Qwen3-0.6B-Q4_0.gguf",
+    "mode": "cpu",
+    "context": 2048,
+    "expected_native_core": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30"
+  },
+  "scope": "API observations; this client does not sample physical NPU counters",
+  "cases": [
+    {
+      "case": "arithmetic",
+      "target": "companion",
+      "request": {
+        "model": "qwen-cpu",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with only the answer: what is 17 + 25?"
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 24
+      },
+      "expected": "42",
+      "transport_ok": true,
+      "quality_ok": false,
+      "contract_checks": {
+        "usage_consistent": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true
+      },
+      "passed": false,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "17 + 25 = 42."
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 28,
+        "completion_tokens": 11,
+        "total_tokens": 39
+      },
+      "client_timing": {
+        "headers_seconds": 0.21453269999619806,
+        "complete_seconds": 0.21474559999478515
+      },
+      "assist": {
+        "requested_mode": "cpu",
+        "actual_mode": "cpu",
+        "fallback_reason": null,
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "architecture": "qwen3",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 0.1927402999936021,
+        "format_seconds": 0.00010570000449661165,
+        "tokenize_seconds": 0.00017880000086734071,
+        "context_reset_seconds": 0.03835650000110036,
+        "prompt_seconds": 0.06716250000317814,
+        "first_text_seconds": 0.10626009999396047,
+        "sampling_and_text_seconds": 0.0026754000064102,
+        "continuation_decode_seconds": 0.08345289999124361,
+        "state_transfer_seconds": 0.0,
+        "state_bytes": 0,
+        "native_decode_tokens_per_second": 132.1956495613508,
+        "postprocess_seconds": 3.2999960239976645e-06
+      },
+      "load_stages": {},
+      "failure_category": "quality"
+    },
+    {
+      "case": "unicode_sse",
+      "target": "companion",
+      "request": {
+        "model": "qwen-cpu",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly this text, without quotes: café 你好"
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 24,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "expected": "café 你好",
+      "transport_ok": true,
+      "quality_ok": false,
+      "contract_checks": {
+        "usage_consistent": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true
+      },
+      "passed": false,
+      "answer": {
+        "message": {
+          "role": "assistant",
+          "content": "café"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 24,
+        "completion_tokens": 2,
+        "total_tokens": 26
+      },
+      "client_timing": {
+        "headers_seconds": 0.0709424000015133,
+        "first_wire_line_seconds": 0.07097749999957159,
+        "first_text_seconds": 0.07103420000203187,
+        "complete_seconds": 0.0848522000014782
+      },
+      "assist": {
+        "requested_mode": "cpu",
+        "actual_mode": "cpu",
+        "fallback_reason": null,
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "architecture": "qwen3",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 0.074748200000613,
+        "format_seconds": 0.00016540000069653615,
+        "tokenize_seconds": 0.000410699998610653,
+        "context_reset_seconds": 0.0023765000005369075,
+        "prompt_seconds": 0.05602069999440573,
+        "first_text_seconds": 0.059343900000385474,
+        "sampling_and_text_seconds": 0.0006980999969528057,
+        "continuation_decode_seconds": 0.014924999995855615,
+        "state_transfer_seconds": 0.0,
+        "state_bytes": 0,
+        "native_decode_tokens_per_second": 134.390538906061,
+        "postprocess_seconds": 2.9000002541579306e-06
+      },
+      "load_stages": {},
+      "failure_category": "quality"
+    }
+  ],
+  "advertised_context_2048": true,
+  "passed": false
+}

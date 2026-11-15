@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "kind": "companion-acceptance-provenance",
+  "evidence_phase": "packaged companion development candidate, separate from historical benchmark prototype",
+  "observation_date": "2026-11-15",
+  "companion_version": "0.1.0",
+  "companion_source_revision": "Snapshots during November 15 initial alpha verification, including runs after several public commits; see fixed-token validation for the implementation revision.",
+  "hardware": {
+    "device_family": "Surface Laptop 7",
+    "processor": "Snapdragon X Plus X1P64100",
+    "cpu_cores": 10,
+    "gpu": "Adreno X1-85",
+    "npu": "Hexagon v73",
+    "installed_memory_gb": 16
+  },
+  "runtime": {
+    "distribution": "Qualcomm GenieX",
+    "version": "0.11.0",
+    "expected_llama_cpp_core": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30",
+    "verification_note": "The acceptance client records the expected core and API observations; it does not independently inspect loaded native bytes or physical device counters. See runtime.lock.json, installer/doctor checks and each receipt scope."
+  },
+  "profiles": {
+    "raptor-hybrid": {
+      "model": "Raptor-0.7-4B-Q6_K.gguf",
+      "architecture": "spark2_5",
+      "mode": "hybrid",
+      "context": 2048,
+      "repack": true
+    },
+    "ornith-q4-assist": {
+      "model": "Ornith-1.5-35B-Q4_K_M.gguf",
+      "architecture": "qwen35moe",
+      "mode": "cpu-experts",
+      "context": 2048,
+      "repack": false
+    },
+    "ornith-q4-gpu-assist": {
+      "model": "Ornith-1.5-35B-Q4_K_M.gguf",
+      "architecture": "qwen35moe",
+      "mode": "gpu-experts",
+      "context": 2048,
+      "repack": false
+    },
+    "qwen-cpu": {
+      "model": "Qwen3-0.6B-Q4_0.gguf",
+      "architecture": "qwen3",
+      "mode": "cpu",
+      "context": 2048
+    }
+  },
+  "receipts": [
+    {
+      "file": "companion-clean-reinstall.json",
+      "original_artifact_basename": "acceptance-clean-reinstall.json"
+    },
+    {
+      "file": "companion-clean-removal.json",
+      "original_artifact_basename": "acceptance-clean-removal.json"
+    },
+    {
+      "file": "companion-final-state.json",
+      "original_artifact_basename": "acceptance-final-state.json"
+    },
+    {
+      "file": "companion-fixed-raptor-cpu.json",
+      "original_artifact_basename": "companion-fixed-raptor-cpu.json"
+    },
+    {
+      "file": "companion-fixed-raptor-gpu.json",
+      "original_artifact_basename": "companion-fixed-raptor-gpu.json"
+    },
+    {
+      "file": "companion-fixed-raptor-hybrid.json",
+      "original_artifact_basename": "companion-fixed-raptor-hybrid.json"
+    },
+    {
+      "file": "companion-fixed-raptor-npu.json",
+      "original_artifact_basename": "companion-fixed-raptor-npu.json"
+    },
+    {
+      "file": "companion-fixed-raptor-validation.json",
+      "source": "independent checks of the four completed fixed-token receipts"
+    },
+    {
+      "file": "companion-ornith-q4-assist.json",
+      "original_artifact_basename": "acceptance-ornith-q4-assist.json"
+    },
+    {
+      "file": "companion-ornith-q4-gpu-assist.json",
+      "original_artifact_basename": "acceptance-ornith-q4-gpu-assist.json"
+    },
+    {
+      "file": "companion-preserved-models.json",
+      "original_artifact_basename": "acceptance-preserved-models.json"
+    },
+    {
+      "file": "companion-qwen-cpu.json",
+      "original_artifact_basename": "acceptance-qwen-cpu.json"
+    },
+    {
+      "file": "companion-raptor-hybrid.json",
+      "original_artifact_basename": "acceptance-raptor-hybrid.json"
+    },
+    {
+      "file": "companion-raptor-osaurus.json",
+      "original_artifact_basename": "acceptance-final-raptor-osaurus.json"
+    },
+    {
+      "file": "companion-server-crash.json",
+      "original_artifact_basename": "acceptance-server-crash.json"
+    }
+  ],
+  "limits": [
+    "Receipts are synthetic tests on one machine, not a broad quality or performance study.",
+    "The initial Raptor direct suite and final direct/routed suite overlap; do not sum their cases as independent tests. The superseded initial ten-case routing receipt is omitted.",
+    "The Qwen quality failures are deliberately retained.",
+    "No clean-machine signed-DSP provisioning, energy measurement, long-duration or sleep/resume evidence is supplied.",
+    "Unit tests use fakes and do not prove physical NPU activity."
+  ]
+}

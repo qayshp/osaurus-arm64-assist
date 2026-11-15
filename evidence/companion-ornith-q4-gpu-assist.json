@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic-hardware-acceptance",
+  "quick": true,
+  "source": {
+    "model_basename": "Ornith-1.5-35B-Q4_K_M.gguf",
+    "mode": "gpu-experts",
+    "context": 2048,
+    "expected_native_core": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30"
+  },
+  "scope": "API observations; this client does not sample physical NPU counters",
+  "cases": [
+    {
+      "case": "arithmetic",
+      "target": "companion",
+      "request": {
+        "model": "ornith-q4-gpu-assist",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with only the answer: what is 17 + 25?"
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 24
+      },
+      "expected": "42",
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "42"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 28,
+        "completion_tokens": 2,
+        "total_tokens": 30
+      },
+      "client_timing": {
+        "headers_seconds": 26.188374400000612,
+        "complete_seconds": 26.189009599998826
+      },
+      "assist": {
+        "requested_mode": "gpu-experts",
+        "actual_mode": "gpu-experts",
+        "fallback_reason": null,
+        "cold_load": true,
+        "load_seconds_this_request": 12.650402600003872,
+        "architecture": "qwen35moe",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 11.532936499999778,
+        "format_seconds": 0.00042209999810438603,
+        "tokenize_seconds": 0.0006091000032029115,
+        "context_reset_seconds": 0.002712599998631049,
+        "prompt_seconds": 10.481501400005072,
+        "first_text_seconds": 10.487222399999155,
+        "sampling_and_text_seconds": 0.0023339000035775825,
+        "continuation_decode_seconds": 1.0444050000005518,
+        "state_transfer_seconds": 0.0,
+        "state_bytes": 0,
+        "native_decode_tokens_per_second": 1.9151804866090578,
+        "postprocess_seconds": 4.499997885432094e-06
+      },
+      "load_stages": {
+        "runtime_verify_and_backend_seconds": 0.14684950000082608,
+        "metadata_and_template_seconds": 0.36470160000317264,
+        "primary": {
+          "model_seconds": 12.062403399999312,
+          "context_seconds": 0.07626750000054017
+        }
+      },
+      "failure_category": null
+    },
+    {
+      "case": "unicode_sse",
+      "target": "companion",
+      "request": {
+        "model": "ornith-q4-gpu-assist",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly this text, without quotes: café 你好"
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 24,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "expected": "café 你好",
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true
+      },
+      "passed": true,
+      "answer": {
+        "message": {
+          "role": "assistant",
+          "content": "café 你好"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 24,
+        "completion_tokens": 4,
+        "total_tokens": 28
+      },
+      "client_timing": {
+        "headers_seconds": 7.231695500006026,
+        "first_wire_line_seconds": 7.231746400000702,
+        "first_text_seconds": 7.2318450000020675,
+        "complete_seconds": 8.972255100001348
+      },
+      "assist": {
+        "requested_mode": "gpu-experts",
+        "actual_mode": "gpu-experts",
+        "fallback_reason": null,
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "architecture": "qwen35moe",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 8.95351970000047,
+        "format_seconds": 0.0005946000019321218,
+        "tokenize_seconds": 0.006175000002258457,
+        "context_reset_seconds": 0.00217720000364352,
+        "prompt_seconds": 7.201090899994597,
+        "first_text_seconds": 7.211543899997196,
+        "sampling_and_text_seconds": 0.0029358999963733368,
+        "continuation_decode_seconds": 1.7398051000054693,
+        "state_transfer_seconds": 0.0,
+        "state_bytes": 0,
+        "native_decode_tokens_per_second": 2.2993368712463327,
+        "postprocess_seconds": 4.499997885432094e-06
+      },
+      "load_stages": {},
+      "failure_category": null
+    }
+  ],
+  "advertised_context_2048": true,
+  "passed": true
+}

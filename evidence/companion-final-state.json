@@ -1,0 +1,23 @@
+{
+  "kind": "companion-final-state",
+  "owned_native_workers": 0,
+  "companion_healthy": true,
+  "profile_ids": [
+    "raptor-hybrid",
+    "raptor-npu",
+    "raptor-cpu",
+    "ornith-q4-assist",
+    "ornith-q4-gpu-assist",
+    "raptor-gpu",
+    "ornith-q4-cpu"
+  ],
+  "companion_running_on_loopback": true,
+  "profile_count": 7,
+  "schema_version": 1,
+  "available_physical_mib": 9381.0,
+  "startup_task_installed": false,
+  "unrelated_osaurus_configuration_unchanged": true,
+  "original_geniex_models_still_available": true,
+  "provider_connected": true,
+  "model_loaded": false
+}

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "kind": "owned-server-crash-acceptance",
+  "seconds_until_children_exited": 0.0166529,
+  "worker_job_attached": true,
+  "loaded_model": "raptor-hybrid",
+  "children_exited_after_server_crash": true,
+  "owned_worker_count": 1
+}

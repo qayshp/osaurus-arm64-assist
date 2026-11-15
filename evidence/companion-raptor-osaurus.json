@@ -1,0 +1,1234 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic-hardware-acceptance",
+  "quick": false,
+  "source": {
+    "model_basename": "Raptor-0.7-4B-Q6_K.gguf",
+    "mode": "hybrid",
+    "context": 2048,
+    "expected_native_core": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30"
+  },
+  "scope": "API observations; this client does not sample physical NPU counters",
+  "cases": [
+    {
+      "case": "arithmetic",
+      "target": "companion",
+      "request": {
+        "model": "raptor-hybrid",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with only the answer: what is 17 + 25?"
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 24
+      },
+      "expected": "42",
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true,
+        "state_transferred": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "42"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 32,
+        "completion_tokens": 2,
+        "total_tokens": 34
+      },
+      "client_timing": {
+        "headers_seconds": 27.729349699999148,
+        "complete_seconds": 27.730445000001055
+      },
+      "assist": {
+        "requested_mode": "hybrid",
+        "actual_mode": "hybrid",
+        "fallback_reason": null,
+        "cold_load": true,
+        "load_seconds_this_request": 17.920972599997185,
+        "architecture": "spark2_5",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 9.622489399996994,
+        "format_seconds": 0.005251499998848885,
+        "tokenize_seconds": 0.012320999994699378,
+        "context_reset_seconds": 0.24624559999938356,
+        "prompt_seconds": 8.2816257999948,
+        "first_text_seconds": 8.552382399997441,
+        "first_token_seconds": 8.548770100002002,
+        "sampling_and_text_seconds": 0.004768499995407183,
+        "continuation_decode_seconds": 1.0428870000032475,
+        "state_transfer_seconds": 0.026193700003204867,
+        "state_bytes": 4720284,
+        "native_decode_tokens_per_second": 1.9180788522216148,
+        "postprocess_seconds": 2.25000039790757e-05
+      },
+      "load_stages": {
+        "runtime_verify_and_backend_seconds": 0.19253609999577748,
+        "metadata_and_template_seconds": 0.14588280000316445,
+        "primary": {
+          "model_seconds": 3.225437499997497,
+          "context_seconds": 3.754789600003278
+        },
+        "secondary_cpu": {
+          "model_seconds": 10.373391399996763,
+          "context_seconds": 0.22626930000114953
+        }
+      },
+      "failure_category": null
+    },
+    {
+      "case": "unicode_sse",
+      "target": "companion",
+      "request": {
+        "model": "raptor-hybrid",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly this text, without quotes: café 你好"
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 24,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "expected": "café 你好",
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true,
+        "state_transferred": true
+      },
+      "passed": true,
+      "answer": {
+        "message": {
+          "role": "assistant",
+          "content": "café 你好"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 28,
+        "completion_tokens": 5,
+        "total_tokens": 33
+      },
+      "client_timing": {
+        "headers_seconds": 0.2339501999958884,
+        "first_wire_line_seconds": 0.23402370000258088,
+        "first_text_seconds": 0.23410960000182968,
+        "complete_seconds": 0.5824977000011131
+      },
+      "assist": {
+        "requested_mode": "hybrid",
+        "actual_mode": "hybrid",
+        "fallback_reason": null,
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "architecture": "spark2_5",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 0.5585118000017246,
+        "format_seconds": 0.00020819999917875975,
+        "tokenize_seconds": 0.010759199998574331,
+        "context_reset_seconds": 0.005195500001718756,
+        "prompt_seconds": 0.19280629999411758,
+        "first_text_seconds": 0.20948130000033416,
+        "first_token_seconds": 0.20944360000430606,
+        "sampling_and_text_seconds": 0.0023785999946994707,
+        "continuation_decode_seconds": 0.34333609999885084,
+        "state_transfer_seconds": 0.003262199999880977,
+        "state_bytes": 4130364,
+        "native_decode_tokens_per_second": 14.571142144405847,
+        "postprocess_seconds": 4.0000013541430235e-06
+      },
+      "load_stages": {},
+      "failure_category": null
+    },
+    {
+      "case": "conversation_history",
+      "target": "companion",
+      "request": {
+        "model": "raptor-hybrid",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Follow the conversation and preserve the user's code."
+          },
+          {
+            "role": "user",
+            "content": "The code for this conversation is ORCHID42. Remember it."
+          },
+          {
+            "role": "assistant",
+            "content": "I will remember the code."
+          },
+          {
+            "role": "user",
+            "content": "What is the code? Reply with only the code."
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 48
+      },
+      "expected": "ORCHID42",
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true,
+        "state_transferred": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "ORCHID42"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 67,
+        "completion_tokens": 5,
+        "total_tokens": 72
+      },
+      "client_timing": {
+        "headers_seconds": 0.6225701000003028,
+        "complete_seconds": 0.6228350999954273
+      },
+      "assist": {
+        "requested_mode": "hybrid",
+        "actual_mode": "hybrid",
+        "fallback_reason": null,
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "architecture": "spark2_5",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 0.6186616999984835,
+        "format_seconds": 0.00032270000519929454,
+        "tokenize_seconds": 0.00953029999800492,
+        "context_reset_seconds": 0.047357899995404296,
+        "prompt_seconds": 0.21097020000161137,
+        "first_text_seconds": 0.26853969999501714,
+        "first_token_seconds": 0.26848149999568705,
+        "sampling_and_text_seconds": 0.0011889000015798956,
+        "continuation_decode_seconds": 0.34291040000971407,
+        "state_transfer_seconds": 0.005852100002812222,
+        "state_bytes": 9882084,
+        "native_decode_tokens_per_second": 14.587806927457754,
+        "postprocess_seconds": 3.3000032999552786e-06
+      },
+      "load_stages": {},
+      "failure_category": null
+    },
+    {
+      "case": "harbor_extract",
+      "target": "companion",
+      "request": {
+        "model": "raptor-hybrid",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Request 1.\nProject Harbor launch handoff, collected messages:\nMonday, 09:00, Alex: The draft landing page is ready. Design has approved the new illustrations, but that approval does not cover the release notes. We can ship the website without the optional animated header. Please do not delay the launch for that animation.\nMonday, 10:15, Priya: The mobile layout passed checks at three screen sizes. The signup button is visible at each size. There is one cosmetic issue in the footer; I have moved it to the next release because it does not prevent signup.\nMonday, 11:40, Maya: I will own the final Harbor release notes. My first draft is due Thursday at noon. This is a draft deadline, not the deadline for the final approved version. Alex will review it after the draft is ready.\nMonday, 14:10, Sam: The newsletter campaign is called Cedar. Its owner is Noah and its deadline is Wednesday at 15:00. Cedar is a separate campaign. It does not change any Harbor deadline or owner.\nTuesday, 08:45, Alex: The Harbor pricing table still uses last month's figures. Finance needs to sign off the replacement before the landing page can go live. Everything else on the page is approved. The footer cosmetic issue is still deferred.\nTuesday, 09:20, Noah: Cedar newsletter copy is approved. The email send test passed. I will export the audience list on Wednesday morning, before the Cedar deadline. No action is required from Maya for this campaign.\nTuesday, 11:00, Priya: The signup flow works on desktop and mobile. I tested a new account and a returning account. Both received the expected confirmation email. We should keep the existing signup flow for the launch.\nTuesday, 13:30, Maya: My draft is on track. Please send corrections in one thread so that we do not merge competing edits. The approved final Harbor release notes are due Friday at 16:00. I still own them. Thursday noon is only the draft milestone.\nWednesday, 09:00, Alex: Finance has not yet approved the revised Harbor pricing table. That is the only remaining blocker for the landing page. The notes deadline remains Friday at 16:00. We can publish the notes even if the optional header animation is unfinished.\nWednesday, 10:10, Sam: We are also planning a project called Birch for next month. Its planning session is on Tuesday at 14:00. Birch has no shared release milestone with Harbor, and its planning invitation should not be added to the Harbor release checklist.\nWednesday, 11:45, Priya: I have documented the footer issue for the next release. No new launch blockers appeared in this morning's checks. Screenshots and test results are in the project folder. The signoff request for pricing is still with Finance.\nWednesday, 12:00, Maya: I confirm that I own the approved final Harbor release notes, due Friday at 16:00. Alex remains the reviewer. Please use this message if an earlier calendar invitation gives a different time.\n\nWho owns the approved final Harbor release notes, and when are they due? Reply with only the owner, weekday, and time, separated by vertical bars. Do not include the draft deadline."
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 48
+      },
+      "expected": {
+        "answer": "Maya|Friday|16:00",
+        "minimum_prompt_tokens_exclusive": 512
+      },
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "long_prompt_over_512_tokens": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true,
+        "state_transferred": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "Maya|Friday|16:00"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 750,
+        "completion_tokens": 10,
+        "total_tokens": 760
+      },
+      "client_timing": {
+        "headers_seconds": 2.014293299995188,
+        "complete_seconds": 2.0144737000009627
+      },
+      "assist": {
+        "requested_mode": "hybrid",
+        "actual_mode": "hybrid",
+        "fallback_reason": null,
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "architecture": "spark2_5",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 2.009849900001427,
+        "format_seconds": 0.00021269999706419185,
+        "tokenize_seconds": 0.036523100003250875,
+        "context_reset_seconds": 0.003899699993780814,
+        "prompt_seconds": 1.2923055999999633,
+        "first_text_seconds": 1.3334675000005518,
+        "first_token_seconds": 1.3333914000031655,
+        "sampling_and_text_seconds": 0.0030451000056928024,
+        "continuation_decode_seconds": 0.6375366000138456,
+        "state_transfer_seconds": 0.035557899995183107,
+        "state_bytes": 110610924,
+        "native_decode_tokens_per_second": 15.693241078000115,
+        "postprocess_seconds": 1.500004145782441e-06
+      },
+      "load_stages": {},
+      "failure_category": null
+    },
+    {
+      "case": "forced_tool",
+      "target": "companion",
+      "request": {
+        "model": "raptor-hybrid",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Use add_numbers to add 17 and 25."
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 128,
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "add_numbers",
+              "description": "Add two integers.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "a": {
+                    "type": "integer"
+                  },
+                  "b": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "a",
+                  "b"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "function",
+          "function": {
+            "name": "add_numbers"
+          }
+        }
+      },
+      "expected": {
+        "function": "add_numbers",
+        "arguments": {
+          "a": 17,
+          "b": 25
+        }
+      },
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true,
+        "state_transferred": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_ba29de9f75b542f9bc89",
+              "type": "function",
+              "function": {
+                "name": "add_numbers",
+                "arguments": "{\"a\": 17, \"b\": 25}"
+              }
+            }
+          ]
+        },
+        "finish_reason": "tool_calls"
+      },
+      "usage": {
+        "prompt_tokens": 123,
+        "completion_tokens": 19,
+        "total_tokens": 142
+      },
+      "client_timing": {
+        "headers_seconds": 1.6014444999964326,
+        "complete_seconds": 1.6016107999967062
+      },
+      "assist": {
+        "requested_mode": "hybrid",
+        "actual_mode": "hybrid",
+        "fallback_reason": null,
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "architecture": "spark2_5",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 1.566810099997383,
+        "format_seconds": 0.0007081000003381632,
+        "tokenize_seconds": 0.013023399995290674,
+        "context_reset_seconds": 0.0036840999964624643,
+        "prompt_seconds": 0.26084340000670636,
+        "first_text_seconds": 0.30150890000368236,
+        "first_token_seconds": 0.3014681999993627,
+        "sampling_and_text_seconds": 0.17000780000671512,
+        "continuation_decode_seconds": 1.104707500024233,
+        "state_transfer_seconds": 0.010527699996600859,
+        "state_bytes": 18140964,
+        "native_decode_tokens_per_second": 17.20867969575054,
+        "postprocess_seconds": 0.024947499994596
+      },
+      "load_stages": {},
+      "failure_category": null
+    },
+    {
+      "case": "tool_roundtrip",
+      "target": "companion",
+      "request": {
+        "model": "raptor-hybrid",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Use add_numbers to add 17 and 25."
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_ba29de9f75b542f9bc89",
+                "type": "function",
+                "function": {
+                  "name": "add_numbers",
+                  "arguments": "{\"a\": 17, \"b\": 25}"
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "tool_call_id": "call_ba29de9f75b542f9bc89",
+            "content": "42"
+          },
+          {
+            "role": "user",
+            "content": "Reply with only the numeric result returned by the tool."
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 48,
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "add_numbers",
+              "description": "Add two integers.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "a": {
+                    "type": "integer"
+                  },
+                  "b": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "a",
+                  "b"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        ],
+        "tool_choice": "none"
+      },
+      "expected": "42",
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true,
+        "state_transferred": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "42"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 74,
+        "completion_tokens": 2,
+        "total_tokens": 76
+      },
+      "client_timing": {
+        "headers_seconds": 0.4073586000013165,
+        "complete_seconds": 0.4075846999985515
+      },
+      "assist": {
+        "requested_mode": "hybrid",
+        "actual_mode": "hybrid",
+        "fallback_reason": null,
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "architecture": "spark2_5",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 0.4019907999972929,
+        "format_seconds": 0.0004358000005595386,
+        "tokenize_seconds": 0.0023655000040889718,
+        "context_reset_seconds": 0.004307199997128919,
+        "prompt_seconds": 0.21634110000013607,
+        "first_text_seconds": 0.22419069999887142,
+        "first_token_seconds": 0.22412679999979446,
+        "sampling_and_text_seconds": 0.0009823999935179017,
+        "continuation_decode_seconds": 0.16546800000651274,
+        "state_transfer_seconds": 0.01137679999374086,
+        "state_bytes": 10914444,
+        "native_decode_tokens_per_second": 12.09248331237303,
+        "postprocess_seconds": 3.7000063457526267e-06
+      },
+      "load_stages": {},
+      "failure_category": null
+    },
+    {
+      "case": "json_object",
+      "target": "companion",
+      "request": {
+        "model": "raptor-hybrid",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return a JSON object with an integer field answer equal to 42."
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 64,
+        "response_format": {
+          "type": "json_object"
+        }
+      },
+      "expected": {
+        "answer": 42
+      },
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true,
+        "state_transferred": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":42}"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 42,
+        "completion_tokens": 6,
+        "total_tokens": 48
+      },
+      "client_timing": {
+        "headers_seconds": 0.6666706000032718,
+        "complete_seconds": 0.666848700006085
+      },
+      "assist": {
+        "requested_mode": "hybrid",
+        "actual_mode": "hybrid",
+        "fallback_reason": null,
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "architecture": "spark2_5",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 0.6432179999974323,
+        "format_seconds": 0.00018819999968400225,
+        "tokenize_seconds": 0.002852999998140149,
+        "context_reset_seconds": 0.004746099999465514,
+        "prompt_seconds": 0.1770433000056073,
+        "first_text_seconds": 0.20173780000186525,
+        "first_token_seconds": 0.2016589999984717,
+        "sampling_and_text_seconds": 0.09386450000602053,
+        "continuation_decode_seconds": 0.36088179999933345,
+        "state_transfer_seconds": 0.0030248999973991886,
+        "state_bytes": 6195084,
+        "native_decode_tokens_per_second": 16.632754328674313,
+        "postprocess_seconds": 9.110000246437266e-05
+      },
+      "load_stages": {},
+      "failure_category": null
+    },
+    {
+      "case": "arithmetic",
+      "target": "osaurus",
+      "request": {
+        "model": "prov-e000bcf60f3c/raptor-hybrid",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with only the answer: what is 17 + 25?"
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 24
+      },
+      "expected": "42",
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "42"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 32,
+        "completion_tokens": 2,
+        "total_tokens": 34
+      },
+      "client_timing": {
+        "headers_seconds": 0.4541287000029115,
+        "complete_seconds": 0.4557534999985364
+      },
+      "assist": {
+        "requested_mode": null,
+        "actual_mode": null,
+        "fallback_reason": null,
+        "cold_load": null,
+        "load_seconds_this_request": null,
+        "architecture": null,
+        "context_length": null
+      },
+      "stages": {},
+      "load_stages": {},
+      "failure_category": null
+    },
+    {
+      "case": "unicode_sse",
+      "target": "osaurus",
+      "request": {
+        "model": "prov-e000bcf60f3c/raptor-hybrid",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly this text, without quotes: café 你好"
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 24,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "expected": "café 你好",
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true
+      },
+      "passed": true,
+      "answer": {
+        "message": {
+          "role": "assistant",
+          "content": "café 你好"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 28,
+        "completion_tokens": 5,
+        "total_tokens": 33
+      },
+      "client_timing": {
+        "headers_seconds": 0.22374530000524828,
+        "first_wire_line_seconds": 0.22377319999941392,
+        "first_text_seconds": 0.22381740000128048,
+        "complete_seconds": 0.5124919000008958
+      },
+      "assist": {
+        "requested_mode": null,
+        "actual_mode": null,
+        "fallback_reason": null,
+        "cold_load": null,
+        "load_seconds_this_request": null,
+        "architecture": null,
+        "context_length": null
+      },
+      "stages": {},
+      "load_stages": {},
+      "failure_category": null
+    },
+    {
+      "case": "conversation_history",
+      "target": "osaurus",
+      "request": {
+        "model": "prov-e000bcf60f3c/raptor-hybrid",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Follow the conversation and preserve the user's code."
+          },
+          {
+            "role": "user",
+            "content": "The code for this conversation is ORCHID42. Remember it."
+          },
+          {
+            "role": "assistant",
+            "content": "I will remember the code."
+          },
+          {
+            "role": "user",
+            "content": "What is the code? Reply with only the code."
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 48
+      },
+      "expected": "ORCHID42",
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "ORCHID42"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 67,
+        "completion_tokens": 5,
+        "total_tokens": 72
+      },
+      "client_timing": {
+        "headers_seconds": 0.5329981999966549,
+        "complete_seconds": 0.5332149000023492
+      },
+      "assist": {
+        "requested_mode": null,
+        "actual_mode": null,
+        "fallback_reason": null,
+        "cold_load": null,
+        "load_seconds_this_request": null,
+        "architecture": null,
+        "context_length": null
+      },
+      "stages": {},
+      "load_stages": {},
+      "failure_category": null
+    },
+    {
+      "case": "harbor_extract",
+      "target": "osaurus",
+      "request": {
+        "model": "prov-e000bcf60f3c/raptor-hybrid",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Request 1.\nProject Harbor launch handoff, collected messages:\nMonday, 09:00, Alex: The draft landing page is ready. Design has approved the new illustrations, but that approval does not cover the release notes. We can ship the website without the optional animated header. Please do not delay the launch for that animation.\nMonday, 10:15, Priya: The mobile layout passed checks at three screen sizes. The signup button is visible at each size. There is one cosmetic issue in the footer; I have moved it to the next release because it does not prevent signup.\nMonday, 11:40, Maya: I will own the final Harbor release notes. My first draft is due Thursday at noon. This is a draft deadline, not the deadline for the final approved version. Alex will review it after the draft is ready.\nMonday, 14:10, Sam: The newsletter campaign is called Cedar. Its owner is Noah and its deadline is Wednesday at 15:00. Cedar is a separate campaign. It does not change any Harbor deadline or owner.\nTuesday, 08:45, Alex: The Harbor pricing table still uses last month's figures. Finance needs to sign off the replacement before the landing page can go live. Everything else on the page is approved. The footer cosmetic issue is still deferred.\nTuesday, 09:20, Noah: Cedar newsletter copy is approved. The email send test passed. I will export the audience list on Wednesday morning, before the Cedar deadline. No action is required from Maya for this campaign.\nTuesday, 11:00, Priya: The signup flow works on desktop and mobile. I tested a new account and a returning account. Both received the expected confirmation email. We should keep the existing signup flow for the launch.\nTuesday, 13:30, Maya: My draft is on track. Please send corrections in one thread so that we do not merge competing edits. The approved final Harbor release notes are due Friday at 16:00. I still own them. Thursday noon is only the draft milestone.\nWednesday, 09:00, Alex: Finance has not yet approved the revised Harbor pricing table. That is the only remaining blocker for the landing page. The notes deadline remains Friday at 16:00. We can publish the notes even if the optional header animation is unfinished.\nWednesday, 10:10, Sam: We are also planning a project called Birch for next month. Its planning session is on Tuesday at 14:00. Birch has no shared release milestone with Harbor, and its planning invitation should not be added to the Harbor release checklist.\nWednesday, 11:45, Priya: I have documented the footer issue for the next release. No new launch blockers appeared in this morning's checks. Screenshots and test results are in the project folder. The signoff request for pricing is still with Finance.\nWednesday, 12:00, Maya: I confirm that I own the approved final Harbor release notes, due Friday at 16:00. Alex remains the reviewer. Please use this message if an earlier calendar invitation gives a different time.\n\nWho owns the approved final Harbor release notes, and when are they due? Reply with only the owner, weekday, and time, separated by vertical bars. Do not include the draft deadline."
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 48
+      },
+      "expected": {
+        "answer": "Maya|Friday|16:00",
+        "minimum_prompt_tokens_exclusive": 512
+      },
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "long_prompt_over_512_tokens": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "Maya|Friday|16:00"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 983,
+        "completion_tokens": 14,
+        "total_tokens": 997
+      },
+      "client_timing": {
+        "headers_seconds": 3.5416866000014124,
+        "complete_seconds": 3.541842999999062
+      },
+      "assist": {
+        "requested_mode": null,
+        "actual_mode": null,
+        "fallback_reason": null,
+        "cold_load": null,
+        "load_seconds_this_request": null,
+        "architecture": null,
+        "context_length": null
+      },
+      "stages": {},
+      "load_stages": {},
+      "failure_category": null
+    },
+    {
+      "case": "forced_tool",
+      "target": "osaurus",
+      "request": {
+        "model": "prov-e000bcf60f3c/raptor-hybrid",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Use add_numbers to add 17 and 25."
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 128,
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "add_numbers",
+              "description": "Add two integers.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "a": {
+                    "type": "integer"
+                  },
+                  "b": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "a",
+                  "b"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "function",
+          "function": {
+            "name": "add_numbers"
+          }
+        }
+      },
+      "expected": {
+        "function": "add_numbers",
+        "arguments": {
+          "a": 17,
+          "b": 25
+        }
+      },
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_e7bdd75143a04e9bbfa5",
+              "type": "function",
+              "function": {
+                "name": "add_numbers",
+                "arguments": "{\"a\": 17, \"b\": 25}"
+              }
+            }
+          ]
+        },
+        "finish_reason": "tool_calls"
+      },
+      "usage": {
+        "prompt_tokens": 123,
+        "completion_tokens": 19,
+        "total_tokens": 142
+      },
+      "client_timing": {
+        "headers_seconds": 1.6068623999963165,
+        "complete_seconds": 1.6070027999958256
+      },
+      "assist": {
+        "requested_mode": null,
+        "actual_mode": null,
+        "fallback_reason": null,
+        "cold_load": null,
+        "load_seconds_this_request": null,
+        "architecture": null,
+        "context_length": null
+      },
+      "stages": {},
+      "load_stages": {},
+      "failure_category": null
+    },
+    {
+      "case": "tool_roundtrip",
+      "target": "osaurus",
+      "request": {
+        "model": "prov-e000bcf60f3c/raptor-hybrid",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Use add_numbers to add 17 and 25."
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_e7bdd75143a04e9bbfa5",
+                "type": "function",
+                "function": {
+                  "name": "add_numbers",
+                  "arguments": "{\"a\": 17, \"b\": 25}"
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "tool_call_id": "call_e7bdd75143a04e9bbfa5",
+            "content": "42"
+          },
+          {
+            "role": "user",
+            "content": "Reply with only the numeric result returned by the tool."
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 48,
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "add_numbers",
+              "description": "Add two integers.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "a": {
+                    "type": "integer"
+                  },
+                  "b": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "a",
+                  "b"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        ],
+        "tool_choice": "none"
+      },
+      "expected": "42",
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "42"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 74,
+        "completion_tokens": 2,
+        "total_tokens": 76
+      },
+      "client_timing": {
+        "headers_seconds": 0.4276393999971333,
+        "complete_seconds": 0.4278668999977526
+      },
+      "assist": {
+        "requested_mode": null,
+        "actual_mode": null,
+        "fallback_reason": null,
+        "cold_load": null,
+        "load_seconds_this_request": null,
+        "architecture": null,
+        "context_length": null
+      },
+      "stages": {},
+      "load_stages": {},
+      "failure_category": null
+    },
+    {
+      "case": "json_object",
+      "target": "osaurus",
+      "request": {
+        "model": "prov-e000bcf60f3c/raptor-hybrid",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return a JSON object with an integer field answer equal to 42."
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 64,
+        "response_format": {
+          "type": "json_object"
+        }
+      },
+      "expected": {
+        "answer": 42
+      },
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":42}"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 42,
+        "completion_tokens": 6,
+        "total_tokens": 48
+      },
+      "client_timing": {
+        "headers_seconds": 0.680022699998517,
+        "complete_seconds": 0.6802181999955792
+      },
+      "assist": {
+        "requested_mode": null,
+        "actual_mode": null,
+        "fallback_reason": null,
+        "cold_load": null,
+        "load_seconds_this_request": null,
+        "architecture": null,
+        "context_length": null
+      },
+      "stages": {},
+      "load_stages": {},
+      "failure_category": null
+    }
+  ],
+  "advertised_context_2048": true,
+  "benchmark_smoke": {
+    "request": {
+      "model": "raptor-hybrid",
+      "prompt_tokens": 32,
+      "generated_tokens": 8,
+      "repetitions": 1,
+      "warmup": 0,
+      "seed": 42
+    },
+    "passed": true,
+    "checks": {
+      "settings_match": true,
+      "deterministic_input_ids": true,
+      "measured_runs_exact": true,
+      "warmup_runs_exact": true,
+      "backend_modes": true,
+      "exact_token_counts": true,
+      "state_transferred": true
+    },
+    "settings": {
+      "prompt_tokens": 32,
+      "generated_tokens": 8,
+      "repetitions": 1,
+      "warmup": 0,
+      "seed": 42
+    },
+    "input_ids": [
+      20952,
+      3648,
+      819,
+      24299,
+      9012,
+      8024,
+      7314,
+      4572,
+      24132,
+      3358,
+      22174,
+      24270,
+      29234,
+      17870,
+      2848,
+      19349,
+      13825,
+      1041,
+      976,
+      3070,
+      7164,
+      7623,
+      16559,
+      19726,
+      869,
+      18390,
+      6515,
+      23462,
+      21295,
+      22981,
+      17856,
+      13746
+    ],
+    "runs": [
+      {
+        "usage": {
+          "prompt_tokens": 32,
+          "completion_tokens": 8,
+          "total_tokens": 40
+        },
+        "generated_ids": [
+          13692,
+          13692,
+          13692,
+          13692,
+          13692,
+          13692,
+          13692,
+          13692
+        ],
+        "metrics": {
+          "request_seconds": 0.5739357999991626,
+          "format_seconds": 0.0,
+          "tokenize_seconds": 0.0,
+          "context_reset_seconds": 0.003538900004059542,
+          "prompt_seconds": 0.20411269999749493,
+          "first_text_seconds": 0.20851659999607364,
+          "first_token_seconds": 0.20808719999331515,
+          "sampling_and_text_seconds": 0.002676600000995677,
+          "continuation_decode_seconds": 0.35926900000777096,
+          "state_transfer_seconds": 0.0036127000057604164,
+          "state_bytes": 4720284,
+          "native_decode_tokens_per_second": 19.49562044812076
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "context_length": 2048
+        }
+      }
+    ],
+    "summary": {
+      "measured_repetitions": 1,
+      "median_metrics": {
+        "context_reset_seconds": 0.003538900004059542,
+        "continuation_decode_seconds": 0.35926900000777096,
+        "first_text_seconds": 0.20851659999607364,
+        "first_token_seconds": 0.20808719999331515,
+        "format_seconds": 0.0,
+        "native_decode_tokens_per_second": 19.49562044812076,
+        "prompt_seconds": 0.20411269999749493,
+        "request_seconds": 0.5739357999991626,
+        "sampling_and_text_seconds": 0.002676600000995677,
+        "state_bytes": 4720284,
+        "state_transfer_seconds": 0.0036127000057604164,
+        "tokenize_seconds": 0.0
+      },
+      "median_manager_seconds": 0.574370700000145,
+      "loading_excluded_from_engine_request_seconds": true,
+      "warmup_excluded": true
+    },
+    "client_timing": {
+      "headers_seconds": 0.6472137999953702,
+      "complete_seconds": 0.6474107999965781
+    }
+  },
+  "passed": true
+}

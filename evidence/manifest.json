@@ -1,10 +1,95 @@
 {
-  "scope": "sanitized historical evidence and its publication helpers",
+  "scope": "sanitized historical benchmark and companion acceptance evidence with publication helpers",
   "files": [
+    {
+      "name": "README.md",
+      "sha256": "e841f3efaedc0ca95f612e7cfd77cc9a7f7dd5afe96e79d4865491d44eafab27",
+      "bytes": 5340
+    },
     {
       "name": "check_public_evidence.py",
       "sha256": "a77b3bbde09c5da6ff36b657742bfc2efc433dffb00f1ffb206c1d369877df55",
       "bytes": 2040
+    },
+    {
+      "name": "companion-acceptance-provenance.json",
+      "sha256": "1379596d1ef53c32df61083800963487f0dda131eb464b8244ca8cd0b5bf7aab",
+      "bytes": 4437
+    },
+    {
+      "name": "companion-clean-reinstall.json",
+      "sha256": "ee6aceeffeaa0eee4639e77f6ccf430637aa6b621d898aed3102a785f79aef68",
+      "bytes": 1194
+    },
+    {
+      "name": "companion-clean-removal.json",
+      "sha256": "e6861161e9fbcc9f38d56247fba331e83e0fa49365eb06ba414c6c2029f14ea1",
+      "bytes": 1036
+    },
+    {
+      "name": "companion-final-state.json",
+      "sha256": "6c80483a0b2441f8d508dd917e1ce61c379cde50ca8d650ee632b8df53db5940",
+      "bytes": 605
+    },
+    {
+      "name": "companion-fixed-raptor-cpu.json",
+      "sha256": "495b9908fe64f735f45c248f853bca1cfb26b0d3ad2f263da501e10c78950067",
+      "bytes": 23569
+    },
+    {
+      "name": "companion-fixed-raptor-gpu.json",
+      "sha256": "8859b9e7ea869689a55a7ea7940521affbaf721f4ae5f1f39c58ae1431bbffe0",
+      "bytes": 23585
+    },
+    {
+      "name": "companion-fixed-raptor-hybrid.json",
+      "sha256": "83446a163cb0a39e1671ebd2998e1a1843f0d2ab4c9cc222a50ac4ae099f11a0",
+      "bytes": 23519
+    },
+    {
+      "name": "companion-fixed-raptor-npu.json",
+      "sha256": "69d0b1bac2dbc436ae0ca5c32cf1ac4cba9b38d38025f3e5719027c1c36a3713",
+      "bytes": 23591
+    },
+    {
+      "name": "companion-fixed-raptor-validation.json",
+      "sha256": "c364f5059b04822749662edce58d4c5b2c716c47cc3cd284bebe3a2fbcafa0b7",
+      "bytes": 6362
+    },
+    {
+      "name": "companion-ornith-q4-assist.json",
+      "sha256": "80c45265f03ce1409042825eebff6f3086d43106b9b753a23fabb2c1941deb43",
+      "bytes": 5008
+    },
+    {
+      "name": "companion-ornith-q4-gpu-assist.json",
+      "sha256": "25cac669d072779330167bb1a4303b90aa6dee6e7b29f5585d05673eae92146e",
+      "bytes": 5018
+    },
+    {
+      "name": "companion-preserved-models.json",
+      "sha256": "d4b0b163eb5f17b0a30b4d2ed5bd201b8ad32d193c63a999ff4a7ef5b974e15c",
+      "bytes": 455
+    },
+    {
+      "name": "companion-qwen-cpu.json",
+      "sha256": "ce51294e42ba4e50abcda32368debaa8e1d65cbfb89850984c348a4e677e2a25",
+      "bytes": 4691
+    },
+    {
+      "name": "companion-raptor-hybrid.json",
+      "sha256": "c6fcb47b2cf5342f4477a22ef347e441180297c6ea54595af6ddcbb2a73b699c",
+      "bytes": 21993
+    },
+    {
+      "name": "companion-raptor-osaurus.json",
+      "sha256": "18e8811408f79ec8d207fbf8fe9a6ac38ec364df24c9c368bcc0aecfa5651621",
+      "bytes": 41382
+    },
+    {
+      "name": "companion-server-crash.json",
+      "sha256": "31cf21476d2d7fcc11eb234aa687ab3598de2bc40c81d120de3b09422f6d021f",
+      "bytes": 263
     },
     {
       "name": "environment.json",
@@ -85,11 +170,6 @@
       "name": "raptor-state-handoff.json",
       "sha256": "15f2b4f0b953bb7360e1f82db019460106691bd2f0c76df6a230ae07682b9a57",
       "bytes": 8151
-    },
-    {
-      "name": "README.md",
-      "sha256": "89fe42707bd3cec8533b2f84d2b137ad3947f8b585c7b9077741f15ce10a25f3",
-      "bytes": 3087
     },
     {
       "name": "stage-timings.csv",

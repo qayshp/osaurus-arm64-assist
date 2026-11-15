@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "kind": "synthetic-hardware-acceptance",
+  "quick": true,
+  "source": {
+    "model_basename": "Ornith-1.5-35B-Q4_K_M.gguf",
+    "mode": "cpu-experts",
+    "context": 2048,
+    "expected_native_core": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30"
+  },
+  "scope": "API observations; this client does not sample physical NPU counters",
+  "cases": [
+    {
+      "case": "arithmetic",
+      "target": "companion",
+      "request": {
+        "model": "ornith-q4-assist",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with only the answer: what is 17 + 25?"
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 24
+      },
+      "expected": "42",
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true
+      },
+      "passed": true,
+      "answer": {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "42"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 28,
+        "completion_tokens": 2,
+        "total_tokens": 30
+      },
+      "client_timing": {
+        "headers_seconds": 16.065084899993963,
+        "complete_seconds": 16.065289799997117
+      },
+      "assist": {
+        "requested_mode": "cpu-experts",
+        "actual_mode": "cpu-experts",
+        "fallback_reason": null,
+        "cold_load": true,
+        "load_seconds_this_request": 6.271567000003415,
+        "architecture": "qwen35moe",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 7.421946900001785,
+        "format_seconds": 0.0002491999985068105,
+        "tokenize_seconds": 0.0005056999943917617,
+        "context_reset_seconds": 0.0037898999944445677,
+        "prompt_seconds": 6.609158499995829,
+        "first_text_seconds": 6.615398300004017,
+        "sampling_and_text_seconds": 0.0025015999999595806,
+        "continuation_decode_seconds": 0.8051723999960814,
+        "state_transfer_seconds": 0.0,
+        "state_bytes": 0,
+        "native_decode_tokens_per_second": 2.4842837996127,
+        "postprocess_seconds": 4.899993655271828e-06
+      },
+      "load_stages": {
+        "runtime_verify_and_backend_seconds": 0.20221699999819975,
+        "metadata_and_template_seconds": 0.3028806000002078,
+        "primary": {
+          "model_seconds": 4.746904100000393,
+          "context_seconds": 1.019447600003332
+        }
+      },
+      "failure_category": null
+    },
+    {
+      "case": "unicode_sse",
+      "target": "companion",
+      "request": {
+        "model": "ornith-q4-assist",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly this text, without quotes: café 你好"
+          }
+        ],
+        "temperature": 0,
+        "max_tokens": 24,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "expected": "café 你好",
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "requested_mode": true,
+        "actual_mode": true,
+        "context_2048": true
+      },
+      "passed": true,
+      "answer": {
+        "message": {
+          "role": "assistant",
+          "content": "café 你好"
+        },
+        "finish_reason": "stop"
+      },
+      "usage": {
+        "prompt_tokens": 24,
+        "completion_tokens": 4,
+        "total_tokens": 28
+      },
+      "client_timing": {
+        "headers_seconds": 3.6183729999975185,
+        "first_wire_line_seconds": 3.6184046999987913,
+        "first_text_seconds": 3.6186750999986543,
+        "complete_seconds": 5.144062599996687
+      },
+      "assist": {
+        "requested_mode": "cpu-experts",
+        "actual_mode": "cpu-experts",
+        "fallback_reason": null,
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "architecture": "qwen35moe",
+        "context_length": 2048
+      },
+      "stages": {
+        "request_seconds": 5.1209092999997665,
+        "format_seconds": 0.00022449999960372224,
+        "tokenize_seconds": 0.00030720000358996913,
+        "context_reset_seconds": 0.010258900001645088,
+        "prompt_seconds": 3.5826120999990962,
+        "first_text_seconds": 3.594431199999235,
+        "sampling_and_text_seconds": 0.0025057999955606647,
+        "continuation_decode_seconds": 1.5246124999976018,
+        "state_transfer_seconds": 0.0,
+        "state_bytes": 0,
+        "native_decode_tokens_per_second": 2.623848950263631,
+        "postprocess_seconds": 3.5000048228539526e-06
+      },
+      "load_stages": {},
+      "failure_category": null
+    }
+  ],
+  "advertised_context_2048": true,
+  "passed": true
+}

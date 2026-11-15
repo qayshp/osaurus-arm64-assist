@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "private_paths_and_credentials_included": false,
+  "osaurus_provider_count_before": 9,
+  "osaurus_provider_count_after": 10,
+  "osaurus_agent_count_before": 3,
+  "osaurus_agent_count_after": 3,
+  "owned_provider_present_after": true,
+  "model_content_hashing_performed": false,
+  "checks": {
+    "unrelated_osaurus_configuration_unchanged": true,
+    "unrelated_providers_unchanged": true,
+    "agents_unchanged": true,
+    "default_agent_unchanged": true,
+    "owned_provider_name_unambiguous": true,
+    "expected_provider_state": true,
+    "model_profiles_preserved": true,
+    "nonsecret_companion_settings_preserved": true,
+    "registered_models_still_exist": true,
+    "fresh_installation_api_key_rotated": true,
+    "owned_provider_endpoint_matches": true,
+    "owned_provider_type_and_enabled_match": true,
+    "expected_installation_state": true,
+    "owned_installation_marker_matches": true
+  },
+  "model_profile_count_before": 7,
+  "model_profile_count_after": 7,
+  "after_companion_config_contains_api_key": true,
+  "installation_api_key_rotated": true,
+  "installation_directory_present_after": true,
+  "passed": true
+}

@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "kind": "companion-fixed-token-verification",
+  "observation_date": "2026-11-15",
+  "implementation_revision": "b735a4ebdf65572946680ac39160e8e8da985ab5",
+  "source_revision_note": "Current src files match this implementation commit; the reinstall and verification occurred after later public documentation commits during initial alpha verification.",
+  "expected_model_identity": {
+    "filename": "Raptor-0.7-4B-Q6_K.gguf",
+    "bytes": 3690735072,
+    "sha256": "d3ee40578d3c747697e76a1534551c4e6822b632f68e7c9a2b1508c94a2b9349",
+    "architecture": "spark2_5"
+  },
+  "model_identity_note": "Expected model identity is linked to the separate complete-file companion-preserved-models.json rehash; the benchmark endpoint itself does not hash weights.",
+  "native_target": {
+    "distribution": "Qualcomm GenieX",
+    "version": "0.11.0",
+    "expected_core": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30"
+  },
+  "checks": {
+    "all_input_ids_identical": true,
+    "all_per_mode_checks_passed": true
+  },
+  "per_mode_checks": {
+    "cpu": {
+      "input_ids_match_seed42": true,
+      "one_warmup_three_measured": true,
+      "settings_match": true,
+      "exact_token_counts": true,
+      "actual_mode_and_context_match": true,
+      "state_transfer_matches_mode": true,
+      "measured_engine_medians_match": true
+    },
+    "npu": {
+      "input_ids_match_seed42": true,
+      "one_warmup_three_measured": true,
+      "settings_match": true,
+      "exact_token_counts": true,
+      "actual_mode_and_context_match": true,
+      "state_transfer_matches_mode": true,
+      "measured_engine_medians_match": true
+    },
+    "gpu": {
+      "input_ids_match_seed42": true,
+      "one_warmup_three_measured": true,
+      "settings_match": true,
+      "exact_token_counts": true,
+      "actual_mode_and_context_match": true,
+      "state_transfer_matches_mode": true,
+      "measured_engine_medians_match": true
+    },
+    "hybrid": {
+      "input_ids_match_seed42": true,
+      "one_warmup_three_measured": true,
+      "settings_match": true,
+      "exact_token_counts": true,
+      "actual_mode_and_context_match": true,
+      "state_transfer_matches_mode": true,
+      "measured_engine_medians_match": true
+    }
+  },
+  "summaries": {
+    "cpu": {
+      "receipt": "companion-fixed-raptor-cpu.json",
+      "median_metrics": {
+        "context_reset_seconds": 0.0020316999944043346,
+        "continuation_decode_seconds": 8.487132499998552,
+        "first_text_seconds": 4.659730899998976,
+        "first_token_seconds": 4.659683400001086,
+        "format_seconds": 0.0,
+        "native_decode_tokens_per_second": 14.969872836234542,
+        "prompt_seconds": 4.648473900000681,
+        "request_seconds": 13.182252500002505,
+        "sampling_and_text_seconds": 0.027186599967535585,
+        "state_bytes": 0,
+        "state_transfer_seconds": 0.0,
+        "tokenize_seconds": 0.0
+      },
+      "engine_request_seconds_range": [
+        13.045723800001724,
+        13.912009400002717
+      ],
+      "warmup_cold_load": true
+    },
+    "npu": {
+      "receipt": "companion-fixed-raptor-npu.json",
+      "median_metrics": {
+        "context_reset_seconds": 0.004943599997204728,
+        "continuation_decode_seconds": 10.419081600026402,
+        "first_text_seconds": 0.8215191000053892,
+        "first_token_seconds": 0.8214249000011478,
+        "format_seconds": 0.0,
+        "native_decode_tokens_per_second": 12.195664162906418,
+        "prompt_seconds": 0.8117946999991545,
+        "request_seconds": 11.314839099999517,
+        "sampling_and_text_seconds": 0.06783219995122636,
+        "state_bytes": 0,
+        "state_transfer_seconds": 0.0,
+        "tokenize_seconds": 0.0
+      },
+      "engine_request_seconds_range": [
+        11.30418830000417,
+        11.573127800002112
+      ],
+      "warmup_cold_load": true
+    },
+    "gpu": {
+      "receipt": "companion-fixed-raptor-gpu.json",
+      "median_metrics": {
+        "context_reset_seconds": 0.0028228000010130927,
+        "continuation_decode_seconds": 8.71093019991531,
+        "first_text_seconds": 3.3478369000004022,
+        "first_token_seconds": 3.3477471000005607,
+        "format_seconds": 0.0,
+        "native_decode_tokens_per_second": 14.588714836458784,
+        "prompt_seconds": 3.3419157000025734,
+        "request_seconds": 12.136234500001592,
+        "sampling_and_text_seconds": 0.05759139999281615,
+        "state_bytes": 0,
+        "state_transfer_seconds": 0.0,
+        "tokenize_seconds": 0.0
+      },
+      "engine_request_seconds_range": [
+        11.846922600001562,
+        12.360036100006255
+      ],
+      "warmup_cold_load": true
+    },
+    "hybrid": {
+      "receipt": "companion-fixed-raptor-hybrid.json",
+      "median_metrics": {
+        "context_reset_seconds": 0.004072899995662738,
+        "continuation_decode_seconds": 7.972999900004652,
+        "first_text_seconds": 0.81487520000519,
+        "first_token_seconds": 0.8147845000057714,
+        "format_seconds": 0.0,
+        "native_decode_tokens_per_second": 15.93483130785316,
+        "prompt_seconds": 0.8057063999949605,
+        "request_seconds": 8.842706800001906,
+        "sampling_and_text_seconds": 0.03065250002691755,
+        "state_bytes": 75510684,
+        "state_transfer_seconds": 0.027762700003222562,
+        "tokenize_seconds": 0.0
+      },
+      "engine_request_seconds_range": [
+        8.656921599998896,
+        9.012368600000627
+      ],
+      "warmup_cold_load": false
+    }
+  },
+  "limits": [
+    "One warmup and three measured repetitions per mode; modes ran sequentially, not randomized.",
+    "Hybrid was already loaded at the start of its warmup; CPU, NPU and GPU warmups included new model loads. Whole-command API time is not a fair startup comparison.",
+    "Measured summaries exclude warmup and loading; full raw warmup and measured runs remain in the companion-fixed-raptor mode receipts.",
+    "Generated IDs differ across execution modes; this fixed synthetic token workload does not establish quality equivalence.",
+    "The client/API observations do not sample independent physical NPU counters or energy.",
+    "No controlled thermal or cold-file-cache conditions were established."
+  ]
+}

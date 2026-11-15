@@ -1,0 +1,14 @@
+[
+  {
+    "model_basename": "Ornith-1.5-35B-Q4_K_M.gguf",
+    "bytes": 21713463040,
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "matches_previously_benchmarked_identity": true
+  },
+  {
+    "model_basename": "Raptor-0.7-4B-Q6_K.gguf",
+    "bytes": 3690735072,
+    "sha256": "d3ee40578d3c747697e76a1534551c4e6822b632f68e7c9a2b1508c94a2b9349",
+    "matches_previously_benchmarked_identity": true
+  }
+]
