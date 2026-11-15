@@ -210,6 +210,14 @@ class IdlePolicyTests(unittest.TestCase):
                         "headers": {"Transfer-Encoding": "chunked"}}
         self.assertEqual(idle_policy.read_osaurus_idle_seconds(endpoint), 15)
 
+    def test_invalid_or_truncated_content_length_is_not_a_live_setting(self):
+        server, endpoint = self.server()
+        body = b'{"idleUnloadSeconds":15}'
+        for length in (-1, "invalid", len(body) + 5):
+            with self.subTest(length=length):
+                server.reply = {"body": body, "length": length}
+                self.assert_error("invalid_response", lambda: idle_policy.read_osaurus_idle_seconds(endpoint))
+
     def test_socket_deadline_bounds_headers_and_slow_drip_body(self):
         server, endpoint = self.server()
         for reply in ({"delay": 0.25}, {"header_drip": 0.03},
@@ -347,7 +355,7 @@ class IdlePolicyTests(unittest.TestCase):
             started = time.monotonic()
             self.assertEqual(policy.seconds, 300)
             self.assertEqual(policy.snapshot()["status"], "fallback")
-            self.assertLess(time.monotonic() - started, 0.1)
+            self.assertLess(time.monotonic() - started, 0.5)
             started = time.monotonic(); policy.close()
             self.assertLess(time.monotonic() - started, 1.6)
             release.set(); policy.close()

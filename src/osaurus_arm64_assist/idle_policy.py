@@ -140,9 +140,13 @@ def read_osaurus_idle_seconds(endpoint, api_key=None, timeout=1.0):
             if response.status != 200:
                 raise IdlePolicyError(f"http_{response.status}")
             content_length = response.getheader("Content-Length")
+            expected_length = None
             if content_length is not None:
                 try:
-                    if int(content_length) > MAX_RESPONSE_BYTES:
+                    expected_length = int(content_length)
+                    if expected_length < 0:
+                        raise IdlePolicyError("invalid_response")
+                    if expected_length > MAX_RESPONSE_BYTES:
                         raise IdlePolicyError("oversized_response")
                 except ValueError:
                     raise IdlePolicyError("invalid_response") from None
@@ -157,6 +161,8 @@ def read_osaurus_idle_seconds(endpoint, api_key=None, timeout=1.0):
                 if count > MAX_RESPONSE_BYTES:
                     raise IdlePolicyError("oversized_response")
                 parts.append(chunk)
+            if expected_length is not None and not response.chunked and count != expected_length:
+                raise IdlePolicyError("invalid_response")
         if expired.is_set():
             raise IdlePolicyError("network_timeout")
         try:
