@@ -68,6 +68,8 @@ class Client:
                         raise ValueError("Expected SSE content type")
                     result = self.sse(response, started, timing)
                 else:
+                    if "application/json" not in response.headers.get("Content-Type", ""):
+                        raise ValueError("Expected JSON content type")
                     raw = response.read(4*1024*1024 + 1)
                     if len(raw) > 4*1024*1024:
                         raise ValueError("Response exceeds bounded client buffer")
@@ -143,16 +145,20 @@ def usage_valid(result):
     return all(type(value) is int and value >= 0 for value in values) and values[0] > 0 and sum(values[:2]) == values[2]
 
 
-def benchmark_result(result, payload):
+def benchmark_result(result, payload, profile):
     settings, runs = result.get("settings", {}), result.get("runs", [])
     rng = random.Random(payload["seed"])
     expected_ids = [rng.randrange(32000) for _ in range(payload["prompt_tokens"])]
     checks = {"settings_match": all(settings.get(key) == value for key, value in payload.items() if key != "model"),
         "deterministic_input_ids": result.get("input_ids") == expected_ids,
         "measured_runs_exact": len(runs) == payload["repetitions"], "warmup_runs_exact": len(result.get("warmup_runs", [])) == payload["warmup"],
+        "backend_modes": all(run.get("assist", {}).get("requested_mode") == profile["mode"] and
+            run.get("assist", {}).get("actual_mode") == profile["mode"] and run.get("assist", {}).get("context_length") == 2048 for run in runs),
         "exact_token_counts": all(usage_valid(run) and run["usage"]["prompt_tokens"] == payload["prompt_tokens"] and
             run["usage"]["completion_tokens"] == payload["generated_tokens"] and
             len(run.get("generated_ids", [])) == payload["generated_tokens"] for run in runs)}
+    if profile["mode"] == "hybrid":
+        checks["state_transferred"] = all(run.get("metrics", {}).get("state_bytes", 0) > 0 for run in runs)
     retained = [{"usage": {key: run.get("usage", {}).get(key) for key in ("prompt_tokens", "completion_tokens", "total_tokens")},
         "generated_ids": run.get("generated_ids"), "metrics": numeric_metrics(run.get("metrics")),
         "assist": {key: run.get("assist", {}).get(key) for key in ("requested_mode", "actual_mode", "context_length")}} for run in runs]
@@ -206,8 +212,6 @@ def exercise(client, target, profile, quick=False):
         {"role": "assistant", "content": "I will remember the code."},
         {"role": "user", "content": "What is the code? Reply with only the code."}]
     run("conversation_history", chat(model, history), "ORCHID42", lambda x: content(x).strip() == "ORCHID42")
-    if target != "companion":
-        return rows
     workload = strict_json((ROOT/"evidence/workloads.json").read_text(encoding="utf-8"))
     harbor = next(item for item in workload["cases"] if item["id"] == "long_extract")
     run("harbor_extract", chat(model, workload["request_prefix"].format(repeat=1)+harbor["prompt"], max_tokens=harbor["max_tokens"]),
@@ -268,7 +272,7 @@ def main():
         payload = {"model": args.model, "prompt_tokens": 32, "generated_tokens": 8, "repetitions": 1, "warmup": 0, "seed": 42}
         try:
             result, timing = client.request("/admin/benchmark", payload)
-            receipt["benchmark_smoke"] = {"request": payload, **benchmark_result(result, payload), "client_timing": timing}
+            receipt["benchmark_smoke"] = {"request": payload, **benchmark_result(result, payload, profile), "client_timing": timing}
         except (APIError, OSError, ValueError, KeyError, TypeError) as error:
             receipt["benchmark_smoke"] = {"request": payload, "passed": False, "error_type": type(error).__name__}
     receipt["passed"] = receipt["advertised_context_2048"] and all(item.get("passed") for item in receipt["cases"]) and receipt.get("benchmark_smoke", {"passed": True})["passed"]

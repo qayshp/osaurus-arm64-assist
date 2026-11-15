@@ -112,6 +112,19 @@ Automated tests cover request/config validation, embedded Spark/Qwen history ren
 
 Historical arithmetic and exact fact-extraction answers were checked. Free-form replies/summaries were timed, not comprehensively quality-graded. Long-term stability, large contexts, sleep/resume, thermal behavior and energy per answer remain unproven. See [support and troubleshooting](docs/support-and-troubleshooting.md).
 
+## Rerun the fixed-token comparison
+
+With the companion running and the profile registered, the benchmark command reruns the historical synthetic workload: 512 direct input token IDs, 128 generated tokens, one warm-up, three measured repetitions and input seed 42. Input IDs use `random.Random(seed).randrange(32000)`, without a chat template or tokenization. Generation is greedy and ignores EOG stopping so each completed run performs the same requested token count. This is a throughput/latency workload, not a meaningful question or model-quality test.
+
+```powershell
+$AssistResult = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'raptor-hybrid-fixed.json'
+& $AssistPython -m osaurus_arm64_assist benchmark --config $AssistConfig --model raptor/hybrid --output $AssistResult --prompt-tokens 512 --generated-tokens 128 --repetitions 3 --warmup 1 --seed 42
+```
+
+Repeat with `raptor/cpu` and `raptor/npu`, using distinct output files and the same settings. Ornith profiles can use the same workload if there is sufficient memory. The authenticated `/admin/benchmark` endpoint holds one inference lock for the entire benchmark, validates context/repetition limits, and uses a separate worker command; the ordinary chat endpoint cannot inject direct token IDs.
+
+Results include exact input/generated IDs, separate warm-up and measured runs, per-run usage/stages/actual execution mode, loading information, and measured-only medians. Engine response timing excludes model loading; `manager_seconds` includes that run's load/IPC overhead, and top-level `api_seconds` covers the complete warm-up-plus-measured invocation. Failed or incomplete generation returns an error instead of a throughput result. Configuration output omits model paths, runtime paths and the API key. Review results before publishing; new runs are separate evidence and need not reproduce historical numbers under different memory, cache, power or thermal conditions.
+
 ## Stop, back up, reinstall and remove
 
 ```powershell
