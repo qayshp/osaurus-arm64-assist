@@ -67,7 +67,7 @@ if (-not $app.StartsWith($root + '\', [StringComparison]::OrdinalIgnoreCase)) { 
 Assert-AssistNoReparsePoints $app
 Remove-Item -LiteralPath $app -Recurse -Force
 New-Item -ItemType Directory -Path $app | Out-Null
-foreach ($name in @('pyproject.toml','requirements.lock','README.md','LICENSE','THIRD_PARTY_NOTICES.md','runtime.lock.json','src','scripts')) {
+foreach ($name in @('pyproject.toml','requirements.lock','README.md','LICENSE','THIRD_PARTY_NOTICES.md','CONTRIBUTING.md','runtime.lock.json','src','scripts','docs','evidence')) {
     $item = Join-Path $sourceRoot $name
     if (Test-Path -LiteralPath $item) { Copy-Item -LiteralPath $item -Destination (Join-Path $root 'app') -Recurse -Force }
 }
