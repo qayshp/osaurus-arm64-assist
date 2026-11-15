@@ -20,7 +20,7 @@ def load(path):
 
 
 def normalized_path(value):
-    return os.path.normcase(os.path.abspath(os.fspath(value)))
+    return os.path.normcase(str(Path(value).resolve()))
 
 
 def model_stat(profile):
@@ -135,6 +135,12 @@ def compare(osaurus_before, osaurus_after, *, provider_name="Osaurus ARM64 Assis
             checks["owned_installation_marker_matches"] = (
                 marker.get("product") == "org.osaurus-community.arm64-assist"
                 and normalized_path(marker.get("root", "")) == normalized_path(root))
+            resolved_root = root.resolve()
+            checks["installation_contains_no_gguf_weights"] = next(root.rglob("*.gguf"), None) is None
+            if companion_after is not None:
+                checks["model_references_are_external_to_installation"] = all(
+                    resolved_root != Path(p["path"]).resolve() and resolved_root not in Path(p["path"]).resolve().parents
+                    for p in companion_after.get("models", []))
     receipt["passed"] = all(checks.values())
     return receipt
 

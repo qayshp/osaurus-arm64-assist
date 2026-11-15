@@ -185,7 +185,13 @@ class BenchmarkHttpTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(len(self.manager.calls), 1)
         self.assertEqual(report["api_seconds"], self.manager.last_metrics["api_seconds"])
-        self.assertFalse(self.manager.lock.locked())
+        # The client can finish reading just before the handler's finally block
+        # releases admission. Check that the next request can acquire it rather
+        # than depending on which thread the scheduler runs first.
+        acquired = self.manager.lock.acquire(timeout=2)
+        self.assertTrue(acquired, "Benchmark admission was not released")
+        if acquired:
+            self.manager.lock.release()
 
     def test_auth_unknown_models_limits_and_busy_requests_do_not_run(self):
         self.assertEqual(self.post(settings(), auth=False)[0], 401)

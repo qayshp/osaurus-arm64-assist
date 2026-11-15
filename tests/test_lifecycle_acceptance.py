@@ -36,7 +36,7 @@ class LifecycleReceiptTests(unittest.TestCase):
         fresh["runtime_dir"] = str(self.root/"runtime-after")
         result = acceptance.compare(self.osaurus, after, expected_provider="present", companion_before=self.config,
                                     companion_after=fresh, model_metadata=self.metadata, expect_key_rotation=True)
-        self.assertTrue(result["passed"])
+        self.assertTrue(result["passed"], result["checks"])
         self.assertTrue(result["installation_api_key_rotated"])
         self.assertTrue(result["checks"]["model_profiles_preserved"])
         self.assertEqual(result["unique_model_file_count"], 1)
@@ -50,7 +50,7 @@ class LifecycleReceiptTests(unittest.TestCase):
         result = acceptance.compare(self.osaurus, self.osaurus, expected_provider="absent", companion_before=self.config,
                                     companion_after=backup, model_metadata=self.metadata, expect_tokenless_after=True,
                                     install_root=self.root/"removed-install", expected_install="absent")
-        self.assertTrue(result["passed"])
+        self.assertTrue(result["passed"], result["checks"])
         self.assertIsNone(result["installation_api_key_rotated"])
         self.assertFalse(result["after_companion_config_contains_api_key"])
 
@@ -83,6 +83,51 @@ class LifecycleReceiptTests(unittest.TestCase):
         result = acceptance.compare(self.osaurus, self.osaurus, model_metadata=self.metadata)
         self.assertFalse(result["passed"])
         self.assertFalse(result["checks"]["model_files_still_exist"])
+
+    def test_model_metadata_matches_a_canonicalized_path_alias(self):
+        if os.name == "nt":
+            # Windows runners can expose TEMP through a DOS short name such as
+            # RUNNER~1. Path.resolve() expands it when capture records the model.
+            import ctypes
+            from ctypes import wintypes
+            get_short_path = ctypes.WinDLL("kernel32", use_last_error=True).GetShortPathNameW
+            get_short_path.argtypes = [wintypes.LPCWSTR, wintypes.LPWSTR, wintypes.DWORD]
+            get_short_path.restype = wintypes.DWORD
+            needed = get_short_path(str(self.model), None, 0)
+            if not needed:
+                self.skipTest("Filesystem does not supply DOS short paths")
+            buffer = ctypes.create_unicode_buffer(needed)
+            written = get_short_path(str(self.model), buffer, needed)
+            if not written or written >= needed:
+                self.skipTest("Filesystem does not supply a stable DOS short path")
+            alias = Path(buffer.value)
+        else:
+            alias_directory = self.root / "model-directory-alias"
+            alias_directory.symlink_to(self.root, target_is_directory=True)
+            alias = alias_directory / self.model.name
+        if os.path.normcase(os.path.abspath(alias)) == os.path.normcase(os.path.abspath(self.model)):
+            self.skipTest("Filesystem has no distinct path alias for this fixture")
+        config = copy.deepcopy(self.config)
+        config["models"][0]["path"] = str(alias)
+        metadata = acceptance.capture_models(config)
+        result = acceptance.compare(self.osaurus, self.osaurus, companion_before=config,
+                                    companion_after=config, model_metadata=metadata)
+        self.assertTrue(result["passed"], result["checks"])
+        self.assertTrue(result["checks"]["metadata_covers_model_profiles"])
+        self.assertTrue(result["checks"]["model_file_identities_unchanged"])
+
+    def test_installed_root_has_no_weight_copy_and_references_external_model(self):
+        install = self.root/"install"; install.mkdir()
+        (install/".osaurus-arm64-assist-install.json").write_text(json.dumps({"product": "org.osaurus-community.arm64-assist", "root": str(install)}))
+        result = acceptance.compare(self.osaurus, self.osaurus, companion_before=self.config, companion_after=self.config,
+                                    install_root=install, expected_install="present")
+        self.assertTrue(result["passed"], result["checks"])
+        self.assertTrue(result["checks"]["installation_contains_no_gguf_weights"])
+        self.assertTrue(result["checks"]["model_references_are_external_to_installation"])
+        (install/"unwanted-copy.gguf").write_bytes(b"duplicate fixture")
+        result = acceptance.compare(self.osaurus, self.osaurus, install_root=install, expected_install="present")
+        self.assertFalse(result["passed"])
+        self.assertFalse(result["checks"]["installation_contains_no_gguf_weights"])
 
     def test_input_cannot_be_overwritten(self):
         source = self.root/"snapshot.json"; source.write_text("{}")
