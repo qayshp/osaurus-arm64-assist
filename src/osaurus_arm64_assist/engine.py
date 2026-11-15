@@ -79,7 +79,8 @@ class Engine:
             repetition = request.get("repeat_penalty", 1.0)
             frequency, presence = request.get("frequency_penalty", 0.0), request.get("presence_penalty", 0.0)
             if repetition != 1.0 or frequency or presence:
-                penalty = api.llama_sampler_init_penalties(64, repetition, frequency, presence)
+                window = request.get("repeat_last_n", 64)
+                penalty = api.llama_sampler_init_penalties(self.context_limit if window == -1 else window, repetition, frequency, presence)
                 if not penalty:
                     raise RuntimeError("Unable to initialize repetition penalties")
                 for token in ids:
@@ -96,6 +97,8 @@ class Engine:
             else:
                 api.llama_sampler_chain_add(chain, api.llama_sampler_init_top_k(int(request.get("top_k", 40))))
                 api.llama_sampler_chain_add(chain, api.llama_sampler_init_top_p(request["top_p"], 1))
+                if request.get("min_p", 0):
+                    api.llama_sampler_chain_add(chain, api.llama_sampler_init_min_p(request["min_p"], 1))
                 api.llama_sampler_chain_add(chain, api.llama_sampler_init_temp(request["temperature"]))
                 api.llama_sampler_chain_add(chain, api.llama_sampler_init_dist(int(request.get("seed", 0xFFFFFFFF))))
             return chain
@@ -107,7 +110,9 @@ class Engine:
         api, primary = self.api, self.primary
         started = time.perf_counter()
         if token_ids is None:
-            before = time.perf_counter(); formatted = self.template.render(request)
+            before = time.perf_counter()
+            formatted = self.template.render({**request, "chat_template_kwargs": {
+                **self.profile.get("template_kwargs", {}), **request.get("chat_template_kwargs", {})}})
             format_seconds = time.perf_counter() - before
             if len(formatted) > 4 * 1024 * 1024:
                 raise ValueError("Formatted prompt is too large")

@@ -127,6 +127,7 @@ class Api:
             (self.llama, "llama_sampler_init_dist", P, [U]),
             (self.llama, "llama_sampler_init_top_k", P, [I]),
             (self.llama, "llama_sampler_init_top_p", P, [F, C.c_size_t]),
+            (self.llama, "llama_sampler_init_min_p", P, [F, C.c_size_t]),
             (self.llama, "llama_sampler_init_temp", P, [F]),
             (self.llama, "llama_sampler_init_penalties", P, [I, F, F, F]),
             (self.llama, "llama_sampler_init_grammar", P, [P, C.c_char_p, C.c_char_p]),
@@ -216,9 +217,11 @@ class Context:
             context.n_ctx, context.n_batch, context.n_ubatch = profile.get("context", 2048), profile.get("batch", 512), profile.get("microbatch", 512)
             context.n_seq_max, context.n_outputs_max, context.n_outputs_max_per_seq = 1, 1, 1
             context.n_threads, context.n_threads_batch = profile.get("threads", 6), profile.get("batch_threads", 10)
-            context.flash_attn_type = 0 if device == "GPUOpenCL" else 1
-            context.no_perf, context.swa_full, context.kv_unified = False, False, False
-            context.op_offload = context.offload_kqv = device != "CPU"
+            context.flash_attn_type = int(profile.get("flash_attention", device != "GPUOpenCL"))
+            context.no_perf = False
+            context.swa_full, context.kv_unified = profile.get("swa_full", False), profile.get("kv_unified", False)
+            context.op_offload = device != "CPU" and profile.get("op_offload", True)
+            context.offload_kqv = device != "CPU" and profile.get("kv_offload", True)
             started = time.perf_counter()
             self.context = api.llama_init_from_model(self.model, context)
             self.timings["context_seconds"] = time.perf_counter() - started

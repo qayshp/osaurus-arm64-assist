@@ -21,7 +21,7 @@ def new_config(runtime_dir):
     return {"schema_version": 1, "runtime_dir": str(Path(runtime_dir).resolve()),
             "api_key": secrets.token_urlsafe(32), "host": "127.0.0.1", "port": 8082,
             "idle_source": "osaurus", "idle_seconds": 300, "auto_start": True,
-            "memory_floor_mib": 512, "models": []}
+            "models_source": "osaurus", "memory_floor_mib": 512, "models": []}
 
 
 def integer(value, label, low, high):
@@ -41,6 +41,8 @@ def validate(config):
     integer(config.get("idle_seconds", 300), "idle_seconds", 0, 86400)
     if not isinstance(config.get("auto_start", True), bool):
         raise ValueError("auto_start must be a boolean")
+    if config.get("models_source", "osaurus") not in ("osaurus", "fixed"):
+        raise ValueError("models_source must be osaurus or fixed")
     if config.get("idle_source", "osaurus") not in ("osaurus", "fixed"):
         raise ValueError("idle_source must be osaurus or fixed")
     endpoint = config.get("osaurus_url", "auto")
@@ -71,6 +73,8 @@ def validate(config):
         seen.add(identifier)
         if model.get("mode") not in MODES:
             raise ValueError(f"Unknown mode for {identifier}; choose from {', '.join(MODES)}")
+        if model.get("settings_source", "osaurus") not in ("osaurus", "fixed"):
+            raise ValueError("settings_source must be osaurus or fixed")
         if not isinstance(model.get("path"), str) or not model["path"].lower().endswith(".gguf"):
             raise ValueError(f"{identifier} needs a GGUF file path")
         model_path = Path(model["path"])

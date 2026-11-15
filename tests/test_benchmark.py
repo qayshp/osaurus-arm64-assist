@@ -211,6 +211,8 @@ class BenchmarkCliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path, destination = Path(directory)/"config.json", Path(directory)/"result.json"
             value = config.new_config("unused-runtime")
+            value["models_source"] = "fixed"
+            (Path(directory)/"synthetic.gguf").write_bytes(b"unit-test fixture; no inference")
             value["models"] = [{"id": "sample", "mode": "cpu", "path": str(Path(directory)/"synthetic.gguf"), "context": 2048}]
             config.atomic_json(path, value)
             report = {"kind": "fixed_tokens", "runs": []}

@@ -55,6 +55,17 @@ def discover(directory=None):
     return sorted(result, key=lambda value: (value["osaurus_model"].lower(), value["path"].lower()))
 
 
+def effective_config(config, config_path):
+    """Read the same source inventory as the server without starting workers."""
+    from .osaurus_sync import SharedModels
+    shared = SharedModels(config_path, lambda: config, autostart=False)
+    try:
+        shared.poll_once()
+        return {**config, "models": shared.profiles(config.get("models", []))}, shared.snapshot()
+    finally:
+        shared.close()
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="osaurus-arm64-assist")
     parser.add_argument("--version", action="version", version=__version__)
@@ -78,6 +89,7 @@ def main(argv=None):
     add.add_argument("--repack", action=argparse.BooleanOptionalAction, default=None)
     add.add_argument("--allow-experimental-architecture", action="store_true")
     add.add_argument("--fallback-mode", choices=["cpu"])
+    add.add_argument("--settings-source", choices=["osaurus", "fixed"], default="osaurus")
     remove = model_sub.add_parser("remove"); remove.add_argument("--config", type=Path, required=True); remove.add_argument("--id", required=True)
     config = sub.add_parser("config"); config_sub = config.add_subparsers(dest="operation", required=True)
     export = config_sub.add_parser("export"); export.add_argument("--config", type=Path, required=True); export.add_argument("--output", type=Path, required=True)
@@ -112,17 +124,19 @@ def main(argv=None):
             from .native import native_platform, verify_runtime
             from .lifecycle import memory_status
             runtime = verify_runtime(config["runtime_dir"])
+            config, sync = effective_config(config, args.config)
             report = {"version": __version__, "python_platform": sysconfig.get_platform(),
                 "native_arm64_python": native_platform(), "runtime_integrity": runtime,
                 "models": [{"id": model["id"], "mode": model["mode"], "exists": Path(model["path"]).is_file(),
                             "context_length": model.get("context",2048)} for model in config["models"]],
-                "memory": memory_status(), "execution_verified": False,
+                "memory": memory_status(), "execution_verified": False, "model_sync": sync,
                 "note": "File integrity and Python architecture are static checks. Run an explicit model self-test to establish backend execution; use scripts/Doctor.ps1 for signed DSP and OEM driver inventory."}
             output(report)
             if not native_platform() or not runtime["verified"]:
                 raise SystemExit(1)
         elif args.command == "models":
             if args.operation == "list":
+                config, _ = effective_config(config, args.config)
                 output([{**model, "exists": Path(model["path"]).is_file()} for model in config["models"]]); return
             if args.operation == "add":
                 path = args.path
@@ -141,7 +155,8 @@ def main(argv=None):
                 profile = {"id": args.id, "path": str(path), "mode": args.mode, "context": args.context,
                     "threads": args.threads, "batch_threads": args.batch_threads, "batch": args.batch,
                     "microbatch": args.microbatch, "power_mode": args.power_mode, "repack": repack,
-                    "allow_experimental_architecture": args.allow_experimental_architecture}
+                    "allow_experimental_architecture": args.allow_experimental_architecture,
+                    "settings_source": args.settings_source}
                 if args.fallback_mode:
                     profile["fallback_mode"] = args.fallback_mode
                 config["models"] = [x for x in config["models"] if x["id"] != args.id]+[profile]
@@ -160,7 +175,7 @@ def main(argv=None):
             else:
                 backup=json.loads(args.input.read_text(encoding="utf-8-sig"))
                 if not isinstance(backup,dict): raise ValueError("Backup must be an object")
-                for name in ("models","idle_source","idle_seconds","osaurus_url","auto_start","memory_floor_mib","port","origins"):
+                for name in ("models","models_source","idle_source","idle_seconds","osaurus_url","auto_start","memory_floor_mib","port","origins"):
                     if name in backup: config[name]=backup[name]
                 settings.validate(config); config.pop("_config_directory",None)
                 settings.atomic_json(args.config,config)
@@ -169,14 +184,18 @@ def main(argv=None):
             output(api(config,"/admin/unload",{}))
         elif args.command == "benchmark":
             from .benchmark import normalize_benchmark
+            config, _ = effective_config(config, args.config)
             profile=next((x for x in config["models"] if x["id"]==args.model and x.get("enabled",True)),None)
             if not profile: raise ValueError("Unknown or disabled profile")
+            if profile["mode"] == "osaurus":
+                raise ValueError("Fixed-token benchmarks require a native companion profile; this model is delegated to Osaurus")
             request=normalize_benchmark({"model":args.model,"prompt_tokens":args.prompt_tokens,
                 "generated_tokens":args.generated_tokens,"repetitions":args.repetitions,"warmup":args.warmup,
                 "seed":args.seed},profile.get("context",2048))
             timeout=profile.get("load_timeout_seconds",300)+(args.repetitions+args.warmup)*profile.get("request_timeout_seconds",900)+30
             output(api(config,"/admin/benchmark",request,timeout=timeout),args.output)
         elif args.command == "self-test":
+            config, _ = effective_config(config, args.config)
             profile=next((x for x in config["models"] if x["id"]==args.model),None)
             if not profile: raise ValueError("Unknown profile")
             request={"model":args.model,"messages":[{"role":"user","content":"Reply with only the answer: what is 17 + 25?"}],"temperature":0,"max_tokens":32}

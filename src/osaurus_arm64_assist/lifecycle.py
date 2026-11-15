@@ -11,6 +11,7 @@ import uuid
 
 from . import config as configuration
 from .idle_policy import IdlePolicy
+from .osaurus_sync import SharedModels
 
 
 class WorkerFailure(RuntimeError):
@@ -89,11 +90,12 @@ class Manager:
         self.last_metrics = None
         self.closed = threading.Event()
         self.context = MP.get_context("spawn")
-        self.idle_policy = IdlePolicy(self.config_path, self.refresh)
+        self.shared_models = SharedModels(self.config_path, self.refresh_raw)
+        self.idle_policy = IdlePolicy(self.config_path, self.refresh_raw)
         self.guard = threading.Thread(target=self._guard, daemon=True)
         self.guard.start()
 
-    def refresh(self):
+    def refresh_raw(self):
         stamp = self.config_path.stat().st_mtime_ns
         if stamp != self.config_stamp:
             updated = configuration.load(self.config_path)
@@ -102,6 +104,13 @@ class Manager:
                     raise ValueError(f"Restart the companion after changing {key}")
             self.config = updated; self.config_stamp = stamp
         return self.config
+
+    def refresh(self):
+        config = self.refresh_raw()
+        shared = getattr(self, "shared_models", None)
+        if shared:
+            return {**config, "models": shared.profiles(config.get("models", []))}
+        return config
 
     def _guard(self):
         while not self.closed.wait(.5):
@@ -159,12 +168,19 @@ class Manager:
         raise WorkerFailure("Native worker exceeded the configured response deadline")
 
     def _load(self, profile):
+        if profile.get("mode") not in configuration.MODES:
+            raise ValueError("Only native companion modes may load a native worker")
         path = Path(profile["path"])
         if not path.is_file():
             raise ValueError("The configured GGUF is missing; register its current Osaurus path")
         stat = path.stat()
-        fingerprint = hashlib.sha256(json.dumps([profile, stat.st_size, stat.st_mtime_ns], sort_keys=True).encode()).hexdigest()
+        load_keys = ("mode", "path", "context", "threads", "batch_threads", "batch", "microbatch", "power_mode",
+                     "repack", "gpu_layers", "flash_attention", "swa_full", "kv_unified", "kv_offload", "op_offload",
+                     "allow_experimental_architecture", "chat_template", "template_kwargs")
+        load_settings = {name: profile[name] for name in load_keys if name in profile}
+        fingerprint = hashlib.sha256(json.dumps([load_settings, stat.st_size, stat.st_mtime_ns], sort_keys=True).encode()).hexdigest()
         if self.child and self.child.is_alive() and fingerprint == self.fingerprint:
+            self.active_profile = profile["id"]
             return False
         self._stop(); self.failure = None
         from .worker import entry
@@ -218,6 +234,10 @@ class Manager:
                         "load_stages": self.ready["load_stages"] if cold else None,
                         "architecture": self.ready["architecture"], "context_length": self.ready["context_length"],
                         "metrics": event["metrics"]}
+                    if profile.get("synced"):
+                        event["assist"]["settings_source"] = "osaurus"
+                        event["assist"]["source_model"] = profile.get("_osaurus", {}).get("model_id")
+                        event["assist"]["settings"] = profile.get("sync", {})
                     self.last_metrics = {"model": profile["id"], **event["assist"]}
                     yield event
                     break
@@ -260,7 +280,8 @@ class Manager:
                    "finish_reason": finished["finish_reason"]}
             (warmups if warmup else runs).append(run)
         allowed = ("id", "mode", "context", "threads", "batch_threads", "batch", "microbatch",
-                   "power_mode", "repack", "gpu_layers", "fallback_mode", "allow_experimental_architecture")
+                   "power_mode", "repack", "gpu_layers", "fallback_mode", "allow_experimental_architecture",
+                   "flash_attention", "swa_full", "kv_unified", "kv_offload", "op_offload", "settings_source")
         return {"schema_version": 1, "kind": "fixed_tokens", "model": profile["id"],
                 "settings": {**settings, "input_rng": "random.Random(seed).randrange(32000)",
                              "input_id_range": [0, 31999], "sampling": "greedy", "ignore_eos": True},
@@ -269,6 +290,12 @@ class Manager:
 
     def close(self):
         self.closed.set()
+        discovery = getattr(self, "discovery", None)
+        if discovery:
+            discovery.close()
+        shared = getattr(self, "shared_models", None)
+        if shared:
+            shared.close()
         policy = getattr(self, "idle_policy", None)
         if policy:
             policy.close()

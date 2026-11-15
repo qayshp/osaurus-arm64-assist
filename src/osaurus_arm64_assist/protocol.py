@@ -151,14 +151,19 @@ def normalize_request(body):
     top_p = body.get("top_p", 0.95)
     if isinstance(top_p, bool) or not isinstance(top_p, (int, float)) or not math.isfinite(top_p) or not 0 < top_p <= 1:
         raise ValueError("top_p must be above 0 and at most 1")
-    for name, low, high, default in (("presence_penalty", -2, 2, 0), ("frequency_penalty", -2, 2, 0), ("repeat_penalty", .01, 10, 1)):
+    for name, low, high, default in (("presence_penalty", -2, 2, 0), ("frequency_penalty", -2, 2, 0), ("repeat_penalty", .01, 10, 1), ("min_p", 0, 1, 0)):
         value = body.get(name, default)
         if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not low <= value <= high:
             raise ValueError(f"{name} is outside its supported numeric range")
-    for name, low, high, default in (("top_k", 0, 1000000, 40), ("seed", 0, 0xFFFFFFFF, 0xFFFFFFFF)):
+    for name, low, high, default in (("top_k", 0, 1000000, 40), ("seed", 0, 0xFFFFFFFF, 0xFFFFFFFF), ("repeat_last_n", -1, 131072, 64)):
         value = body.get(name, default)
         if isinstance(value, bool) or not isinstance(value, int) or not low <= value <= high:
             raise ValueError(f"{name} must be an integer between {low} and {high}")
+    kwargs = body.get("chat_template_kwargs", {})
+    if not isinstance(kwargs, dict) or any(key not in ("enable_thinking", "preserve_thinking") or not isinstance(value, bool) for key, value in kwargs.items()):
+        raise ValueError("Only boolean enable_thinking and preserve_thinking template arguments are supported")
+    if kwargs.get("enable_thinking") is True:
+        raise ValueError("This release uses thinking-disabled profiles")
     return {**body, "messages": normalized, "tools": tools, "tool_choice": choice,
             "response_format": response_format, "max_tokens": maximum, "temperature": temperature,
             "top_p": top_p, "stop": stop}
@@ -189,8 +194,9 @@ class ChatTemplate:
             messages.insert(0, {"role": "system", "content": instruction})
         if request["response_format"]["type"] == "json_object":
             messages = [{"role": "system", "content": "Return one JSON object, without Markdown."}] + messages
+        kwargs = {"enable_thinking": False, **request.get("chat_template_kwargs", {})}
         return self.template.render(messages=messages, tools=tools, add_generation_prompt=True,
-                                    enable_thinking=False, bos_token=self.bos_token, eos_token=self.eos_token)
+                                    bos_token=self.bos_token, eos_token=self.eos_token, **kwargs)
 
 
 def resolve_local_schema(schema, root):

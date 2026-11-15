@@ -91,7 +91,10 @@ def sanitize_settings(settings):
         if value is None:
             continue
         if key not in SUPPORTED:
-            if type(value) is not type(defaults.get(key)) or value != defaults.get(key):
+            # Overrides are sparse Nullable<T> fields in Osaurus. Even a
+            # value equal to an engine default is an explicit preference.
+            # The one known harmless loading preference matches this ABI.
+            if not (key == "useMlock" and value is False):
                 unsupported.add(key if isinstance(key, str) and re.fullmatch(r"[A-Za-z][A-Za-z0-9]{0,63}", key) else "unknownSetting")
             continue
         try:
@@ -280,6 +283,8 @@ def build_profile(entry, settings, resolved, runtime, path, *, identifier=None, 
         fallback("thinking_not_supported", "chatTemplateKwargs")
     if template: applied.add("chatTemplateKwargs")
     if "cpuMoe" in overrides and overrides["cpuMoe"] and not expert:
+        fallback("expert_policy_unsupported", "cpuMoe")
+    if overrides.get("cpuMoe") is False and expert:
         fallback("expert_policy_unsupported", "cpuMoe")
 
     identifier = identifier or entry["id"]

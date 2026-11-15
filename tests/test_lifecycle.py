@@ -275,6 +275,8 @@ class WorkerLifecycleTests(unittest.TestCase):
             profile = {"id": "sample-cpu", "mode": "cpu", "path": str(model)}
             self.assertTrue(manager._load(profile))
             self.assertFalse(manager._load(profile))
+            self.assertFalse(manager._load({**profile, "sampling_defaults": {"temperature": 0.0},
+                                           "sync": {"status": "updated"}}))
             self.assertEqual(len(children), 1)
             self.assertTrue(manager._load({**profile, "id": "sample-npu", "mode": "npu"}))
             self.assertTrue(children[0].closed and channels[0][0].closed and jobs[0].closed)

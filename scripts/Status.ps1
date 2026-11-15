@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'Common.ps1')
 $root = Assert-AssistInstallation (Resolve-AssistRoot $RootPath)
 $statePath = Join-Path $root 'state/server.json'
-$result = [ordered]@{installed=$true;root=$root;running=$false;healthy=$false;port=$null;pid=$null;identity_matches=$false;idle_policy=$null;
+$result = [ordered]@{installed=$true;root=$root;running=$false;healthy=$false;port=$null;pid=$null;identity_matches=$false;idle_policy=$null;model_sync=$null;
     auto_start=$true;startup_registered=$false;startup_user_disabled=$false;supervisor_running=$false;supervisor_status=$null;osaurus_app_state=$null;automatic_error=$null}
 $config = Read-AssistJson (Join-Path $root 'config.json')
 if ($config.PSObject.Properties['auto_start']) { $result.auto_start=[bool]$config.auto_start }
@@ -36,6 +36,7 @@ if (Test-Path -LiteralPath $statePath) {
         $health = Get-AssistHealth ([int]$state.port)
         $result.healthy = [bool]($health -and $health.service -eq 'osaurus-arm64-assist' -and $health.instance_id -eq $state.instance_id)
         if ($result.healthy -and $health.PSObject.Properties.Name -contains 'idle_policy') { $result.idle_policy = $health.idle_policy }
+        if ($result.healthy -and $health.PSObject.Properties.Name -contains 'model_sync') { $result.model_sync = $health.model_sync }
     }
 }
 if ($Json) { $result | ConvertTo-Json -Depth 5 } else { [pscustomobject]$result | Format-List }

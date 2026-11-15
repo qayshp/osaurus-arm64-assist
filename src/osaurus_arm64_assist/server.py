@@ -3,6 +3,7 @@ import hmac
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
+import re
 import threading
 import time
 from urllib.parse import urlsplit
@@ -10,6 +11,7 @@ import uuid
 
 from . import __version__
 from .lifecycle import Manager, WorkerFailure, memory_status
+from .osaurus_proxy import ProxyError, proxy_events
 from .protocol import normalize_request
 
 
@@ -17,6 +19,48 @@ def strict_json(data):
     def invalid(value):
         raise ValueError(f"Non-finite JSON number is not allowed: {value}")
     return json.loads(data, parse_constant=invalid)
+
+
+def merge_preferences(profile, body):
+    """Explicit request fields win over inherited model preferences, including 0."""
+    defaults = profile.get("sampling_defaults") or {}
+    merged = {**defaults, **body}
+    if "max_tokens" in body and "max_completion_tokens" not in body:
+        merged.pop("max_completion_tokens", None)
+    template = profile.get("template_kwargs") or {}
+    if isinstance(template, dict):
+        if "chat_template_kwargs" not in body:
+            if template:
+                merged["chat_template_kwargs"] = dict(template)
+        elif isinstance(body["chat_template_kwargs"], dict):
+            merged["chat_template_kwargs"] = {**template, **body["chat_template_kwargs"]}
+    return merged
+
+
+def unsupported_request(body):
+    """Unknown native request controls stay with Osaurus rather than being lost."""
+    supported = {"model", "messages", "tools", "tool_choice", "response_format", "stop", "stream", "stream_options",
+                 "max_tokens", "max_completion_tokens", "temperature", "top_p", "top_k", "min_p", "seed",
+                 "repeat_penalty", "repeat_last_n", "frequency_penalty", "presence_penalty", "n",
+                 "logprobs", "top_logprobs", "enable_thinking", "chat_template_kwargs"}
+    if set(body) - supported:
+        return True
+    if isinstance(body.get("stream_options"), dict) and set(body["stream_options"]) - {"include_usage"}:
+        return True
+    # Remaining unsupported values (schema output, vision, thinking, n>1, etc.)
+    # are detected by normalize_request without invoking a model or runtime.
+    return False
+
+
+def sync_snapshot(manager):
+    source = getattr(manager, "shared_models", None)
+    return source.snapshot() if source else None
+
+
+def public_profile(model):
+    return {"id": model["id"], "mode": model["mode"], "context": model.get("context", 2048),
+            "synced": model.get("synced", False), "settings_source": model.get("settings_source", "fixed"),
+            "fallback_reason": model.get("_fallback_reason"), "sync": model.get("sync")}
 
 
 class AssistServer(ThreadingHTTPServer):
@@ -79,13 +123,16 @@ class Handler(BaseHTTPRequestHandler):
         supplied = self.headers.get("Authorization", "")
         return hmac.compare_digest(supplied.encode("utf-8"), expected.encode("utf-8"))
 
-    def error(self, status, message, kind="invalid_request_error"):
+    def error(self, status, message, kind="invalid_request_error", code=None):
         self.close_connection = True
+        error = {"message": message, "type": kind}
+        if code is not None:
+            error["code"] = code
         if self.response_started:
-            self.sse({"error": {"message": message, "type": kind}})
+            self.sse({"error": error})
             self.wfile.write(b"data: [DONE]\n\n"); self.wfile.flush()
         else:
-            self.send_json(status, {"error": {"message": message, "type": kind}})
+            self.send_json(status, {"error": error})
 
     def do_OPTIONS(self):
         try:
@@ -116,17 +163,22 @@ class Handler(BaseHTTPRequestHandler):
                     "model_loaded": loaded, "active_model": manager.active_profile if loaded else None,
                     "worker_job_attached": bool(manager.job and manager.job.handle),
                     "idle_policy": manager.idle_policy.snapshot() if getattr(manager, "idle_policy", None) else None,
+                    "model_sync": sync_snapshot(manager),
                     "memory": memory_status()})
                 return
             if not self.authorized():
                 self.error(401, "A valid companion API key is required", "authentication_error"); return
-            manager.refresh()
+            config = manager.refresh()
             if path == "/v1/models":
                 self.send_json(200, {"object": "list", "data": [
                     {"id": model["id"], "object": "model", "created": 0, "owned_by": "osaurus-arm64-assist",
                      "context_length": model.get("context", 2048), "max_model_len": model.get("context", 2048),
-                     "assist": {"mode": model["mode"], "experimental": True, "modalities": ["text"]}}
-                    for model in manager.config["models"] if model.get("enabled", True)]})
+                     "assist": {"mode": model["mode"], "experimental": True, "modalities": ["text"],
+                                "synced": model.get("synced", False), "settings_source": model.get("settings_source", "fixed")}}
+                    for model in config["models"] if model.get("enabled", True)]})
+            elif path == "/sync":
+                self.send_json(200, {"model_sync": sync_snapshot(manager), "models": [public_profile(model)
+                    for model in config["models"] if model.get("enabled", True)]})
             elif path in ("/metrics", "/v1/metrics"):
                 self.send_json(200, {"last_request": manager.last_metrics, "active_model": manager.active_profile})
             else:
@@ -176,6 +228,8 @@ class Handler(BaseHTTPRequestHandler):
                 profile = next((model for model in config["models"] if model["id"] == request["model"] and model.get("enabled", True)), None)
                 if not profile:
                     self.error(404, "Unknown or disabled model profile"); return
+                if profile.get("mode") == "osaurus":
+                    self.error(400, "Fixed-token benchmarks require a companion native execution profile", code="native_benchmark_required"); return
                 normalize_benchmark(request, profile.get("context", 2048))
                 acquired = manager.lock.acquire(blocking=False)
                 if not acquired:
@@ -186,17 +240,76 @@ class Handler(BaseHTTPRequestHandler):
                 manager.last_metrics = {"model": profile["id"], "benchmark": True,
                                         "summary": report["summary"], "api_seconds": report["api_seconds"]}
                 self.send_json(200, report); return
-            request = normalize_request(body)
-            profile = next((model for model in config["models"] if model["id"] == request.get("model") and model.get("enabled", True)), None)
+            if not isinstance(body, dict):
+                raise ValueError("Request must be a JSON object")
+            profile = next((model for model in config["models"] if model["id"] == body.get("model") and model.get("enabled", True)), None)
             if not profile:
                 self.error(404, "Unknown or disabled model profile"); return
+            proxy = profile.get("mode") == "osaurus"
+            if not proxy:
+                merged = merge_preferences(profile, body)
+                if profile.get("synced") and unsupported_request(merged):
+                    proxy = True
+                else:
+                    try:
+                        request = normalize_request(merged)
+                    except (ValueError, TypeError, KeyError, AttributeError):
+                        if not profile.get("synced"):
+                            raise
+                        proxy = True
+                if proxy:
+                    profile = {**profile, "_fallback_reason": "unsupported_request_features"}
+                elif profile.get("synced") and request["max_tokens"] >= profile.get("context", 2048):
+                    proxy = True
+                    profile = {**profile, "_fallback_reason": "requested_output_exceeds_assist_context"}
             acquired = manager.lock.acquire(blocking=False)
             if not acquired:
                 self.error(429, "One model request is already running; retry after it completes", "rate_limit_error"); return
             api_started = time.perf_counter()
-            events = manager.generate(profile, request)
+            if not proxy:
+                events = manager.generate(profile, request)
+                try:
+                    first_event = next(events)
+                except ValueError as error:
+                    # Only retry a known capacity mismatch, before any client
+                    # output. Other model/output errors retain their contract.
+                    if not profile.get("synced") or not re.fullmatch(
+                            r"Prompt \([0-9]+ tokens\) plus requested output \([0-9]+\) exceeds the configured [0-9]+-token context", str(error)):
+                        raise
+                    events.close()
+                    events = None
+                    proxy = True
+                    profile = {**profile, "_fallback_reason": "prompt_exceeds_assist_context"}
+            if proxy:
+                # One admission slot covers both engines; release native memory
+                # before asking Osaurus to allocate its own local model.
+                manager._stop()
+                events = proxy_events(profile, body)
+                first_event = next(events)
+                if body.get("stream"):
+                    self.close_connection = True
+                    self.headers_for(200, "text/event-stream; charset=utf-8")
+                    event = first_event
+                    while True:
+                        if event["type"] == "end":
+                            self.wfile.write(b"data: [DONE]\n\n"); self.wfile.flush()
+                            return
+                        if event["type"] != "sse":
+                            raise ProxyError(502, "invalid_stream", "Osaurus returned an invalid stream event.")
+                        value = event["value"]
+                        if "assist" in value:
+                            value["assist"]["api_seconds"] = time.perf_counter()-api_started
+                            manager.last_metrics = {"model": profile["id"], **value["assist"]}
+                        self.sse(value)
+                        event = next(events)
+                if first_event["type"] != "json":
+                    raise ProxyError(502, "invalid_response", "Osaurus returned an invalid completion response.")
+                value = first_event["value"]
+                value["assist"]["api_seconds"] = time.perf_counter()-api_started
+                manager.last_metrics = {"model": profile["id"], **value["assist"]}
+                self.send_json(200, value)
+                return
             buffered = bool(request["tools"] and request["tool_choice"] != "none") or request["response_format"]["type"] != "text"
-            first_event = next(events)
             identifier, created = "chatcmpl-"+uuid.uuid4().hex, int(time.time())
             base = {"id": identifier, "created": created, "model": profile["id"]}
             if request.get("stream"):
@@ -242,7 +355,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(200, {**base, "object": "chat.completion", "choices": [{"index": 0,
                     "message": finished["message"], "finish_reason": finished["finish_reason"]}],
                     "usage": finished["usage"], "assist": finished["assist"]})
-        except (BrokenPipeError, ConnectionResetError, TimeoutError):
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError, TimeoutError):
             if acquired:
                 manager._stop()
         except PermissionError:
@@ -253,6 +366,8 @@ class Handler(BaseHTTPRequestHandler):
             self.error(400, str(error))
         except WorkerFailure as error:
             self.error(503, str(error), "native_worker_error")
+        except ProxyError as error:
+            self.error(error.status, error.message, "osaurus_proxy_error", error.code)
         except Exception:
             self.error(500, "Companion request failed; inspect the local service log", "server_error")
         finally:
@@ -285,6 +400,8 @@ def serve(config_path, host=None, port=None, instance_id=None):
     server = None
     try:
         server = AssistServer((host, port), manager, instance_id)
+        from .discovery import DiscoveryRefresh
+        manager.discovery = DiscoveryRefresh(manager.refresh)
         print(f"Osaurus ARM64 Assist {__version__} listening on http://{host}:{port}", flush=True)
         server.serve_forever(poll_interval=.2)
     finally:

@@ -138,9 +138,10 @@ class ModelSettingsTests(unittest.TestCase):
                 self.assertEqual(value["mode"], "osaurus")
                 self.assertTrue(value["sync"]["unsupported"])
 
-    def test_unchanged_unimplemented_defaults_are_not_treated_as_user_overrides(self):
+    def test_sparse_explicit_unimplemented_settings_use_stock_even_when_equal_to_defaults(self):
         self.assertEqual(profile(s=settings({"useMlock": False}))["mode"], "hybrid")
-        self.assertEqual(profile(s=settings({"futureFlag": False}, futureFlag=False))["mode"], "hybrid")
+        self.assertEqual(profile(s=settings({"futureFlag": False}, futureFlag=False))["mode"], "osaurus")
+        self.assertEqual(profile(s=settings({"cachePrompt": True}, cachePrompt=True))["mode"], "osaurus")
         self.assertEqual(profile(s=settings({"futureFlag": 0}, futureFlag=False))["mode"], "osaurus")
 
     def test_sampling_overrides_preserve_zero_and_reject_executable_display_strings(self):

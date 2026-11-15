@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 $root = Assert-AssistInstallation (Resolve-AssistRoot $RootPath)
 $configPath = Join-Path $root 'config.json'; Assert-AssistPathAncestors $configPath
 $config = Read-AssistJson $configPath
-if (@($config.models).Count -eq 0) { throw 'Add a model profile before connecting Osaurus. No model is downloaded or loaded automatically.' }
+if (@($config.models).Count -eq 0 -and $config.PSObject.Properties['models_source'] -and $config.models_source -eq 'fixed') { throw 'Fixed model mode requires a registered profile. Automatic mode discovers Osaurus downloads.' }
 if (-not $config.api_key -or ([string]$config.api_key).Length -lt 32) { throw 'The local companion API key is missing or too short. Recreate a valid config with the companion init command.' }
 $osaurus = Get-AssistOsaurus
 $uri = [Uri]$OsaurusUrl
@@ -66,6 +66,10 @@ $provider = @($after.providers | Where-Object {$_.name -ieq $ProviderName})
 if ($provider.Count -ne 1) { throw 'Provider was not present after apply; inspect Osaurus before retrying.' }
 Assert-AssistOwnedProvider $provider[0] ([pscustomobject]$registration)
 try {
+    # Automatic profiles are intentionally absent from config.json. Discover
+    # their IDs from the authenticated companion endpoint when available.
+    $companionModels = Invoke-AssistLocalJson -Url ($baseUrl + '/models') -ApiKey ([string]$config.api_key) -TimeoutSec 10
+    $registration['model_ids'] = @($companionModels.data | ForEach-Object {$_.id})
     $models = Invoke-AssistLocalJson -Url ($OsaurusUrl.TrimEnd('/') + '/v1/models') -TimeoutSec 10
     $owners = @($models.data | Where-Object {$_.id -in $registration.model_ids -and $_.owned_by -like 'prov-*'} | Select-Object -ExpandProperty owned_by -Unique)
     if ($owners.Count -eq 1) { $registration['provider_id']=$owners[0] }

@@ -22,6 +22,9 @@ class CommandLineTests(unittest.TestCase):
         self.runtime = self.root/"runtime"
         self.models = self.root/"osaurus"/"models"
         self.run_cli(["init", "--config", str(self.settings), "--runtime-dir", str(self.runtime)])
+        value = config.load(self.settings)
+        value["models_source"] = "fixed"
+        config.atomic_json(self.settings, value)
 
     def run_cli(self, arguments, expected=0):
         stdout, stderr = io.StringIO(), io.StringIO()

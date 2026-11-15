@@ -108,5 +108,5 @@ if ($autoEnabled) {
 if ($ConnectOsaurus) { & (Join-Path $PSScriptRoot 'Connect-Osaurus.ps1') -RootPath $root -RespectStartupDisabled }
 Write-Host "Installed at $root"
 Write-Host 'Model weights and drivers were preserved. Automatic mode uses only this user''s owned Startup shortcut.'
-Write-Host 'Add a local GGUF model, then connect the provider with Connect-Osaurus.ps1. Use -NoAutoStart for manual lifecycle.'
+Write-Host 'Models and supported preferences are discovered from Osaurus automatically. Use -NoAutoStart for manual lifecycle.'
 } finally { Exit-AssistOperationLock $automaticOperation }
