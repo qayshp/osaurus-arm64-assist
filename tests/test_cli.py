@@ -176,6 +176,61 @@ class CommandLineTests(unittest.TestCase):
         self.run_cli(["config", "import", "--config", str(self.settings), "--input", str(backup)], expected=2)
         self.assertEqual(self.settings.read_bytes(), before)
 
+    def test_idle_defaults_follow_osaurus_and_legacy_configs_remain_valid(self):
+        value = config.load(self.settings)
+        self.assertEqual(value["idle_source"], "osaurus")
+        self.assertEqual(value.get("osaurus_url", "auto"), "auto")
+        self.assertEqual(value["idle_seconds"], 300)
+        value.pop("idle_source"); value.pop("osaurus_url", None); value.pop("_config_directory")
+        config.atomic_json(self.settings, value)
+        loaded = config.load(self.settings)
+        self.assertEqual(loaded.get("idle_source", "osaurus"), "osaurus")
+        self.assertEqual(loaded["api_key"], value["api_key"])
+
+    def test_tokenless_backup_restores_follow_or_fixed_policy_and_endpoint(self):
+        for index, (source, seconds, endpoint) in enumerate([
+                ("osaurus", 90, "auto"), ("fixed", 0, "http://localhost:1444/")]):
+            with self.subTest(source=source):
+                value = config.load(self.settings)
+                value.update(idle_source=source, idle_seconds=seconds, osaurus_url=endpoint)
+                value.pop("_config_directory"); config.atomic_json(self.settings, value)
+                backup = self.root/f"idle-backup-{index}.json"
+                self.run_cli(["config", "export", "--config", str(self.settings), "--output", str(backup)])
+                self.assertNotIn(value["api_key"], backup.read_text(encoding="utf-8"))
+                destination = self.root/f"new-install-{index}"/"settings.json"
+                self.run_cli(["init", "--config", str(destination), "--runtime-dir", str(self.root/f"runtime-{index}")])
+                fresh_key = config.load(destination)["api_key"]
+                self.run_cli(["config", "import", "--config", str(destination), "--input", str(backup)])
+                restored = config.load(destination)
+                self.assertEqual((restored["idle_source"], restored["idle_seconds"], restored["osaurus_url"]),
+                    (source, seconds, endpoint))
+                self.assertEqual(restored["api_key"], fresh_key)
+
+    def test_invalid_idle_sources_and_nonlocal_or_credentialed_origins_are_rejected_atomically(self):
+        before = self.settings.read_bytes()
+        invalid = [{"idle_source": "automatic"}, {"idle_source": None}, {"osaurus_url": None},
+            {"osaurus_url": "https://127.0.0.1:1337"}, {"osaurus_url": "http://example.invalid:1337"},
+            {"osaurus_url": "http://user:secret@127.0.0.1:1337"},
+            {"osaurus_url": "http://127.0.0.1:1337/private"},
+            {"osaurus_url": "http://127.0.0.1:1337/?token=secret"},
+            {"osaurus_url": "http://127.0.0.1:1337/#fragment"},
+            {"osaurus_url": "http://127.0.0.1:0"}, {"osaurus_url": "http://[::1]:65536"}]
+        for changes in invalid:
+            with self.subTest(changes=changes):
+                backup = self.root/"invalid-idle-backup.json"
+                backup.write_text(json.dumps(changes), encoding="utf-8")
+                _, error = self.run_cli(["config", "import", "--config", str(self.settings),
+                    "--input", str(backup)], expected=2)
+                self.assertIn("error", json.loads(error))
+                self.assertEqual(self.settings.read_bytes(), before)
+
+    def test_loopback_idle_endpoint_options_pass_validation_without_network_calls(self):
+        for endpoint in ("auto", "http://127.0.0.1:1337", "http://localhost:1444/", "http://[::1]:1337"):
+            with self.subTest(endpoint=endpoint):
+                value = config.new_config(self.runtime)
+                value.update(idle_source="osaurus", osaurus_url=endpoint)
+                self.assertEqual(config.validate(value)["osaurus_url"], endpoint)
+
 
 if __name__ == "__main__":
     unittest.main()

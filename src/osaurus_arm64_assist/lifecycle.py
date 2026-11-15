@@ -10,6 +10,7 @@ import time
 import uuid
 
 from . import config as configuration
+from .idle_policy import IdlePolicy
 
 
 class WorkerFailure(RuntimeError):
@@ -88,6 +89,7 @@ class Manager:
         self.last_metrics = None
         self.closed = threading.Event()
         self.context = MP.get_context("spawn")
+        self.idle_policy = IdlePolicy(self.config_path, self.refresh)
         self.guard = threading.Thread(target=self._guard, daemon=True)
         self.guard.start()
 
@@ -112,10 +114,15 @@ class Manager:
             except (ValueError, OSError):
                 # Another thread may have closed the old process after this snapshot.
                 pass
-            idle = self.config.get("idle_seconds", 300)
+            policy = getattr(self, "idle_policy", None)
+            idle = policy.seconds if policy else self.config.get("idle_seconds", 300)
             if idle and child and time.monotonic()-self.last_used > idle and self.lock.acquire(blocking=False):
                 try:
-                    self._stop()
+                    # A response or a preference change can finish between the
+                    # initial check and admission. Recheck under the lock.
+                    idle = policy.seconds if policy else self.config.get("idle_seconds", 300)
+                    if idle and self.child and time.monotonic()-self.last_used > idle:
+                        self._stop()
                 finally:
                     self.lock.release()
 
@@ -262,5 +269,8 @@ class Manager:
 
     def close(self):
         self.closed.set()
+        policy = getattr(self, "idle_policy", None)
+        if policy:
+            policy.close()
         with self.lock:
             self._stop()

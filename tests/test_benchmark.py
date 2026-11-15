@@ -225,6 +225,10 @@ class BenchmarkCliTests(unittest.TestCase):
         requests = []
         class Redirect(BaseHTTPRequestHandler):
             def do_POST(self):
+                # Consume the request before closing this HTTP/1.0 fixture;
+                # unread body bytes can otherwise race the 302 with a Windows
+                # TCP reset and obscure the redirect policy being tested.
+                self.rfile.read(int(self.headers.get("Content-Length", "0")))
                 requests.append(self.path)
                 self.send_response(302)
                 self.send_header("Location", "/must-not-follow")
@@ -238,7 +242,7 @@ class BenchmarkCliTests(unittest.TestCase):
         thread = threading.Thread(target=lambda: server.serve_forever(poll_interval=.01), daemon=True); thread.start()
         try:
             with self.assertRaises(ValueError):
-                cli.api({"port": server.server_port, "api_key": "synthetic-test-key"}, "/admin/benchmark", {})
+                cli.api({"port": server.server_port, "api_key": "synthetic-test-key"}, "/admin/benchmark", {}, timeout=3)
             self.assertEqual(requests, ["/admin/benchmark"])
         finally:
             server.shutdown(); server.server_close(); thread.join(2)

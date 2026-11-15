@@ -115,6 +115,7 @@ class Handler(BaseHTTPRequestHandler):
                     "pid": os.getpid(), "instance_id": self.server.instance_id,
                     "model_loaded": loaded, "active_model": manager.active_profile if loaded else None,
                     "worker_job_attached": bool(manager.job and manager.job.handle),
+                    "idle_policy": manager.idle_policy.snapshot() if getattr(manager, "idle_policy", None) else None,
                     "memory": memory_status()})
                 return
             if not self.authorized():

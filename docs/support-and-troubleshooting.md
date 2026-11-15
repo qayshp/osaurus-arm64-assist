@@ -55,6 +55,25 @@ Compare complete responses at equal token counts, and show startup separately. N
 
 For the handoff mode, measure both contexts' startup and memory. The Raptor prototype warmed to 9.48 s for a fixed request but took 21.96 s from backend initialization to its first tiny control answer. That is why a warm benchmark alone cannot justify enabling it automatically for every request or model.
 
+## When a model stays loaded or unloads sooner than expected
+
+Companion 0.1.1 follows **Osaurus → Settings → Models → Local engine → Idle unload** by default. Choose the interval there, including **Never unload**. Existing configurations without `idle_source` also use this behavior after upgrading. The companion checks for changes about every five seconds; changing the preference in Osaurus does not require a companion restart.
+
+Use `scripts/Status.ps1 -RootPath <installation> -Json` to inspect `idle_policy`, or read the companion's `GET /health` response. Its `seconds` value is the effective interval, with zero disabling automatic idle expiry. The `status` explains where it came from:
+
+| Status | Meaning |
+|---|---|
+| `live` | The latest read obtained a valid Osaurus preference |
+| `cached` | Osaurus could not be read; the last valid value for that endpoint remains in use |
+| `fallback` | No usable Osaurus value is available; `idle_seconds` supplies the fallback, 300 seconds by default |
+| `fixed` | An advanced `idle_source: "fixed"` override deliberately uses the companion's own interval |
+
+An `error` code identifies a failed read, invalid response or cache-write problem without exposing credentials or the full Osaurus settings. A local Osaurus access-key requirement can produce `http_401` or `http_403`; the reader can reuse an existing `OSAURUS_API_KEY` environment variable inherited by the companion. Network failures keep a valid cached value, including **Never unload**. The cache is retained across companion restarts and is scoped to its source endpoint.
+
+The timer measures activity in the companion worker, so native-model activity elsewhere in Osaurus does not keep that worker warm. Health checks, model-list requests and preference polls do not reset it. Inference is protected from idle expiry; model switching, explicit unload/stop and the memory-pressure guard can still release a worker. To release its weights immediately, use the companion `unload` command from the README.
+
+The preference reader uses an internal Windows app API observed on Osaurus 1.0.3, with bounded read-only requests and validated fallback behavior. See [the idle-policy reference](idle-policy.md) for discovery, authentication and advanced configuration. The earlier 0.1.0 acceptance receipts describe that earlier package and are unchanged.
+
 ## What clean removal should preserve
 
 Uninstall only the companion's own registration, processes and installation directory. Verify process identity before stopping it and path containment before recursive deletion. Preserve user models, Osaurus conversations and settings, other providers, device drivers, signed DSP provisioning and files outside the selected installation root. Do not change machine startup or service configuration unless a user explicitly requests a separate managed-startup option.

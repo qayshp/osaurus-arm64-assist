@@ -82,7 +82,9 @@ def compare(osaurus_before, osaurus_after, *, provider_name="Osaurus ARM64 Assis
         checks["model_profiles_preserved"] = sorted(before_profiles, key=lambda p: p["id"]) == sorted(after_profiles, key=lambda p: p["id"])
         checks["nonsecret_companion_settings_preserved"] = all(
             companion_before.get(k) == companion_after.get(k)
-            for k in ("idle_seconds", "memory_floor_mib", "port", "origins"))
+            for k in ("idle_seconds", "memory_floor_mib", "port", "origins")) and all(
+            companion_before.get(k, default) == companion_after.get(k, default)
+            for k, default in (("idle_source", "osaurus"), ("osaurus_url", "auto")))
         receipt["model_profile_count_before"] = len(before_profiles)
         receipt["model_profile_count_after"] = len(after_profiles)
         checks["registered_models_still_exist"] = all(Path(p["path"]).is_file() for p in after_profiles)

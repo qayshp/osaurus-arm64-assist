@@ -84,7 +84,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Start.ps1 -Roo
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Doctor.ps1 -RootPath $AssistRoot -Json
 ```
 
-Start launches a hidden loopback server on `127.0.0.1:8082`. Models load on demand; starting the server alone does not load every profile or prove NPU execution. The server uses one admitted inference request at a time, releases the previous worker when switching profiles, and defaults to a five-minute idle unload. Historical results use a 2048-token context; raising it can materially increase memory and has not been validated here.
+Start launches a hidden loopback server on `127.0.0.1:8082`. Models load on demand; starting the server alone does not load every profile or prove NPU execution. The server uses one admitted inference request at a time and releases the previous worker when switching profiles. By default it follows the **Idle unload** preference already selected in **Osaurus → Settings → Models → Local engine**. Historical results use a 2048-token context; raising it can materially increase memory and has not been validated here.
 
 Before connecting Osaurus, request an explicit model smoke test. This command checks a tiny arithmetic answer plus experimental JSON-object and forced-tool behavior. It can be expensive because it actually loads and runs the selected profile.
 
@@ -103,6 +103,14 @@ To compare optional Raptor baselines, register the same file under separate IDs 
 ```
 
 For an Ornith CPU baseline, use the same Q4 stem with `--id ornith-q4/cpu --mode cpu --no-repack`. Keep every other setting matched. Restart the companion after editing profiles/configuration, and refresh the provider's model list in Osaurus. To update an existing profile deliberately, repeat `models add` with `--replace`; `models remove --config ... --id ...` removes only the profile, never the model file.
+
+## Idle unload follows Osaurus
+
+Starting with companion 0.1.1, set the idle interval in **Osaurus → Settings → Models → Local engine → Idle unload**. The companion reads that preference automatically, including **Never unload**; no second idle setting is needed. Changes are checked about every five seconds and take effect after a successful refresh without restarting the companion. Existing companion configurations that omit `idle_source` also follow Osaurus after upgrading.
+
+The companion tracks activity for its own model worker. Inference keeps that worker active; health checks, model discovery and preference polling leave its idle clock unchanged. Idle expiry waits for inference to finish. A previously read value is cached for the same Osaurus endpoint, including a zero/never value across companion restarts. If no valid value is available, the default fallback is 300 seconds. `Status.ps1 -Json` reports whether the effective policy is live, cached, fallback or a deliberate fixed override.
+
+See [idle policy and diagnostics](docs/idle-policy.md) for offline behavior, alternate Osaurus profiles and the advanced fixed override. Automatic following uses an internal Windows app API observed on Osaurus 1.0.3; it validates the response and reports a fallback if that interface changes. The packaged 0.1.0 acceptance records below retain their original version and behavior.
 
 ## Protocol and acceptance status
 
@@ -156,6 +164,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Uninstall.ps1 
 - [Curated experiment history](docs/experiment-history.md): original PR startup failure, official Windows/Surface update versus driver/runtime distinctions, and the progression from Qwen to Raptor and Ornith.
 - [Machine-readable evidence](evidence/README.md): sanitized request/output records, CSV timing rows and a checksummed manifest; no raw chat history, local configuration, credentials or model weights.
 - [Support boundary](docs/support-and-troubleshooting.md): tested architectures, mapping/commit failures, provisioning and memory limitations.
+- [Idle policy](docs/idle-policy.md): automatic Osaurus preference following, cached/offline behavior and status diagnostics.
 
 `runtime.lock.json` pins the official GenieX **0.11.0** Windows ARM64 archive and every required native-file SHA-256. Its llama.cpp core revision is `93cf736a8d1d46aa922e27eb64aa712bcd5ebc30`; the Python declarations and packaged native allowlist are tied to it. `requirements.lock` pins Python distributions and hashes. These are reproducibility pins, not a claim that the versions are the newest available. Do not mix arbitrary replacement DLLs or DSP payloads into the bundle.
 

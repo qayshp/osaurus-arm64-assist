@@ -1,10 +1,13 @@
 """Real loopback HTTP contracts backed by a fake manager, never a model/DLL."""
 import http.client
 import json
+from pathlib import Path
+import tempfile
 import threading
 import unittest
 
 from osaurus_arm64_assist.lifecycle import WorkerFailure
+from osaurus_arm64_assist.idle_policy import IdlePolicy
 from osaurus_arm64_assist.server import AssistServer
 
 
@@ -118,6 +121,28 @@ class ServerContractTests(unittest.TestCase):
         response = connection.getresponse()
         self.assertEqual(response.status, 401)
         self.assertEqual(json.loads(response.read())["error"]["type"], "authentication_error")
+
+    def test_public_health_includes_only_safe_idle_policy_metadata(self):
+        with tempfile.TemporaryDirectory() as folder:
+            policy_config = {"idle_source": "osaurus", "idle_seconds": 300,
+                "osaurus_url": "http://127.0.0.1:1444", "api_key": "private-fixture-api-key",
+                "runtime_dir": "private-fixture-runtime-path"}
+            policy = self.manager.idle_policy = IdlePolicy(Path(folder)/"config.json", lambda: policy_config, autostart=False)
+            try:
+                connection = self.connection()
+                connection.request("GET", "/health")
+                response = connection.getresponse()
+                raw = response.read().decode("utf-8")
+                self.assertEqual(response.status, 200)
+                metadata = json.loads(raw)["idle_policy"]
+                self.assertEqual(metadata, {"mode": "osaurus", "seconds": 300, "status": "fallback",
+                    "error": None, "setting": "idleUnloadSeconds"})
+                for private in (policy_config["api_key"], policy_config["runtime_dir"], policy_config["osaurus_url"],
+                        self.manager.config["api_key"], folder):
+                    self.assertNotIn(private, raw)
+                self.assertIsNone(policy._thread, "health test must not start a watcher or contact real Osaurus")
+            finally:
+                policy.close()
 
     def test_persistent_connection_success_then_error_then_success(self):
         connection = self.connection()

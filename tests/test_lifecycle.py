@@ -3,6 +3,7 @@ import hashlib
 from pathlib import Path
 import tempfile
 import threading
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 
@@ -82,6 +83,106 @@ def manager_without_thread():
 
 
 class GuardTests(unittest.TestCase):
+    def test_shared_never_policy_overrides_an_expired_fixed_fallback(self):
+        manager = manager_without_thread()
+        manager.config["idle_seconds"] = 1
+        manager.idle_policy = SimpleNamespace(seconds=0)
+        process = manager.child = FakeProcess()
+        manager.connection = FakeConnection(process)
+        manager.closed = mock.Mock()
+        manager.closed.wait.side_effect = [False, True]
+        with mock.patch.object(lifecycle, "memory_status", return_value=None), \
+                mock.patch.object(lifecycle.time, "monotonic", return_value=1000):
+            manager._guard()
+        self.assertTrue(process.alive)
+        self.assertFalse(process.terminated)
+        self.assertEqual(manager.connection.sent, [])
+
+    def test_shorter_shared_policy_uses_existing_idle_elapsed_time_next_sweep(self):
+        manager = manager_without_thread()
+        manager.idle_policy = SimpleNamespace(seconds=300)
+        process = manager.child = FakeProcess()
+        connection = manager.connection = FakeConnection(process)
+        manager.closed = mock.Mock()
+        def sweep(timeout):
+            count = manager.closed.wait.call_count
+            if count == 2:
+                self.assertTrue(process.alive, "the first sweep must respect the longer timer")
+                manager.idle_policy.seconds = 60
+            return count >= 3
+        manager.closed.wait.side_effect = sweep
+        with mock.patch.object(lifecycle, "memory_status", return_value=None), \
+                mock.patch.object(lifecycle.time, "monotonic", return_value=100):
+            manager._guard()
+        self.assertEqual(manager.last_used, 0, "a preference change must not restart elapsed idle time")
+        self.assertEqual(connection.sent, [{"type": "unload"}])
+        self.assertTrue(process.closed)
+
+    def test_shared_policy_cannot_unload_an_active_inference_request(self):
+        manager = manager_without_thread()
+        manager.idle_policy = SimpleNamespace(seconds=1)
+        manager.child = FakeProcess()
+        manager._stop = mock.Mock()
+        manager.closed = mock.Mock()
+        manager.closed.wait.side_effect = [False, True]
+        with manager.lock:
+            with mock.patch.object(lifecycle, "memory_status", return_value=None), \
+                    mock.patch.object(lifecycle.time, "monotonic", return_value=1000):
+                manager._guard()
+        manager._stop.assert_not_called()
+        self.assertTrue(manager.child.alive)
+
+    def test_response_finishing_before_guard_admission_prevents_stale_unload(self):
+        manager = manager_without_thread()
+        manager.idle_policy = SimpleNamespace(seconds=60)
+        manager.child = FakeProcess()
+        manager._stop = mock.Mock()
+        manager.closed = mock.Mock()
+        manager.closed.wait.side_effect = [False, True]
+        def admit(*args, **kwargs):
+            # A response updates last_used after the initial elapsed-time test.
+            manager.last_used = 1000
+            return True
+        manager.lock = mock.Mock()
+        manager.lock.acquire.side_effect = admit
+        with mock.patch.object(lifecycle, "memory_status", return_value=None), \
+                mock.patch.object(lifecycle.time, "monotonic", return_value=1000):
+            manager._guard()
+        manager._stop.assert_not_called()
+        manager.lock.release.assert_called_once()
+
+    def test_never_or_longer_policy_chosen_during_admission_prevents_unload(self):
+        for seconds in (0, 2000):
+            with self.subTest(seconds=seconds):
+                manager = manager_without_thread()
+                manager.idle_policy = SimpleNamespace(seconds=60)
+                manager.child = FakeProcess()
+                manager._stop = mock.Mock()
+                manager.closed = mock.Mock()
+                manager.closed.wait.side_effect = [False, True]
+                def admit(*args, **kwargs):
+                    manager.idle_policy.seconds = seconds
+                    return True
+                manager.lock = mock.Mock()
+                manager.lock.acquire.side_effect = admit
+                with mock.patch.object(lifecycle, "memory_status", return_value=None), \
+                        mock.patch.object(lifecycle.time, "monotonic", return_value=1000):
+                    manager._guard()
+                manager._stop.assert_not_called()
+                manager.lock.release.assert_called_once()
+
+    def test_close_stops_shared_policy_watcher_before_owned_worker_cleanup(self):
+        manager = manager_without_thread()
+        manager.closed = threading.Event()
+        manager.idle_policy = mock.Mock()
+        order = []
+        manager.idle_policy.close.side_effect = lambda: order.append("policy")
+        manager._stop = mock.Mock(side_effect=lambda: order.append("worker"))
+        manager.close()
+        self.assertTrue(manager.closed.is_set())
+        self.assertEqual(order, ["policy", "worker"])
+        manager.idle_policy.close.assert_called_once_with()
+
     def test_closed_snapshot_does_not_disable_later_memory_protection(self):
         for race_error in (ValueError("closed process"), OSError("handle closed")):
             with self.subTest(error=type(race_error).__name__):

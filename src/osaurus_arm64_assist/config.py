@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import re
 import secrets
+from .idle_policy import IdlePolicyError, normalize_endpoint
 
 MODES = ("cpu", "npu", "hybrid", "cpu-experts", "gpu", "gpu-experts")
 
@@ -19,7 +20,7 @@ def atomic_json(path, value):
 def new_config(runtime_dir):
     return {"schema_version": 1, "runtime_dir": str(Path(runtime_dir).resolve()),
             "api_key": secrets.token_urlsafe(32), "host": "127.0.0.1", "port": 8082,
-            "idle_seconds": 300, "memory_floor_mib": 512, "models": []}
+            "idle_source": "osaurus", "idle_seconds": 300, "memory_floor_mib": 512, "models": []}
 
 
 def integer(value, label, low, high):
@@ -37,6 +38,16 @@ def validate(config):
         raise ValueError("This companion only serves on 127.0.0.1")
     integer(config.get("port", 8082), "port", 1024, 65535)
     integer(config.get("idle_seconds", 300), "idle_seconds", 0, 86400)
+    if config.get("idle_source", "osaurus") not in ("osaurus", "fixed"):
+        raise ValueError("idle_source must be osaurus or fixed")
+    endpoint = config.get("osaurus_url", "auto")
+    if not isinstance(endpoint, str):
+        raise ValueError("osaurus_url must be auto or a loopback HTTP origin")
+    if endpoint != "auto":
+        try:
+            normalize_endpoint(endpoint)
+        except IdlePolicyError:
+            raise ValueError("osaurus_url must be a loopback HTTP origin without credentials or a path") from None
     integer(config.get("memory_floor_mib", 512), "memory_floor_mib", 256, 65536)
     if not isinstance(config.get("api_key"), str) or len(config["api_key"]) < 24:
         raise ValueError("Configuration needs an installation-specific API key of at least 24 characters")

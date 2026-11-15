@@ -155,7 +155,7 @@ def main(argv=None):
             else:
                 backup=json.loads(args.input.read_text(encoding="utf-8-sig"))
                 if not isinstance(backup,dict): raise ValueError("Backup must be an object")
-                for name in ("models","idle_seconds","memory_floor_mib","port","origins"):
+                for name in ("models","idle_source","idle_seconds","osaurus_url","memory_floor_mib","port","origins"):
                     if name in backup: config[name]=backup[name]
                 settings.validate(config); config.pop("_config_directory",None)
                 settings.atomic_json(args.config,config)

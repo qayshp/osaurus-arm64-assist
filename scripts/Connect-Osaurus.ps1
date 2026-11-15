@@ -9,8 +9,14 @@ if (@($config.models).Count -eq 0) { throw 'Add a model profile before connectin
 if (-not $config.api_key -or ([string]$config.api_key).Length -lt 32) { throw 'The local companion API key is missing or too short. Recreate a valid config with the companion init command.' }
 $osaurus = Get-AssistOsaurus
 $uri = [Uri]$OsaurusUrl
-if ($uri.Scheme -ne 'http' -or $uri.Host -notin @('127.0.0.1','localhost','[::1]','::1')) { throw 'OsaurusUrl must address the local Osaurus server.' }
+if ($uri.Scheme -ne 'http' -or $uri.Host -notin @('127.0.0.1','localhost','[::1]','::1') -or $uri.Port -lt 1 -or $uri.UserInfo -or $uri.Query -or $uri.Fragment -or $uri.AbsolutePath -ne '/') { throw 'OsaurusUrl must be a loopback HTTP origin without credentials or a path.' }
 if (-not $PSCmdlet.ShouldProcess($ProviderName, 'Register this companion as an Osaurus OpenAI-compatible provider')) { return }
+if ($PSBoundParameters.ContainsKey('OsaurusUrl')) {
+    # A deliberately selected Osaurus endpoint is also the preference source.
+    # Default connections keep automatic port discovery, requiring no setting.
+    $config | Add-Member -NotePropertyName osaurus_url -NotePropertyValue $uri.GetLeftPart([UriPartial]::Authority) -Force
+    Write-AssistJson $configPath $config
+}
 & (Join-Path $PSScriptRoot 'Start.ps1') -RootPath $root
 $null = & $osaurus serve
 if ($LASTEXITCODE -ne 0) { throw 'Osaurus did not start. Launch the app and retry.' }
