@@ -1,0 +1,437 @@
+{
+  "schema_version": 1,
+  "package_version": "0.1.3",
+  "kind": "model_settings_sharing",
+  "checks": [
+    {
+      "name": "inventory_has_four_chat_models",
+      "passed": true
+    },
+    {
+      "name": "control_has_no_companion_registration",
+      "passed": true
+    },
+    {
+      "name": "config_models_and_key_preserved",
+      "passed": true
+    },
+    {
+      "name": "automatic_profiles_visible_through_osaurus",
+      "passed": true
+    },
+    {
+      "name": "automatic_raptor_native_handoff",
+      "passed": true,
+      "seconds": 19.006372500007274,
+      "usage": {
+        "prompt_tokens": 32,
+        "completion_tokens": 2,
+        "total_tokens": 34
+      },
+      "assist": {
+        "requested_mode": "hybrid",
+        "actual_mode": "hybrid",
+        "fallback_reason": null,
+        "cold_load": true,
+        "load_seconds_this_request": 13.295646700004,
+        "load_stages": {
+          "runtime_verify_and_backend_seconds": 0.1810193999990588,
+          "metadata_and_template_seconds": 0.14110290000098757,
+          "primary": {
+            "model_seconds": 3.0743961999978637,
+            "context_seconds": 2.0505971999955364
+          },
+          "secondary_cpu": {
+            "model_seconds": 7.671045000010054,
+            "context_seconds": 0.1747719999984838
+          }
+        },
+        "architecture": "spark2_5",
+        "context_length": 2048,
+        "metrics": {
+          "request_seconds": 5.428589600007399,
+          "format_seconds": 0.005061800009571016,
+          "tokenize_seconds": 0.006659399994532578,
+          "context_reset_seconds": 0.034118399998988025,
+          "prompt_seconds": 5.029859699992812,
+          "first_text_seconds": 5.081518999999389,
+          "first_token_seconds": 5.079092200001469,
+          "sampling_and_text_seconds": 0.004990000001271255,
+          "continuation_decode_seconds": 0.28996120001829695,
+          "state_transfer_seconds": 0.055710499989800155,
+          "state_bytes": 4720284,
+          "native_decode_tokens_per_second": 6.901477951503314,
+          "token_count_convention": "sampled non-EOG output tokens; no billing",
+          "postprocess_seconds": 2.3000029614195228e-06
+        },
+        "settings_source": "osaurus",
+        "source_model": "Raptor-0.7-4B-Q6_K",
+        "settings": {
+          "applied": [
+            "batchSize",
+            "chatTemplateKwargs",
+            "frequencyPenalty",
+            "kvOffload",
+            "kvUnified",
+            "minP",
+            "opOffload",
+            "presencePenalty",
+            "repeatLastN",
+            "repeatPenalty",
+            "seed",
+            "swaFull",
+            "temperature",
+            "topK",
+            "topP",
+            "uBatchSize"
+          ],
+          "adapted": [
+            "cachePrompt",
+            "contextSize",
+            "flashAttention",
+            "loadMode"
+          ],
+          "unsupported": []
+        },
+        "api_seconds": 18.974038200001814
+      },
+      "answer": "42"
+    },
+    {
+      "name": "automatic_raptor_unicode_stream",
+      "passed": true,
+      "answer": "caf\u00e9",
+      "usage": {
+        "prompt_tokens": 23,
+        "completion_tokens": 3,
+        "total_tokens": 26
+      },
+      "assist": {
+        "requested_mode": "hybrid",
+        "actual_mode": "hybrid",
+        "fallback_reason": null,
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "load_stages": null,
+        "architecture": "spark2_5",
+        "context_length": 2048,
+        "metrics": {
+          "request_seconds": 0.4005639999959385,
+          "format_seconds": 0.00027859999681822956,
+          "tokenize_seconds": 0.002917900012107566,
+          "context_reset_seconds": 0.0038449999992735684,
+          "prompt_seconds": 0.19661660000565462,
+          "first_text_seconds": 0.20446049999736715,
+          "first_token_seconds": 0.20440999999118503,
+          "sampling_and_text_seconds": 0.0016388000221922994,
+          "continuation_decode_seconds": 0.19134510000003502,
+          "state_transfer_seconds": 0.003575399998226203,
+          "state_bytes": 3392964,
+          "native_decode_tokens_per_second": 15.689391879170762,
+          "token_count_convention": "sampled non-EOG output tokens; no billing",
+          "postprocess_seconds": 2.3000029614195228e-06
+        },
+        "settings_source": "osaurus",
+        "source_model": "Raptor-0.7-4B-Q6_K",
+        "settings": {
+          "applied": [
+            "batchSize",
+            "chatTemplateKwargs",
+            "frequencyPenalty",
+            "kvOffload",
+            "kvUnified",
+            "minP",
+            "opOffload",
+            "presencePenalty",
+            "repeatLastN",
+            "repeatPenalty",
+            "seed",
+            "swaFull",
+            "temperature",
+            "topK",
+            "topP",
+            "uBatchSize"
+          ],
+          "adapted": [
+            "cachePrompt",
+            "contextSize",
+            "flashAttention",
+            "loadMode"
+          ],
+          "unsupported": []
+        },
+        "api_seconds": 0.40261679999821354
+      },
+      "done_markers": 1
+    },
+    {
+      "name": "raptor_direct",
+      "passed": true,
+      "answer": "42",
+      "usage": {
+        "prompt_tokens": 32,
+        "completion_tokens": 2,
+        "total_tokens": 34
+      },
+      "assist": {
+        "requested_mode": "hybrid",
+        "actual_mode": "hybrid",
+        "fallback_reason": null,
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "load_stages": null,
+        "architecture": "spark2_5",
+        "context_length": 2048,
+        "metrics": {
+          "request_seconds": 0.3719699999928707,
+          "format_seconds": 0.00012159999459981918,
+          "tokenize_seconds": 0.00027370000316295773,
+          "context_reset_seconds": 0.004109900008188561,
+          "prompt_seconds": 0.1999943999981042,
+          "first_text_seconds": 0.20497409999370575,
+          "first_token_seconds": 0.2049298999918392,
+          "sampling_and_text_seconds": 0.000786900011007674,
+          "continuation_decode_seconds": 0.16202039999188855,
+          "state_transfer_seconds": 0.0044363000051816925,
+          "state_bytes": 4720284,
+          "native_decode_tokens_per_second": 12.35063451384815,
+          "token_count_convention": "sampled non-EOG output tokens; no billing",
+          "postprocess_seconds": 1.7999991541728377e-06
+        },
+        "settings_source": "osaurus",
+        "source_model": "Raptor-0.7-4B-Q6_K",
+        "settings": {
+          "applied": [
+            "batchSize",
+            "chatTemplateKwargs",
+            "frequencyPenalty",
+            "kvOffload",
+            "kvUnified",
+            "minP",
+            "opOffload",
+            "presencePenalty",
+            "repeatLastN",
+            "repeatPenalty",
+            "seed",
+            "swaFull",
+            "temperature",
+            "topK",
+            "topP",
+            "uBatchSize"
+          ],
+          "adapted": [
+            "cachePrompt",
+            "contextSize",
+            "flashAttention",
+            "loadMode"
+          ],
+          "unsupported": []
+        },
+        "api_seconds": 0.3725682000076631
+      }
+    },
+    {
+      "name": "raptor_through_osaurus",
+      "passed": true,
+      "answer": "42",
+      "usage": {
+        "prompt_tokens": 32,
+        "completion_tokens": 2,
+        "total_tokens": 34
+      }
+    },
+    {
+      "name": "new_qwen_control_direct",
+      "passed": true,
+      "answer": "17 + 25 = 42.",
+      "usage": {
+        "prompt_tokens": 28,
+        "completion_tokens": 12,
+        "total_tokens": 40,
+        "tokens_per_second": 87.41536603197814,
+        "completion_tokens_per_second": 87.41536603197814
+      },
+      "assist": {
+        "requested_mode": "auto",
+        "actual_mode": "osaurus-native",
+        "fallback_reason": "native_compatibility_unverified",
+        "source_model": "Qwen3-0.6B-Q4_0",
+        "api_seconds": 4.1221185000031255
+      }
+    },
+    {
+      "name": "new_qwen_control_through_osaurus",
+      "passed": false,
+      "answer": "",
+      "usage": {
+        "prompt_tokens": 24,
+        "completion_tokens": 32,
+        "total_tokens": 56,
+        "tokens_per_second": 80.51174302729348,
+        "completion_tokens_per_second": 80.51174302729348,
+        "prompt_tokens_details": {
+          "cached_tokens": 23
+        }
+      }
+    },
+    {
+      "name": "no_companion_worker_after_stock_fallback",
+      "passed": true
+    }
+  ],
+  "model_sync": {
+    "source": "osaurus",
+    "status": "live",
+    "error": null,
+    "inventory_models": 4,
+    "excluded_models": 2,
+    "pending_downloads": 0,
+    "revision": 1,
+    "automatic_profiles": 4,
+    "manual_profiles": 7,
+    "native_profiles": 10,
+    "proxy_profiles": 1
+  },
+  "automatic_models": [
+    {
+      "id": "osaurus/Ornith-1.5-35B-A3B-Q2_K-31b0889eeec7531e",
+      "mode": "cpu-experts",
+      "context": 2048,
+      "synced": true,
+      "settings_source": "osaurus",
+      "fallback_reason": null,
+      "sync": {
+        "applied": [
+          "batchSize",
+          "frequencyPenalty",
+          "kvOffload",
+          "kvUnified",
+          "minP",
+          "opOffload",
+          "presencePenalty",
+          "repeatLastN",
+          "repeatPenalty",
+          "seed",
+          "swaFull",
+          "temperature",
+          "topK",
+          "topP",
+          "uBatchSize"
+        ],
+        "adapted": [
+          "cachePrompt",
+          "contextSize",
+          "flashAttention",
+          "loadMode",
+          "repack"
+        ],
+        "unsupported": []
+      }
+    },
+    {
+      "id": "osaurus/Ornith-1.5-35B-Q4_K_M-245fb0724ab09d51",
+      "mode": "cpu-experts",
+      "context": 2048,
+      "synced": true,
+      "settings_source": "osaurus",
+      "fallback_reason": null,
+      "sync": {
+        "applied": [
+          "batchSize",
+          "chatTemplateKwargs",
+          "frequencyPenalty",
+          "kvOffload",
+          "kvUnified",
+          "minP",
+          "opOffload",
+          "presencePenalty",
+          "repeatLastN",
+          "repeatPenalty",
+          "seed",
+          "swaFull",
+          "temperature",
+          "topK",
+          "topP",
+          "uBatchSize"
+        ],
+        "adapted": [
+          "cachePrompt",
+          "contextSize",
+          "flashAttention",
+          "loadMode",
+          "repack"
+        ],
+        "unsupported": []
+      }
+    },
+    {
+      "id": "osaurus/Qwen3-0.6B-Q4_0-abde4d1f386faf1b",
+      "mode": "osaurus",
+      "context": 40960,
+      "synced": true,
+      "settings_source": "osaurus",
+      "fallback_reason": "native_compatibility_unverified",
+      "sync": {
+        "applied": [
+          "batchSize",
+          "frequencyPenalty",
+          "kvOffload",
+          "kvUnified",
+          "minP",
+          "opOffload",
+          "presencePenalty",
+          "repeatLastN",
+          "repeatPenalty",
+          "seed",
+          "swaFull",
+          "temperature",
+          "topK",
+          "topP",
+          "uBatchSize"
+        ],
+        "adapted": [
+          "contextSize",
+          "flashAttention",
+          "loadMode"
+        ],
+        "unsupported": []
+      }
+    },
+    {
+      "id": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+      "mode": "hybrid",
+      "context": 2048,
+      "synced": true,
+      "settings_source": "osaurus",
+      "fallback_reason": null,
+      "sync": {
+        "applied": [
+          "batchSize",
+          "chatTemplateKwargs",
+          "frequencyPenalty",
+          "kvOffload",
+          "kvUnified",
+          "minP",
+          "opOffload",
+          "presencePenalty",
+          "repeatLastN",
+          "repeatPenalty",
+          "seed",
+          "swaFull",
+          "temperature",
+          "topK",
+          "topP",
+          "uBatchSize"
+        ],
+        "adapted": [
+          "cachePrompt",
+          "contextSize",
+          "flashAttention",
+          "loadMode"
+        ],
+        "unsupported": []
+      }
+    }
+  ],
+  "passed": false
+}

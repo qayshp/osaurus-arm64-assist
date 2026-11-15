@@ -2,7 +2,19 @@
 
 These November 15, 2026 observations exercise the community companion installed on the same Surface Laptop 7 used for the [historical experiments](benchmarks.md): Snapdragon X Plus X1P64100, ten CPU cores, Adreno X1-85, Hexagon v73 and 16 GB installed RAM. They establish bounded behavior on that machine, rather than general support for all models, NPUs or Osaurus workflows.
 
-The native target is the pinned Qualcomm GenieX 0.11.0 Windows ARM64 release, with llama.cpp core `93cf736a8d1d46aa922e27eb64aa712bcd5ebc30`. The companion package identifies itself as 0.1.0. These receipts were produced during November 15 initial alpha verification, including runs after several public commits; the original prototype benchmarks and successive companion acceptance runs are separate observations. [Provenance](../evidence/companion-acceptance-provenance.json) identifies hardware, profile intent and receipt basenames without local paths or credentials.
+The native target is the pinned Qualcomm GenieX 0.11.0 Windows ARM64 release, with llama.cpp core `93cf736a8d1d46aa922e27eb64aa712bcd5ebc30`. The benchmark and protocol receipts in the tables below identify the companion as **0.1.0**. These receipts were produced during November 15 initial alpha verification, including runs after several public commits; the original prototype benchmarks and successive companion acceptance runs are separate observations. [Provenance](../evidence/companion-acceptance-provenance.json) identifies hardware, profile intent and receipt basenames without local paths or credentials.
+
+## Automatic model and settings acceptance
+
+**0.1.3-alpha.1** adds automatic Osaurus inventory/settings following, known-model assisted routing and delegation to Osaurus's original engine when a model or explicit preference cannot be honored. Its [implementation contract](model-sharing.md) covers source polling, context Auto, supported settings, offline snapshots and fixed benchmark opt-outs. Existing 0.1.0 protocol passes do not prove that newer synchronization code, every downloaded model or every source setting works on hardware.
+
+The [live sharing receipt](../evidence/companion-model-sharing-live.json) records four automatically imported chat models, seven preserved aliases, automatic visibility through Osaurus, Raptor handoff and Unicode streaming, and stock-engine Qwen inference. Raptor's cold arithmetic request used 32 input and two output tokens, took 19.01 seconds overall including 13.30 seconds loading, and checked a 4,720,284-byte inference-state handoff. These functional checks are not a throughput benchmark.
+
+The [follow-up receipt](../evidence/companion-model-sharing-followup.json) retains Qwen's second failed answer check, verifies exact Unicode stock streaming, and observes the source-residency policy. Routed Qwen with 32 and 128 output-token budgets returned empty final content while consuming its budget in reasoning. The [settings receipt](../evidence/companion-model-sharing-settings.json) then verifies context/sampling propagation without a restart and a correct routed answer after thinking was disabled in **Osaurus's per-model setting**: 28 input and 12 output tokens. All three settings checks passed. Original preferences were restored; the app retains its normal undo history. These failures are preserved alongside the successful configuration case.
+
+[Provenance and limitations](../evidence/companion-model-sharing-provenance.json) identify the downloaded control file, synthetic prompts, code revision and an interim unexplained cold-reload disconnect. The final source was checked with 244 automated tests and real inference on this laptop. Read-only residency checks avoid an additional assisted allocation when Osaurus already has a source model resident; they do not create an atomic memory reservation across independent app requests.
+
+The historical and packaged fixed benchmarks use batch/microbatch 512; automatic Osaurus defaults can use batch 2048 and model-derived sampling values. Those are different configurations, so their timings must not be treated as interchangeable. The native runtime pin remains the same. The following tables retain their original versions and settings.
 
 ## What the receipts establish
 
@@ -21,7 +33,7 @@ The initial and final Raptor suites overlap. Do not add 7 and 14 into a claim of
 
 The acceptance client checks usage totals, requested/reported actual mode, advertised context, expected synthetic outputs and hybrid state-transfer evidence where available. Its receipt explicitly says **“API observations; this client does not sample physical NPU counters.”** Successful host-side API metadata and state bytes are useful execution evidence; they are not an independent counter trace proving utilization, device occupancy or energy efficiency. These tests do not bypass the need for signed-DSP provisioning and runtime integrity checks.
 
-## Current packaged fixed-token comparison
+## Packaged 0.1.0 fixed-token comparison
 
 The completed companion CLI rerun used the same Raptor Q6_K file for all four modes, a 2048-token context, batch/microbatch 512, six decode threads, ten batch threads, CPU repacking enabled and balanced NPU power. Each mode ran one warm-up followed by **three measured repetitions**, sequentially, with the context cleared for each request. Independent checks confirmed that every input array is the same 512 IDs generated by `random.Random(42).randrange(32000)`, and every warm-up/measured run reports exactly 512 input / 128 generated tokens with 128 captured output IDs.
 
@@ -88,6 +100,6 @@ After explicit unload, the [final state receipt](../evidence/companion-final-sta
 
 ## Reproduce and interpret
 
-Use the root [setup instructions](../README.md) to register existing model files and start the companion. The public `tools/hardware_acceptance.py` client uses synthetic requests and writes sanitized receipts; inspect its help for explicit model/target arguments. `benchmark` provides the separate deterministic fixed-token throughput workload. Neither command is an automatic model-quality certification.
+Use the root [setup instructions](../README.md) for automatic source-model discovery and starting the companion. Register explicit fixed aliases when reproducing a controlled comparison, so subsequent Osaurus settings edits do not change the workload. The public `tools/hardware_acceptance.py` client uses synthetic requests and writes sanitized receipts; inspect its help for explicit model/target arguments. `benchmark` provides the separate deterministic fixed-token throughput workload. Neither command is an automatic model-quality certification.
 
 Keep hardware acceptance distinct from unit tests: unit tests exercise parsing, protocol, bounds and lifecycle logic using synthetic files or fake workers. Passing them does not execute the physical NPU. Conversely, these few hardware successes do not establish broad tool reliability, JSON Schema output, multimodal support, larger contexts, long-duration operation, comfortable RAM headroom or battery benefits. Keep failed checks, startup time and memory regressions alongside warm successes when sharing results.

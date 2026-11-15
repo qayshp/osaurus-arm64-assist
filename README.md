@@ -4,7 +4,9 @@ An experimental community companion for selecting CPU, Adreno GPU and Qualcomm H
 
 **Alpha software.** Acceleration experiments were performed on one Surface Laptop 7 with a Snapdragon X Plus, Hexagon v73 and 16 GB of RAM, using a 2048-token context. This is a Snapdragon/Hexagon project; Intel and AMD NPUs are unsupported. Other Snapdragon generations and model architectures need their own validation. It is not an official Osaurus, Qualcomm, Microsoft or llama.cpp component.
 
-The companion exposes a local OpenAI-compatible provider. Models remain in Osaurus's model directory, and you explicitly select a companion profile in Osaurus. Downloading a model through Osaurus does not automatically enable NPU assistance. This repository contains source, setup scripts and sanitized experimental evidence; it contains no model weights or native runtime binaries.
+The companion exposes a local OpenAI-compatible provider. **0.1.3-alpha.1** automatically follows Osaurus's completed local model inventory and supported model settings. Download or configure a model in Osaurus, then select its companion entry; no per-model registration or second weight copy is required. Known compatible profiles can use Hexagon assistance. Other chat models, or preferences the companion cannot honor, use Osaurus's original engine with the actual route reported. Embedding, speech, adapter and projector assets are excluded from this text-chat catalog.
+
+This repository contains source, setup scripts and sanitized experimental evidence; it contains no model weights or native runtime binaries. See [model and settings sharing](docs/model-sharing.md) for compatibility, context, offline behavior and fixed benchmark profiles. The [new live acceptance receipts](docs/companion-acceptance.md#automatic-model-and-settings-acceptance) include working inference, settings changes and failed short-budget Qwen answer checks. The [release listing](https://github.com/qayshp/osaurus-arm64-assist/releases) identifies published builds.
 
 Companion 0.1.2 adds automatic lifecycle management: the normal installer enables a small hidden watcher for your Windows sign-in. It starts the companion server when you open the official Store version of Osaurus and stops it after Osaurus actually quits. Closing to the tray keeps Osaurus running. Models still load only when you request inference, and their idle interval follows your existing Osaurus setting.
 
@@ -38,8 +40,9 @@ Read the **[complete balanced benchmark record](docs/benchmarks.md)** for all mo
 | `cpu-experts` | Expert work on CPU, supported remaining work on NPU | Ornith 1.5 35B-A3B, architecture `qwen35moe`; workload-dependent benefit |
 | `gpu` | Adreno OpenCL offload with CPU host/fallback operations | Historical Qwen/Raptor comparisons; model support varies |
 | `gpu-experts` | CPU expert work with supported remaining work on Adreno | Historical Ornith comparisons were slower than CPU |
+| `osaurus` | Delegate to the source model in Osaurus's original local engine | Preserves unsupported model/settings behavior; responses report `actual_mode: osaurus-native` |
 
-The same GGUF can have multiple profiles without copying its weights. Registration checks configuration and file presence; it does **not** prove successful execution. A new quantization, architecture, cache configuration or native runtime needs separate load, correctness and performance tests. CPU fallback is opt-in (`--fallback-mode cpu`) and reported; it must not be counted as a successful NPU run.
+The same GGUF can have multiple profiles without copying its weights. Discovery and profile construction do **not** prove successful execution. A new quantization, architecture, cache configuration or native runtime needs separate tests. The automatic native policy recognizes Raptor `spark2_5` Q6_K and Ornith `qwen35moe` Q4_K_M/Q2_K; it is not a general NPU compatibility claim. Stock-engine delegation and opt-in CPU fallback are reported and must not be counted as successful NPU runs.
 
 ## Prerequisites
 
@@ -67,48 +70,52 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Install.ps1 -R
 
 $AssistPython = Join-Path $AssistRoot '.venv\Scripts\python.exe'
 $AssistConfig = Join-Path $AssistRoot 'config.json'
-& $AssistPython -m osaurus_arm64_assist models discover
 ```
 
 The installer creates a private Python environment and installation-specific API key, obtains the pinned official GenieX archive, and verifies the archive and native-file hashes. Starting with 0.1.2, fresh setup also enables a new, owned shortcut in your **per-user Windows Startup folder**, launching the hidden lifecycle watcher at sign-in. It preserves your existing Osaurus shortcuts and Osaurus startup preference; updates respect a watcher entry you disabled in Windows Startup Apps. This user-level setup needs no administrator access; model downloads, driver provisioning and Windows power settings remain separate. If Python detection fails, rerun `Install.ps1` with `-PythonPath` pointing to your native ARM64 `python.exe`. Advanced manual-only installations can use `-NoAutoStart`.
 
-Use the exact `osaurus_model` filename stem printed by discovery. These examples match the tested files. Duplicate stems from different publishers are rejected; use `--path` with the explicit GGUF path, or `--models-dir` to narrow discovery.
+Open Osaurus and keep it running during initial connection. Completed chat models already in Osaurus appear automatically after the next refresh, normally within about five seconds. Download future models and change their preferences in Osaurus. A model is not loaded merely because it appears in the companion catalog.
 
 ```powershell
-# Raptor: NPU prompt processing followed by CPU generation.
-& $AssistPython -m osaurus_arm64_assist models add --config $AssistConfig --id raptor/hybrid --mode hybrid --osaurus-model Raptor-0.7-4B-Q6_K --context 2048 --threads 6 --batch-threads 10 --batch 512 --microbatch 512 --power-mode balanced --repack
-
-# Optional, memory-hungry Ornith profile: retain the original Q4 weights.
-& $AssistPython -m osaurus_arm64_assist models add --config $AssistConfig --id ornith-q4/assist --mode cpu-experts --osaurus-model Ornith-1.5-35B-Q4_K_M --context 2048 --threads 6 --batch-threads 10 --batch 512 --microbatch 512 --power-mode balanced --no-repack
-
-& $AssistPython -m osaurus_arm64_assist models list --config $AssistConfig
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Start.ps1 -RootPath $AssistRoot
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Connect-Osaurus.ps1 -RootPath $AssistRoot
+& $AssistPython -m osaurus_arm64_assist models list --config $AssistConfig
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Status.ps1 -RootPath $AssistRoot -Json
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Doctor.ps1 -RootPath $AssistRoot -Json
 ```
 
 During initial setup, `Start.ps1` can also launch the hidden loopback server on `127.0.0.1:8082` for testing. In everyday use, the watcher manages it with Osaurus. Models load on demand; starting the server alone does not load every profile or prove NPU execution. The server uses one admitted inference request at a time and releases the previous worker when switching profiles. By default it follows the **Idle unload** preference already selected in **Osaurus → Settings → Models → Local engine**. Historical results use a 2048-token context; raising it can materially increase memory and has not been validated here.
 
-Before connecting Osaurus, request an explicit model smoke test. This command checks a tiny arithmetic answer plus experimental JSON-object and forced-tool behavior. It can be expensive because it actually loads and runs the selected profile.
+The connection script adds an owned OpenAI-compatible provider named **Osaurus ARM64 Assist**, stores its credential through the Osaurus secret mechanism, and preserves existing providers, agents and defaults. Select the desired model under that provider in Osaurus. Selecting the original local model continues to use Osaurus's original engine. The companion base URL is `http://127.0.0.1:8082/v1`; this is separate from Osaurus's own local API, commonly on port 1337.
+
+For an optional explicit smoke test, copy a profile ID from `models list`. This command checks a tiny arithmetic answer plus experimental JSON-object and forced-tool behavior. It actually loads/runs the selected profile and can be expensive; the automatic catalog alone makes no execution claim.
 
 ```powershell
-& $AssistPython -m osaurus_arm64_assist self-test --config $AssistConfig --model raptor/hybrid --json-object --tools
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Connect-Osaurus.ps1 -RootPath $AssistRoot
+$AssistModel = 'your-selected-profile-id'
+& $AssistPython -m osaurus_arm64_assist self-test --config $AssistConfig --model $AssistModel --json-object --tools
 ```
 
-The connection script adds an owned OpenAI-compatible provider named **Osaurus ARM64 Assist**, stores its credential through the Osaurus secret mechanism, and preserves existing providers, agents and defaults. Select `raptor/hybrid` or another configured profile explicitly in Osaurus. The companion base URL is `http://127.0.0.1:8082/v1`; this is separate from Osaurus's own local API, commonly on port 1337.
+## Model settings follow Osaurus
 
-To compare optional Raptor baselines, register the same file under separate IDs before starting or after stopping the server:
+The companion inherits supported typed preferences and resolved model sampling defaults, then applies explicit request sampling overrides. Known Raptor Q6_K profiles choose phase handoff; known Ornith Q4_K_M/Q2_K profiles choose CPU-expert assistance. Other chat models and unsupported explicit settings delegate to the source model in Osaurus, with `actual_mode: osaurus-native` and a fallback reason. Source discovery does not promise universal NPU compatibility.
+
+For assisted profiles, context **Auto** currently means the tested 2048 tokens. A large stock-engine plan is not copied into an NPU allocation. An explicit source context larger than 2048 uses the stock engine. Default caching/scheduling policies also have documented backend adaptations; the companion does not claim identical internals or cross-request KV reuse. See [the setting-by-setting contract](docs/model-sharing.md), including offline diagnostics and fixed opt-outs.
+
+## Optional fixed benchmark profiles
+
+For reproducible CPU/GPU/NPU comparisons, deliberately register fixed aliases that do not follow later Osaurus settings edits. These examples reuse the tested Raptor file and do not copy weights. Use the exact `osaurus_model` filename stem printed by `models discover`; duplicate stems are rejected, so use `--path` or `--models-dir` to disambiguate.
 
 ```powershell
-& $AssistPython -m osaurus_arm64_assist models add --config $AssistConfig --id raptor/cpu --mode cpu --osaurus-model Raptor-0.7-4B-Q6_K --context 2048 --threads 6 --batch-threads 10 --batch 512 --microbatch 512 --repack
-& $AssistPython -m osaurus_arm64_assist models add --config $AssistConfig --id raptor/npu --mode npu --osaurus-model Raptor-0.7-4B-Q6_K --context 2048 --threads 6 --batch-threads 10 --batch 512 --microbatch 512 --power-mode balanced --repack
+& $AssistPython -m osaurus_arm64_assist models add --config $AssistConfig --id raptor/cpu --mode cpu --osaurus-model Raptor-0.7-4B-Q6_K --settings-source fixed --context 2048 --threads 6 --batch-threads 10 --batch 512 --microbatch 512 --repack
+& $AssistPython -m osaurus_arm64_assist models add --config $AssistConfig --id raptor/npu --mode npu --osaurus-model Raptor-0.7-4B-Q6_K --settings-source fixed --context 2048 --threads 6 --batch-threads 10 --batch 512 --microbatch 512 --power-mode balanced --repack
+& $AssistPython -m osaurus_arm64_assist models add --config $AssistConfig --id raptor/hybrid-fixed --mode hybrid --osaurus-model Raptor-0.7-4B-Q6_K --settings-source fixed --context 2048 --threads 6 --batch-threads 10 --batch 512 --microbatch 512 --power-mode balanced --repack
 ```
 
-For an Ornith CPU baseline, use the same Q4 stem with `--id ornith-q4/cpu --mode cpu --no-repack`. Keep every other setting matched. Restart the companion after editing profiles/configuration. Managed startup refreshes Osaurus's provider discovery after the companion becomes ready. To update an existing profile deliberately, repeat `models add` with `--replace`; `models remove --config ... --id ...` removes only the profile, never the model file.
+For original Ornith Q4, use `--osaurus-model Ornith-1.5-35B-Q4_K_M --settings-source fixed --no-repack`, with separate `--mode cpu` and `--mode cpu-experts` IDs and all other settings matched. These larger-model runs have substantial memory costs. Restart the companion after editing manual profiles/configuration. To update an existing profile deliberately, repeat `models add` with `--replace`; `models remove --config ... --id ...` removes only the profile, never the model file. Advanced global `"models_source": "fixed"` disables automatic catalog/settings following independently of idle/lifecycle behavior.
 
 ## Automatic startup and shutdown with Osaurus
 
-With the default 0.1.2 installation, open Osaurus normally and select a companion profile. The watcher recognizes the official Store app in the same Windows user session, starts the server, and refreshes provider discovery when it is ready. Minimizing Osaurus or closing its window to the system tray keeps the app and companion running. A true app exit stops the companion server and model workers after a short confirmation delay.
+With the default installation, open Osaurus normally and select a companion profile. The watcher recognizes the official Store app in the same Windows user session, starts the server, and refreshes provider discovery when it is ready. Minimizing Osaurus or closing its window to the system tray keeps the app and companion running. A true app exit stops the companion server and model workers after a short confirmation delay.
 
 A small watcher remains in your signed-in session, waiting for Osaurus to open again. It has a memory cost; large model weights and NPU contexts are allocated only when inference is requested. Your existing Osaurus launch-at-login choice is preserved. See [automatic lifecycle](docs/automatic-lifecycle.md) for startup ownership, diagnostics, disabling the feature and manual operation.
 
@@ -122,11 +129,11 @@ See [idle policy and diagnostics](docs/idle-policy.md) for offline behavior, alt
 
 ## Protocol and acceptance status
 
-The implementation includes text chat, multi-turn conversations using embedded GGUF templates, SSE streaming, sampling controls, tool-call parsing/argument validation, architecture-specific forced-tool grammar for Spark/Qwen formats, and a grammar-backed `json_object` response mode. JSON Schema output, multimodal input and universal tool-template compatibility are outside this alpha's contract. Tools and JSON objects are buffered until validated rather than exposing partial native markup to clients.
+The native implementation includes text chat, multi-turn conversations using embedded GGUF templates, SSE streaming, sampling controls, tool-call parsing/argument validation, architecture-specific forced-tool grammar for Spark/Qwen formats, and a grammar-backed `json_object` response mode. JSON Schema output, multimodal native input and universal tool-template compatibility are outside the native alpha's contract. Tools and JSON objects are buffered until validated rather than exposing partial native markup to clients. Stock-engine delegation retains the source engine's own capabilities and limits; a proxied response is not proof that the native path implements the same feature.
 
 Automated tests cover request/config validation, embedded Spark/Qwen history rendering, tool delimiters inside JSON strings, schema validation, Unicode streaming, HTTP errors/authentication, serial request admission, worker lifecycle, runtime integrity and model-preserving registry/backup operations. These tests use synthetic files and mocked native workers. **They do not establish physical NPU execution or full Osaurus agent compatibility.**
 
-The packaged companion was also exercised on the documented Snapdragon laptop. Raptor hybrid passed seven synthetic checks directly and the same seven through Osaurus 1.0.3, including a prompt longer than one native batch, conversation history, Unicode SSE, forced tool calls with a tool-result round trip, and JSON-object output. Ornith Q4 passed arithmetic and Unicode streaming in both CPU-expert/NPU and CPU-expert/Adreno modes. Clean removal and reinstall preserved the existing Osaurus configuration and model files, restored seven profiles, and rotated the installation credential. The small Qwen control's exact-answer failures are retained too. See [packaged companion acceptance](docs/companion-acceptance.md) for the receipts, timing boundaries and limits; this is separate from the historical prototype benchmarks and does not certify every Osaurus agent or model.
+The packaged **0.1.0** companion was also exercised on the documented Snapdragon laptop. Raptor hybrid passed seven synthetic checks directly and the same seven through Osaurus 1.0.3, including a prompt longer than one native batch, conversation history, Unicode SSE, forced tool calls with a tool-result round trip, and JSON-object output. Ornith Q4 passed arithmetic and Unicode streaming in both CPU-expert/NPU and CPU-expert/Adreno modes. Clean removal and reinstall preserved the existing Osaurus configuration and model files, restored seven profiles, and rotated the installation credential. The small Qwen control's exact-answer failures are retained too. See [packaged companion acceptance](docs/companion-acceptance.md) for the receipts, timing boundaries and limits. Newer automatic model/settings acceptance is tracked separately; earlier passes do not certify that phase, every Osaurus agent or every model.
 
 Historical arithmetic and exact fact-extraction answers were checked. Free-form replies/summaries were timed, not comprehensively quality-graded. Long-term stability, large contexts, sleep/resume, thermal behavior and energy per answer remain unproven. See [support and troubleshooting](docs/support-and-troubleshooting.md).
 
@@ -136,10 +143,10 @@ With the companion running and the profile registered, the benchmark command rer
 
 ```powershell
 $AssistResult = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'raptor-hybrid-fixed.json'
-& $AssistPython -m osaurus_arm64_assist benchmark --config $AssistConfig --model raptor/hybrid --output $AssistResult --prompt-tokens 512 --generated-tokens 128 --repetitions 3 --warmup 1 --seed 42
+& $AssistPython -m osaurus_arm64_assist benchmark --config $AssistConfig --model raptor/hybrid-fixed --output $AssistResult --prompt-tokens 512 --generated-tokens 128 --repetitions 3 --warmup 1 --seed 42
 ```
 
-Repeat with `raptor/cpu` and `raptor/npu`, using distinct output files and the same settings. Ornith profiles can use the same workload if there is sufficient memory. The authenticated `/admin/benchmark` endpoint holds one inference lock for the entire benchmark, validates context/repetition limits, and uses a separate worker command; the ordinary chat endpoint cannot inject direct token IDs.
+Repeat with the fixed `raptor/cpu` and `raptor/npu` aliases, using distinct output files and the same settings. Automatic source defaults can change batch, sampling and other settings, so use fixed aliases for a controlled comparison. Ornith profiles can use the same workload if there is sufficient memory. The authenticated `/admin/benchmark` endpoint holds one inference lock for the entire benchmark, validates context/repetition limits, and uses a separate worker command; the ordinary chat endpoint cannot inject direct token IDs.
 
 Results include exact input/generated IDs, separate warm-up and measured runs, per-run usage/stages/actual execution mode, loading information, and measured-only medians. Engine response timing excludes model loading; `manager_seconds` includes that run's load/IPC overhead, and top-level `api_seconds` covers the complete warm-up-plus-measured invocation. Failed or incomplete generation returns an error instead of a throughput result. Configuration output omits model paths, runtime paths and the API key. Review results before publishing; new runs are separate evidence and need not reproduce historical numbers under different memory, cache, power or thermal conditions.
 
@@ -176,6 +183,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Uninstall.ps1 
 - [Support boundary](docs/support-and-troubleshooting.md): tested architectures, mapping/commit failures, provisioning and memory limitations.
 - [Idle policy](docs/idle-policy.md): automatic Osaurus preference following, cached/offline behavior and status diagnostics.
 - [Automatic lifecycle](docs/automatic-lifecycle.md): the owned login shortcut, app/tray/quit behavior and manual controls.
+- [Models and settings](docs/model-sharing.md): automatic inventory, inherited preferences, stock-engine fallback, offline state and benchmark opt-outs.
 
 `runtime.lock.json` pins the official GenieX **0.11.0** Windows ARM64 archive and every required native-file SHA-256. Its llama.cpp core revision is `93cf736a8d1d46aa922e27eb64aa712bcd5ebc30`; the Python declarations and packaged native allowlist are tied to it. `requirements.lock` pins Python distributions and hashes. These are reproducibility pins, not a claim that the versions are the newest available. Do not mix arbitrary replacement DLLs or DSP payloads into the bundle.
 

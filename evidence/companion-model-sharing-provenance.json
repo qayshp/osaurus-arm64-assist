@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-15",
+  "package_version": "0.1.3",
+  "code_commit": "79d3e536becbccdae1189cd3401f6f479ee23549",
+  "hardware": "Surface Laptop 7, Snapdragon X Plus X1P64100, Hexagon v73, Adreno X1-85, 16 GB",
+  "osaurus_version": "1.0.3",
+  "native_runtime": "Qualcomm GenieX 0.11.0; pinned core 93cf736a8d1d46aa922e27eb64aa712bcd5ebc30",
+  "control_download": {
+    "source": "Osaurus CLI pull",
+    "repository": "unsloth/Qwen3-0.6B-GGUF",
+    "file": "Qwen3-0.6B-Q4_0.gguf",
+    "bytes": 382156480,
+    "sha256": "33bcc57074ec7b6eada5a90651ee546ec0c2b271002c22baf9f1b2dd1e8f75cb",
+    "registered_in_companion_config": false
+  },
+  "prompts": {
+    "arithmetic": "Reply with only the answer: what is 17 + 25?",
+    "unicode": "Reply with only the word caf\u00e9."
+  },
+  "request_sampling": {
+    "temperature": 0,
+    "default_max_tokens": 32,
+    "extended_qwen_max_tokens": 128
+  },
+  "scope": "Functional model/settings sharing and inference acceptance, not a new CPU/GPU/NPU performance comparison.",
+  "source_settings_test": "Only the newly downloaded control model received temporary overrides; original overrides restored. Osaurus normal undo history changed.",
+  "observations": [
+    "Qwen routed requests with 32 and 128 token budgets exhausted their budget in reasoning and returned empty final content. Both failed answer checks are retained.",
+    "Disabling thinking in the source Osaurus per-model setting produced the correct routed final answer within 12 output tokens; that setting was then restored.",
+    "During development, Accept-driven SSE negotiation caused a nonstream proxy failure; fixed and regression-tested before these final receipts.",
+    "An interim cold Raptor reload while a stock model was resident ended without an HTTP response. Its exact cause was not captured. Raw timeout responses now have explicit errors; the read-only residency guard avoids a new assisted allocation alongside a source resident model. No cause attribution or soak-test claim is made.",
+    "The initial Raptor checks began with all source chat models cold. The final resting state has no companion native worker; the stock control model follows Osaurus own idle timer."
+  ],
+  "preserved_configuration": [
+    "companion model aliases and API key unchanged",
+    "existing provider definitions unchanged",
+    "existing agents and default agent unchanged",
+    "historical positive and negative benchmark files unchanged"
+  ],
+  "automated_tests": 244,
+  "ci_run": 43759747699,
+  "receipts": [
+    "companion-model-sharing-live.json",
+    "companion-model-sharing-followup.json",
+    "companion-model-sharing-settings.json"
+  ]
+}

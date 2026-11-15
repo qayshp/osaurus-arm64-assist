@@ -1,5 +1,7 @@
 # Benchmark and companion acceptance evidence
 
+The 0.1.3 [model-sharing provenance](companion-model-sharing-provenance.json), [live inference](companion-model-sharing-live.json), [follow-up checks](companion-model-sharing-followup.json), and [source-settings checks](companion-model-sharing-settings.json) form a separate functional verification phase. They preserve two failed short-budget Qwen answer checks as well as successful NPU handoff, streaming, automatic discovery and settings propagation. They are not new CPU/GPU/NPU speed comparisons. See [the interpretation](../docs/companion-acceptance.md#automatic-model-and-settings-acceptance).
+
 These files are sanitized projections of experiments conducted on November 14–15, 2026 on one Windows ARM64 Surface Laptop 7. They support the project's rationale, including slower cases and unsuccessful loads. They are not evidence that the current companion build passed a clean-machine install or that another device/model is supported.
 
 The `companion-*` files are a separate set of installed-companion acceptance observations on the same machine. Read [their exact scope and retained failures](../docs/companion-acceptance.md). They must not be mixed into the historical benchmark medians or counted as clean-machine DSP provisioning proof.

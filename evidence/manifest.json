@@ -3,8 +3,13 @@
   "files": [
     {
       "name": "README.md",
-      "sha256": "f8935e9ee6ca2552e3b07d4c988d8266c3a83ea5abe2f49a3f09259ad490794c",
-      "bytes": 6567
+      "sha256": "3ed6c9dee9022d602d90d95bf8bad6e382f62c2b583fe4444b1c694ca39ff0d5",
+      "bytes": 7170
+    },
+    {
+      "name": "automatic-lifecycle-live.json",
+      "sha256": "d255c7c5f5982932603ba6098c44b30ed44b843c48eafd46c40514f0221a00bd",
+      "bytes": 1150
     },
     {
       "name": "check_public_evidence.py",
@@ -55,6 +60,26 @@
       "name": "companion-fixed-raptor-validation.json",
       "sha256": "c364f5059b04822749662edce58d4c5b2c716c47cc3cd284bebe3a2fbcafa0b7",
       "bytes": 6362
+    },
+    {
+      "name": "companion-model-sharing-followup.json",
+      "sha256": "6489f5911a0615d336da8477f01a68cca58ed60ca53662410b18be90752ef7a8",
+      "bytes": 1962
+    },
+    {
+      "name": "companion-model-sharing-live.json",
+      "sha256": "867fe381f43f5e6f9e65c0bfb1d797b783f06a0a5b7f8213273b7d74e5625bf5",
+      "bytes": 12482
+    },
+    {
+      "name": "companion-model-sharing-provenance.json",
+      "sha256": "a8301b3a468e9d9b2692e20a35dec983912aad72a45ae6729245a1de8ad4dad5",
+      "bytes": 2724
+    },
+    {
+      "name": "companion-model-sharing-settings.json",
+      "sha256": "3f3f2575b99493ec182f531a4eac601671a2dad23ab00ff62f189fdd2ce30ee9",
+      "bytes": 1821
     },
     {
       "name": "companion-ornith-q4-assist.json",
@@ -172,6 +197,11 @@
       "bytes": 8151
     },
     {
+      "name": "shared-idle-live.json",
+      "sha256": "2345a7905b92537dad873a854354968433c46a559a7e81bf48c0a02dee4b67f4",
+      "bytes": 1231
+    },
+    {
       "name": "stage-timings.csv",
       "sha256": "e8950eb1883e7ebed4944303c1a1742f0520079c585c057378e98eb764d0908e",
       "bytes": 24610
@@ -185,16 +215,6 @@
       "name": "workloads.json",
       "sha256": "a2e3c0cd7cedfc7702c4b0aa10cd02bbcbbb7962356f08440c98796571756292",
       "bytes": 10099
-    },
-    {
-      "name": "shared-idle-live.json",
-      "sha256": "2345a7905b92537dad873a854354968433c46a559a7e81bf48c0a02dee4b67f4",
-      "bytes": 1231
-    },
-    {
-      "name": "automatic-lifecycle-live.json",
-      "sha256": "d255c7c5f5982932603ba6098c44b30ed44b843c48eafd46c40514f0221a00bd",
-      "bytes": 1150
     }
   ]
 }

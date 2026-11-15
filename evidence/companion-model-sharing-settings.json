@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "model": "Qwen3-0.6B-Q4_0",
+  "temporary_override": {
+    "contextSize": 512,
+    "temperature": 0.13,
+    "topK": 17,
+    "chatTemplateKwargs": "{\"enable_thinking\":false}"
+  },
+  "checks": [
+    {
+      "name": "source_preference_reached_companion_without_restart",
+      "passed": true
+    },
+    {
+      "name": "source_thinking_preference_applied_through_osaurus_route",
+      "passed": true
+    },
+    {
+      "name": "original_preferences_restored",
+      "passed": true
+    }
+  ],
+  "profile": {
+    "id": "osaurus/Qwen3-0.6B-Q4_0-abde4d1f386faf1b",
+    "mode": "osaurus",
+    "context": 512,
+    "synced": true,
+    "settings_source": "osaurus",
+    "fallback_reason": "native_compatibility_unverified",
+    "sync": {
+      "applied": [
+        "batchSize",
+        "chatTemplateKwargs",
+        "contextSize",
+        "frequencyPenalty",
+        "kvOffload",
+        "kvUnified",
+        "minP",
+        "opOffload",
+        "presencePenalty",
+        "repeatLastN",
+        "repeatPenalty",
+        "seed",
+        "swaFull",
+        "temperature",
+        "topK",
+        "topP",
+        "uBatchSize"
+      ],
+      "adapted": [
+        "flashAttention",
+        "loadMode"
+      ],
+      "unsupported": []
+    }
+  },
+  "routed_with_source_thinking_disabled": {
+    "message": {
+      "role": "assistant",
+      "content": "17 + 25 = 42."
+    },
+    "usage": {
+      "prompt_tokens": 28,
+      "completion_tokens": 12,
+      "total_tokens": 40,
+      "tokens_per_second": 132.3419716547559,
+      "completion_tokens_per_second": 132.3419716547559
+    },
+    "finish_reason": "stop"
+  },
+  "passed": true,
+  "side_effect": "Temporary test overrides were restored. Osaurus retains its normal undo history."
+}

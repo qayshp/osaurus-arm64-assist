@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "native_admission_with_stock_resident": "osaurus_residency_policy",
+  "checks": [
+    {
+      "name": "routed_qwen_128_token_budget_answers",
+      "passed": false
+    },
+    {
+      "name": "stock_unicode_stream_transport",
+      "passed": true
+    },
+    {
+      "name": "stock_unicode_stream_exact_copy",
+      "passed": true
+    },
+    {
+      "name": "resident_stock_avoids_new_assist_allocation",
+      "passed": true
+    }
+  ],
+  "qwen_routed_128_token_budget": {
+    "message": {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "Okay, so I need to figure out what 17 plus 25 is. Let me start by recalling how addition works. When you add two numbers, you just add their values together. So 17 plus 25... Let me think. 17 plus 20 would be 37, right? Because 17 + 20 is 37. Then adding 5 more would make it 42. Wait, is that right? Let me check another way. Maybe I can break it down. 17 plus 25 can be thought of as 1"
+    },
+    "usage": {
+      "prompt_tokens": 24,
+      "completion_tokens": 128,
+      "total_tokens": 152,
+      "tokens_per_second": 131.17788444157986,
+      "completion_tokens_per_second": 131.17788444157986,
+      "prompt_tokens_details": {
+        "cached_tokens": 23
+      }
+    },
+    "finish_reason": "length"
+  },
+  "stock_unicode_stream": {
+    "answer": "caf\u00e9",
+    "done_markers": 1,
+    "assist": {
+      "requested_mode": "auto",
+      "actual_mode": "osaurus-native",
+      "fallback_reason": "native_compatibility_unverified",
+      "source_model": "Qwen3-0.6B-Q4_0",
+      "api_seconds": 0.03761429998849053
+    },
+    "usage": {
+      "prompt_tokens": 19,
+      "completion_tokens": 3,
+      "total_tokens": 22,
+      "tokens_per_second": 149.17580368464235,
+      "completion_tokens_per_second": 149.17580368464235,
+      "prompt_tokens_details": {
+        "cached_tokens": 7
+      }
+    }
+  }
+}
