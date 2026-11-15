@@ -231,6 +231,29 @@ class CommandLineTests(unittest.TestCase):
                 value.update(idle_source="osaurus", osaurus_url=endpoint)
                 self.assertEqual(config.validate(value)["osaurus_url"], endpoint)
 
+    def test_watch_entry_delegates_without_loading_a_native_model(self):
+        with patch("osaurus_arm64_assist.supervisor.watch") as watch:
+            self.run_cli(["watch", "--config", str(self.settings)])
+        watch.assert_called_once_with(self.settings)
+
+    def test_automatic_lifecycle_boolean_is_validated_and_survives_tokenless_backup(self):
+        self.assertIs(config.load(self.settings)["auto_start"], True)
+        for invalid in ("false", 0, None, []):
+            value = config.new_config(self.runtime); value["auto_start"] = invalid
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError): config.validate(value)
+        for enabled in (False, True):
+            with self.subTest(enabled=enabled):
+                value = config.load(self.settings); value["auto_start"] = enabled
+                value.pop("_config_directory"); config.atomic_json(self.settings, value)
+                backup = self.root/"automatic-settings.json"
+                self.run_cli(["config", "export", "--config", str(self.settings), "--output", str(backup)])
+                target = self.root/str(enabled)/"config.json"
+                self.run_cli(["init", "--config", str(target), "--runtime-dir", str(self.root/"other-runtime")])
+                key = config.load(target)["api_key"]
+                self.run_cli(["config", "import", "--config", str(target), "--input", str(backup)])
+                self.assertIs(config.load(target)["auto_start"], enabled)
+                self.assertEqual(config.load(target)["api_key"], key)
+
 
 if __name__ == "__main__":
     unittest.main()

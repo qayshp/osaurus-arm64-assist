@@ -20,7 +20,8 @@ def atomic_json(path, value):
 def new_config(runtime_dir):
     return {"schema_version": 1, "runtime_dir": str(Path(runtime_dir).resolve()),
             "api_key": secrets.token_urlsafe(32), "host": "127.0.0.1", "port": 8082,
-            "idle_source": "osaurus", "idle_seconds": 300, "memory_floor_mib": 512, "models": []}
+            "idle_source": "osaurus", "idle_seconds": 300, "auto_start": True,
+            "memory_floor_mib": 512, "models": []}
 
 
 def integer(value, label, low, high):
@@ -38,6 +39,8 @@ def validate(config):
         raise ValueError("This companion only serves on 127.0.0.1")
     integer(config.get("port", 8082), "port", 1024, 65535)
     integer(config.get("idle_seconds", 300), "idle_seconds", 0, 86400)
+    if not isinstance(config.get("auto_start", True), bool):
+        raise ValueError("auto_start must be a boolean")
     if config.get("idle_source", "osaurus") not in ("osaurus", "fixed"):
         raise ValueError("idle_source must be osaurus or fixed")
     endpoint = config.get("osaurus_url", "auto")

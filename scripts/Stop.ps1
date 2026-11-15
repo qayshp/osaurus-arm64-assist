@@ -1,11 +1,20 @@
 [CmdletBinding()]
-param([string]$RootPath)
+param([string]$RootPath,[switch]$ServerOnly,[string]$AutomaticOwnerId)
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'Common.ps1')
 $root = Assert-AssistInstallation (Resolve-AssistRoot $RootPath)
+if ($AutomaticOwnerId -and $AutomaticOwnerId -ine (Get-AssistInstallationId $root)) { throw 'Automatic server owner must match this installation UUID.' }
+if (-not $ServerOnly) { & (Join-Path $PSScriptRoot 'Stop-AutoStart.ps1') -RootPath $root }
+$operation = Enter-AssistOperationLock $root 'Server'
+try {
 $statePath = Join-Path $root 'state/server.json'
 if (-not (Test-Path -LiteralPath $statePath)) { Write-Host 'No tracked companion server.'; return }
 $state = Read-AssistJson $statePath
+if ($AutomaticOwnerId) {
+    if (-not $state.PSObject.Properties['automatic_owner_id'] -or $state.automatic_owner_id -ine $AutomaticOwnerId) { Write-Host 'The independently managed server was preserved.'; return }
+    $tracked = Get-Process -Id ([int]$state.identity.pid) -ErrorAction SilentlyContinue
+    if ($tracked -and $tracked.SessionId -ne (Get-Process -Id $PID).SessionId) { Write-Host 'The server in another Windows session was preserved.'; return }
+}
 $identity = $state.identity
 if (-not (Test-AssistProcessIdentity $identity)) {
     Remove-Item -LiteralPath $statePath -Force
@@ -43,3 +52,4 @@ if (Test-AssistProcessIdentity $identity) { Stop-Process -Id ([int]$identity.pid
 if ($state.launcher_identity -and (Test-AssistProcessIdentity $state.launcher_identity)) { Stop-Process -Id ([int]$state.launcher_identity.pid) -ErrorAction SilentlyContinue }
 Remove-Item -LiteralPath $statePath -Force
 Write-Host 'Companion and its tracked model workers stopped.'
+} finally { Exit-AssistOperationLock $operation }

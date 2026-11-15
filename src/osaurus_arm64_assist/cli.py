@@ -62,6 +62,7 @@ def main(argv=None):
     init = sub.add_parser("init"); init.add_argument("--config", type=Path, required=True); init.add_argument("--runtime-dir", required=True)
     serve = sub.add_parser("serve"); serve.add_argument("--config", type=Path, required=True)
     serve.add_argument("--host"); serve.add_argument("--port", type=int); serve.add_argument("--instance-id")
+    watch = sub.add_parser("watch"); watch.add_argument("--config", type=Path, required=True)
     doctor = sub.add_parser("doctor"); doctor.add_argument("--config", type=Path, required=True); doctor.add_argument("--json", action="store_true")
     models = sub.add_parser("models"); model_sub = models.add_subparsers(dest="operation", required=True)
     scan = model_sub.add_parser("discover"); scan.add_argument("--config", type=Path); scan.add_argument("--models-dir", type=Path)
@@ -92,6 +93,10 @@ def main(argv=None):
     try:
         if getattr(args,"output",None) and getattr(args,"config",None) and args.output.resolve()==args.config.resolve():
             raise ValueError("Output must not overwrite the live configuration")
+        if args.command == "watch":
+            from .supervisor import watch
+            watch(args.config)
+            return
         if args.command == "init":
             if args.config.exists():
                 raise ValueError("Configuration already exists; init will not overwrite its key or model profiles")
@@ -155,7 +160,7 @@ def main(argv=None):
             else:
                 backup=json.loads(args.input.read_text(encoding="utf-8-sig"))
                 if not isinstance(backup,dict): raise ValueError("Backup must be an object")
-                for name in ("models","idle_source","idle_seconds","osaurus_url","memory_floor_mib","port","origins"):
+                for name in ("models","idle_source","idle_seconds","osaurus_url","auto_start","memory_floor_mib","port","origins"):
                     if name in backup: config[name]=backup[name]
                 settings.validate(config); config.pop("_config_directory",None)
                 settings.atomic_json(args.config,config)

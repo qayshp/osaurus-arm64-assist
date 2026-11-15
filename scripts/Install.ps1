@@ -1,5 +1,5 @@
 [CmdletBinding(SupportsShouldProcess=$true)]
-param([string]$RootPath, [string]$PythonPath, [string]$RuntimeArchive, [string]$ConfigBackup, [switch]$ConnectOsaurus)
+param([string]$RootPath, [string]$PythonPath, [string]$RuntimeArchive, [string]$ConfigBackup, [switch]$ConnectOsaurus, [switch]$NoAutoStart)
 $ErrorActionPreference = 'Stop'
 $sourceRoot = Split-Path -Parent $PSScriptRoot
 . (Join-Path $PSScriptRoot 'Common.ps1')
@@ -14,6 +14,7 @@ if (Test-Path -LiteralPath $root) {
     if (Test-Path -LiteralPath (Join-Path $root '.osaurus-arm64-assist-install.json')) {
         $null = Assert-AssistInstallation $root
         Assert-AssistModelsOutsideInstallation $root
+        $null = Assert-AssistAutoRegistration $root
     }
     elseif (@(Get-ChildItem -LiteralPath $root -Force).Count -gt 0) { throw 'The target is nonempty and is not an owned installation.' }
 }
@@ -23,10 +24,14 @@ $markerPath = Join-Path $root '.osaurus-arm64-assist-install.json'
 if (-not (Test-Path -LiteralPath $markerPath)) {
     Write-AssistJson $markerPath @{product=$script:AssistProduct;root=$root;installation_id=[guid]::NewGuid().ToString();created_utc=[DateTime]::UtcNow.ToString('o')}
 }
+$automaticOperation = Enter-AssistOperationLock $root 'Automatic'
+try {
+& (Join-Path $PSScriptRoot 'Stop-AutoStart.ps1') -RootPath $root
+$serverOperation = Enter-AssistOperationLock $root 'Server'
+try {
 $statePath = Join-Path $root 'state/server.json'
 if (Test-Path -LiteralPath $statePath) {
-    $running = Read-AssistJson $statePath
-    if (Test-AssistProcessIdentity $running.identity) { throw 'Stop this companion before reinstalling or updating it.' }
+    & (Join-Path $PSScriptRoot 'Stop.ps1') -RootPath $root -ServerOnly
 }
 foreach ($folder in @('app','cache','runtime','state','logs')) {
     $folderPath = Join-Path $root $folder
@@ -88,7 +93,20 @@ if ($ConfigBackup) {
     if (-not (Test-Path -LiteralPath $backup -PathType Leaf)) { throw 'The configuration backup does not exist.' }
     Invoke-AssistPython $environmentPython @('-m','osaurus_arm64_assist','config','import','--config',$config,'--input',$backup)
 }
-if ($ConnectOsaurus) { & (Join-Path $PSScriptRoot 'Connect-Osaurus.ps1') -RootPath $root }
+if ($NoAutoStart) { Set-AssistAutoStartConfig $root $false }
+} finally { Exit-AssistOperationLock $serverOperation }
+$installedConfig = Read-AssistJson (Join-Path $root 'config.json')
+$autoEnabled = -not $installedConfig.PSObject.Properties['auto_start'] -or $installedConfig.auto_start -eq $true
+if ($autoEnabled) {
+    $descriptor = Get-AssistAutoStartDescriptor $root
+    if (Test-AssistStartupUserDisabled $descriptor.shortcut_path) {
+        & (Join-Path $PSScriptRoot 'Enable-AutoStart.ps1') -RootPath $root -RegistrationOnly
+    } else {
+        & (Join-Path $PSScriptRoot 'Enable-AutoStart.ps1') -RootPath $root
+    }
+} else { & (Join-Path $PSScriptRoot 'Disable-AutoStart.ps1') -RootPath $root }
+if ($ConnectOsaurus) { & (Join-Path $PSScriptRoot 'Connect-Osaurus.ps1') -RootPath $root -RespectStartupDisabled }
 Write-Host "Installed at $root"
-Write-Host 'No models, drivers, startup tasks or Windows settings were installed or changed.'
-Write-Host 'Add a local GGUF model with the companion models add command, then use Start.ps1 and Connect-Osaurus.ps1.'
+Write-Host 'Model weights and drivers were preserved. Automatic mode uses only this user''s owned Startup shortcut.'
+Write-Host 'Add a local GGUF model, then connect the provider with Connect-Osaurus.ps1. Use -NoAutoStart for manual lifecycle.'
+} finally { Exit-AssistOperationLock $automaticOperation }

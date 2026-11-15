@@ -74,9 +74,19 @@ The timer measures activity in the companion worker, so native-model activity el
 
 The preference reader uses an internal Windows app API observed on Osaurus 1.0.3, with bounded read-only requests and validated fallback behavior. See [the idle-policy reference](idle-policy.md) for discovery, authentication and advanced configuration. The earlier 0.1.0 acceptance receipts describe that earlier package and are unchanged.
 
+## When automatic startup or shutdown differs from expectations
+
+Companion 0.1.2 enables a hidden, per-user login watcher by default. It starts the companion server when the official Store Osaurus app is running in the same Windows user session, and stops the server/model workers after a true app exit and short confirmation delay. A minimized window or a window closed to the system tray still belongs to a running app, so the companion stays available; its separate idle policy can release model weights meanwhile.
+
+The watcher remains signed in and waiting for the next app launch. It consumes some memory even while no model is loaded. It preserves existing Osaurus shortcuts and the app's own launch-at-login preference. See [automatic lifecycle](automatic-lifecycle.md) for the startup entry and controls.
+
+`Stop.ps1` stops the watcher first so it cannot immediately restart a server you deliberately stopped. Its owned login shortcut remains for future sign-ins. Use `Disable-AutoStart.ps1` to remove automatic startup persistently and stop the watcher plus its managed server; untracked manual servers are preserved. `Start.ps1` starts a manual server, while `Enable-AutoStart.ps1` resumes the watcher for the current sign-in session. `Install.ps1 -NoAutoStart` selects an advanced manual installation, and `auto_start: false` is included in configuration backup/restore. Updates also respect an entry disabled in Windows Startup Apps.
+
+Model discovery is refreshed automatically after the managed server becomes ready. If a provider is unavailable, inspect `Status.ps1 -Json` and the companion logs for readiness or identity errors. A similarly named executable outside the verified Store app or another Windows user session is not the intended lifecycle signal. Keep Osaurus running while using the companion from another client.
+
 ## What clean removal should preserve
 
-Uninstall only the companion's own registration, processes and installation directory. Verify process identity before stopping it and path containment before recursive deletion. Preserve user models, Osaurus conversations and settings, other providers, device drivers, signed DSP provisioning and files outside the selected installation root. Do not change machine startup or service configuration unless a user explicitly requests a separate managed-startup option.
+Uninstall only the companion's own provider registration, identified processes, owned login shortcut and installation directory. Verify process identity before stopping it and path containment before recursive deletion. Preserve user models, Osaurus conversations and settings, other providers, existing Osaurus shortcuts, other startup entries, device drivers, signed DSP provisioning and files outside the selected installation root. The default automatic lifecycle feature owns one per-user Startup shortcut; cleanup must be limited to that entry.
 
 If the user edited provider/configuration data after setup, removal should detect the change rather than blindly restoring an old global configuration. Reinstallation should use the lock file and a fresh owned environment, without requiring the original experiment workspace.
 

@@ -1,8 +1,11 @@
 [CmdletBinding()]
-param([string]$RootPath, [ValidateRange(1024,65535)][int]$Port = 0)
+param([string]$RootPath, [ValidateRange(1024,65535)][int]$Port = 0, [string]$AutomaticOwnerId)
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'Common.ps1')
 $root = Assert-AssistInstallation (Resolve-AssistRoot $RootPath)
+if ($AutomaticOwnerId -and $AutomaticOwnerId -ine (Get-AssistInstallationId $root)) { throw 'Automatic server owner must match this installation UUID.' }
+$operation = Enter-AssistOperationLock $root 'Server'
+try {
 $configPath = Join-Path $root 'config.json'
 Assert-AssistPathAncestors $configPath
 $config = Read-AssistJson $configPath
@@ -14,6 +17,11 @@ Assert-AssistPathAncestors (Join-Path $root 'logs')
 if (Test-Path -LiteralPath $statePath) {
     $state = Read-AssistJson $statePath
     if (Test-AssistProcessIdentity $state.identity) {
+        if ($AutomaticOwnerId) {
+            if (-not $state.PSObject.Properties['automatic_owner_id'] -or $state.automatic_owner_id -ine $AutomaticOwnerId -or
+                (Get-Process -Id ([int]$state.identity.pid)).SessionId -ne (Get-Process -Id $PID).SessionId -or
+                -not (Test-AssistServerIdentity $state.identity $root)) { throw 'An existing manual, foreign, or other-session server was preserved; automatic adoption is refused.' }
+        }
         $health = Get-AssistHealth ([int]$state.port)
         if ($health -and $health.service -eq 'osaurus-arm64-assist' -and $health.instance_id -eq $state.instance_id) {
             Write-Host "Companion is already running on http://127.0.0.1:$($state.port)"; return
@@ -61,7 +69,9 @@ if (-not $descendsFromLauncher) { throw 'The responding server is not a descenda
 $identity = $candidateIdentity
 $listener = @(Get-NetTCPConnection -State Listen -LocalPort $Port -ErrorAction SilentlyContinue)
 if (-not ($listener | Where-Object { $_.OwningProcess -eq $identity.pid -and $_.LocalAddress -eq '127.0.0.1' })) { throw 'Listener identity did not match the local companion.' }
-Write-AssistJson $statePath @{port=$Port;instance_id=$health.instance_id;identity=$identity;launcher_identity=$launcherIdentity;stdout=$stdout;stderr=$stderr;root=$root}
+$serverState = @{port=$Port;instance_id=$health.instance_id;identity=$identity;launcher_identity=$launcherIdentity;stdout=$stdout;stderr=$stderr;root=$root}
+if ($AutomaticOwnerId) { $serverState.automatic_owner_id=$AutomaticOwnerId }
+Write-AssistJson $statePath $serverState
 Write-Host "Companion started on http://127.0.0.1:$Port (PID $($identity.pid)). Models load on demand."
 } catch {
     $launcherCurrent = $false
@@ -89,3 +99,4 @@ Write-Host "Companion started on http://127.0.0.1:$Port (PID $($identity.pid)). 
     }
     throw
 }
+} finally { Exit-AssistOperationLock $operation }

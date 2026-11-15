@@ -280,3 +280,220 @@ function Assert-AssistOwnedProvider {
         throw 'The Osaurus provider was edited after registration. It was preserved; restore its recorded settings or remove it manually before disconnecting.'
     }
 }
+
+function Get-AssistInstallationId {
+    param([Parameter(Mandatory=$true)][string]$RootPath)
+    $root = Assert-AssistInstallation $RootPath
+    $marker = Read-AssistJson (Join-Path $root '.osaurus-arm64-assist-install.json')
+    $value = [guid]::Empty
+    if (-not [guid]::TryParse([string]$marker.installation_id,[ref]$value) -or $value -eq [guid]::Empty) { throw 'The installation UUID is invalid.' }
+    return $value.ToString('D')
+}
+
+function Enter-AssistOperationLock {
+    param([Parameter(Mandatory=$true)][string]$RootPath,[ValidateSet('Server','Automatic')][string]$Kind='Server')
+    $id = Get-AssistInstallationId $RootPath
+    $mutex = New-Object Threading.Mutex($false,('Local\OsaurusArm64Assist.' + $Kind + '.' + $id))
+    try {
+        try { $acquired = $mutex.WaitOne(90000) } catch [Threading.AbandonedMutexException] { $acquired = $true }
+        if (-not $acquired) { throw 'Another companion lifecycle operation is still running.' }
+        return $mutex
+    } catch { $mutex.Dispose(); throw }
+}
+
+function Exit-AssistOperationLock {
+    param([Parameter(Mandatory=$true)]$Mutex)
+    try { $Mutex.ReleaseMutex() } finally { $Mutex.Dispose() }
+}
+
+function Set-AssistAutoStartConfig {
+    param([Parameter(Mandatory=$true)][string]$RootPath,[Parameter(Mandatory=$true)][bool]$Enabled)
+    $configPath = Join-Path (Assert-AssistInstallation $RootPath) 'config.json'
+    Assert-AssistPathAncestors $configPath
+    $config = Read-AssistJson $configPath
+    $config | Add-Member -NotePropertyName auto_start -NotePropertyValue $Enabled -Force
+    $temporary = $configPath + '.' + [guid]::NewGuid().ToString('N') + '.tmp'
+    try {
+        Write-AssistJson $temporary $config
+        [IO.File]::Replace($temporary,$configPath,[System.Management.Automation.Language.NullString]::Value)
+    } finally { if (Test-Path -LiteralPath $temporary) { Remove-Item -LiteralPath $temporary -Force } }
+}
+
+function Get-AssistAutoStartDescriptor {
+    param([Parameter(Mandatory=$true)][string]$RootPath,[string]$StartupDirectory)
+    $root = Assert-AssistInstallation $RootPath
+    $id = Get-AssistInstallationId $root
+    if (-not $StartupDirectory) { $StartupDirectory = [Environment]::GetFolderPath('Startup') }
+    if (-not $StartupDirectory) { throw 'The current-user Startup directory is unavailable.' }
+    $startup = [IO.Path]::GetFullPath($StartupDirectory).TrimEnd('\')
+    Assert-AssistPathAncestors $startup
+    $config = Join-Path $root 'config.json'
+    $arguments = @('-I','-m','osaurus_arm64_assist','watch','--config',$config)
+    return [pscustomobject]@{schema_version=1;product=$script:AssistProduct;installation_id=$id;
+        shortcut_path=(Join-Path $startup ('Osaurus ARM64 Assist ' + $id + '.lnk'));
+        target_path=(Join-Path $root '.venv/Scripts/pythonw.exe');
+        arguments=(@($arguments | ForEach-Object { Quote-AssistArgument $_ }) -join ' ');
+        working_directory=$root;description=($script:AssistProduct + ' automatic lifecycle ' + $id)}
+}
+
+function Get-AssistShortcutProperties {
+    param([Parameter(Mandatory=$true)][string]$Path)
+    Assert-AssistPathAncestors $Path
+    $shell = $null; $shortcut = $null
+    try {
+        $shell = New-Object -ComObject WScript.Shell
+        $shortcut = $shell.CreateShortcut($Path)
+        return [pscustomobject]@{target_path=[string]$shortcut.TargetPath;arguments=[string]$shortcut.Arguments;
+            working_directory=[string]$shortcut.WorkingDirectory;description=[string]$shortcut.Description}
+    } finally {
+        if ($shortcut) { [void][Runtime.InteropServices.Marshal]::ReleaseComObject($shortcut) }
+        if ($shell) { [void][Runtime.InteropServices.Marshal]::ReleaseComObject($shell) }
+    }
+}
+
+function Assert-AssistAutoRegistration {
+    param([Parameter(Mandatory=$true)][string]$RootPath,[string]$StartupDirectory)
+    $expected = Get-AssistAutoStartDescriptor $RootPath $StartupDirectory
+    $registrationPath = Join-Path $RootPath 'state/automatic-registration.json'
+    Assert-AssistPathAncestors $registrationPath
+    Assert-AssistPathAncestors $expected.shortcut_path
+    if (-not (Test-Path -LiteralPath $registrationPath -PathType Leaf)) {
+        if (Test-Path -LiteralPath $expected.shortcut_path) { throw 'A Startup shortcut exists without matching ownership tracking. It was preserved.' }
+        return $null
+    }
+    $registration = Read-AssistJson $registrationPath
+    foreach ($name in @('schema_version','product','installation_id','shortcut_path','target_path','arguments','working_directory','description')) {
+        if (-not $registration.PSObject.Properties[$name] -or [string]$registration.$name -cne [string]$expected.$name) {
+            throw 'Automatic startup ownership tracking was edited. The registration was preserved.'
+        }
+    }
+    if (Test-Path -LiteralPath $expected.shortcut_path) {
+        if (-not (Test-Path -LiteralPath $expected.shortcut_path -PathType Leaf)) { throw 'Startup shortcut target is not a regular file.' }
+        $actual = Get-AssistShortcutProperties $expected.shortcut_path
+        foreach ($name in @('target_path','working_directory')) {
+            if (-not $actual.$name -or -not ([IO.Path]::GetFullPath($actual.$name)).TrimEnd('\').Equals(([IO.Path]::GetFullPath($expected.$name)).TrimEnd('\'),[StringComparison]::OrdinalIgnoreCase)) {
+                throw 'The Startup shortcut was edited. Its target was preserved.'
+            }
+        }
+        if ($actual.arguments -cne $expected.arguments -or $actual.description -cne $expected.description) { throw 'The Startup shortcut was edited. Its arguments and ownership marker were preserved.' }
+    }
+    return $registration
+}
+
+function Register-AssistAutoStart {
+    param([Parameter(Mandatory=$true)][string]$RootPath,[string]$StartupDirectory)
+    $expected = Get-AssistAutoStartDescriptor $RootPath $StartupDirectory
+    $null = Assert-AssistAutoRegistration $RootPath $StartupDirectory
+    if (-not (Test-Path -LiteralPath $expected.target_path -PathType Leaf)) { throw 'The installed Pythonw launcher is missing. Reinstall native ARM64 Python and the companion.' }
+    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $expected.shortcut_path) | Out-Null
+    $registrationPath = Join-Path $RootPath 'state/automatic-registration.json'
+    Assert-AssistPathAncestors (Split-Path -Parent $registrationPath)
+    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $registrationPath) | Out-Null
+    if (-not (Test-Path -LiteralPath $registrationPath)) { Write-AssistJson $registrationPath $expected }
+    # Do not re-save an owned existing shortcut: Windows' Startup Apps disable
+    # state and any unrelated optional shortcut properties remain untouched.
+    if (-not (Test-Path -LiteralPath $expected.shortcut_path)) {
+        $shell = $null; $shortcut = $null
+        try {
+            $shell = New-Object -ComObject WScript.Shell
+            $shortcut = $shell.CreateShortcut($expected.shortcut_path)
+            $shortcut.TargetPath = $expected.target_path
+            $shortcut.Arguments = $expected.arguments
+            $shortcut.WorkingDirectory = $expected.working_directory
+            $shortcut.Description = $expected.description
+            $shortcut.WindowStyle = 7
+            $shortcut.Save()
+        } finally {
+            if ($shortcut) { [void][Runtime.InteropServices.Marshal]::ReleaseComObject($shortcut) }
+            if ($shell) { [void][Runtime.InteropServices.Marshal]::ReleaseComObject($shell) }
+        }
+    }
+    $null = Assert-AssistAutoRegistration $RootPath $StartupDirectory
+    return $expected
+}
+
+function Unregister-AssistAutoStart {
+    param([Parameter(Mandatory=$true)][string]$RootPath,[string]$StartupDirectory)
+    $registration = Assert-AssistAutoRegistration $RootPath $StartupDirectory
+    if ($registration) {
+        if (Test-Path -LiteralPath $registration.shortcut_path) { Remove-Item -LiteralPath $registration.shortcut_path -Force }
+        Remove-Item -LiteralPath (Join-Path $RootPath 'state/automatic-registration.json') -Force
+    }
+}
+
+function Test-AssistStartupUserDisabled {
+    param([Parameter(Mandatory=$true)][string]$ShortcutPath)
+    $name = [IO.Path]::GetFileName($ShortcutPath)
+    foreach ($key in @('HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\StartupFolder','HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\StartupFolder32')) {
+        # Get-ItemPropertyValue can raise a terminating provider exception when
+        # a Startup entry has never had an approval value. Missing is normal.
+        $registry = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey($key.Substring(6))
+        $value = $null
+        try { if ($registry) { $value = $registry.GetValue($name,$null) } }
+        finally { if ($registry) { $registry.Dispose() } }
+        if ($value -is [byte[]] -and $value.Length -gt 0 -and $value[0] -eq 3) { return $true }
+    }
+    return $false
+}
+
+function Test-AssistSupervisorIdentity {
+    param([Parameter(Mandatory=$true)]$State,[Parameter(Mandatory=$true)][string]$RootPath)
+    try {
+        $id = Get-AssistInstallationId $RootPath
+        $instance = [guid]::Empty
+        $config = Join-Path $RootPath 'config.json'
+        if ($State.product -ne $script:AssistProduct -or $State.installation_id -ine $id -or
+            -not [guid]::TryParse([string]$State.instance_id,[ref]$instance) -or $instance -eq [guid]::Empty -or
+            -not ([IO.Path]::GetFullPath([string]$State.config_path)).Equals($config,[StringComparison]::OrdinalIgnoreCase) -or
+            -not ($State.creation_filetime -is [long] -or $State.creation_filetime -is [int])) { return $false }
+        $process = Get-Process -Id ([int]$State.pid) -ErrorAction SilentlyContinue
+        if (-not $process -or $process.StartTime.ToFileTimeUtc() -ne [long]$State.creation_filetime -or
+            $process.SessionId -ne [int]$State.session_id -or $process.SessionId -ne (Get-Process -Id $PID).SessionId) { return $false }
+        $identity = Get-AssistProcessIdentity ([int]$State.pid)
+        if (-not $identity -or [IO.Path]::GetFileName($identity.executable) -ine 'pythonw.exe') { return $false }
+        $command = $identity.command_line.Replace('"','')
+        return ([regex]::IsMatch($command,'(?i)(?:^|\s)-m\s+osaurus_arm64_assist\s+watch(?:\s|$)') -and
+            [regex]::IsMatch($command,('(?i)(?:^|\s)--config\s+' + [regex]::Escape($config) + '(?=\s|$)')))
+    } catch { return $false }
+}
+
+function Get-AssistOwnedDescendants {
+    param([Parameter(Mandatory=$true)]$Identity)
+    if (-not (Test-AssistProcessIdentity $Identity)) { return @() }
+    $rootProcess = Get-Process -Id ([int]$Identity.pid) -ErrorAction SilentlyContinue
+    if (-not $rootProcess) { return @() }
+    $all = @(Get-CimInstance Win32_Process)
+    $queue = New-Object 'Collections.Generic.Queue[int]'; $queue.Enqueue([int]$Identity.pid)
+    $seen = New-Object 'Collections.Generic.HashSet[int]'
+    $null = $seen.Add([int]$Identity.pid)
+    $found = @()
+    while ($queue.Count -gt 0) {
+        $parent = $queue.Dequeue()
+        foreach ($child in @($all | Where-Object { $_.ParentProcessId -eq $parent })) {
+            if (-not $seen.Add([int]$child.ProcessId) -or [int]$child.SessionId -ne $rootProcess.SessionId) { continue }
+            $entry = Get-AssistProcessIdentity ([int]$child.ProcessId)
+            if ($entry -and (Get-AssistTimeTicks $entry.start_time_utc) -ge (Get-AssistTimeTicks $Identity.start_time_utc)) {
+                $found += $entry; $queue.Enqueue([int]$child.ProcessId)
+            }
+        }
+    }
+    return $found
+}
+
+function Get-AssistManualServerTransferRequired {
+    param([Parameter(Mandatory=$true)][string]$RootPath)
+    $statePath = Join-Path $RootPath 'state/server.json'
+    Assert-AssistPathAncestors $statePath
+    if (-not (Test-Path -LiteralPath $statePath)) { return $false }
+    $state = Read-AssistJson $statePath
+    if ($state.PSObject.Properties['automatic_owner_id'] -and $state.automatic_owner_id) {
+        if ($state.automatic_owner_id -ine (Get-AssistInstallationId $RootPath)) { throw 'A server owned by another automatic controller was preserved.' }
+        return $false
+    }
+    if (Test-AssistProcessIdentity $state.identity) {
+        $process = Get-Process -Id ([int]$state.identity.pid) -ErrorAction SilentlyContinue
+        if (-not $process -or $process.SessionId -ne (Get-Process -Id $PID).SessionId -or
+            -not (Test-AssistServerIdentity $state.identity $RootPath)) { throw 'The live manual server is not this installation in the current session. It was preserved.' }
+    }
+    return $true
+}

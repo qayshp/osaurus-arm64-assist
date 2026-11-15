@@ -1,5 +1,5 @@
 [CmdletBinding(SupportsShouldProcess=$true)]
-param([string]$RootPath, [string]$ProviderName='Osaurus ARM64 Assist', [string]$OsaurusUrl='http://127.0.0.1:1337')
+param([string]$RootPath, [string]$ProviderName='Osaurus ARM64 Assist', [string]$OsaurusUrl='http://127.0.0.1:1337', [switch]$RespectStartupDisabled)
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'Common.ps1')
 $root = Assert-AssistInstallation (Resolve-AssistRoot $RootPath)
@@ -17,9 +17,17 @@ if ($PSBoundParameters.ContainsKey('OsaurusUrl')) {
     $config | Add-Member -NotePropertyName osaurus_url -NotePropertyValue $uri.GetLeftPart([UriPartial]::Authority) -Force
     Write-AssistJson $configPath $config
 }
-& (Join-Path $PSScriptRoot 'Start.ps1') -RootPath $root
 $null = & $osaurus serve
 if ($LASTEXITCODE -ne 0) { throw 'Osaurus did not start. Launch the app and retry.' }
+$startAutomatically = -not $config.PSObject.Properties['auto_start'] -or $config.auto_start -eq $true
+if ($RespectStartupDisabled -and $startAutomatically) {
+    $descriptor = Get-AssistAutoStartDescriptor $root
+    if (Test-AssistStartupUserDisabled $descriptor.shortcut_path) { $startAutomatically = $false }
+}
+if ($startAutomatically) {
+    & (Join-Path $PSScriptRoot 'Enable-AutoStart.ps1') -RootPath $root
+    & (Join-Path $PSScriptRoot 'Start.ps1') -RootPath $root -AutomaticOwnerId (Get-AssistInstallationId $root)
+} else { & (Join-Path $PSScriptRoot 'Start.ps1') -RootPath $root }
 $statePath = Join-Path $root 'state/osaurus-registration.json'; Assert-AssistPathAncestors $statePath
 $marker = Read-AssistJson (Join-Path $root '.osaurus-arm64-assist-install.json')
 $server = Read-AssistJson (Join-Path $root 'state/server.json')

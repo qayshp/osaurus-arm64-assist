@@ -165,16 +165,33 @@ class ServerContractTests(unittest.TestCase):
 
     def test_bad_auth_with_unread_body_closes_connection_and_server_recovers(self):
         connection = self.connection()
-        response, data = self.post(connection=connection, headers={"Content-Type": "application/json"})
-        self.assertEqual(response.status, 401)
-        self.assertEqual(response.getheader("Connection"), "close")
-        self.assertTrue(response.will_close)
-        self.assertIn("error", json.loads(data))
-        connection.request("GET", "/health")
-        healthy = connection.getresponse()
+        try:
+            response, data = self.post(connection=connection, headers={"Content-Type": "application/json"})
+        except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError,
+                http.client.RemoteDisconnected, http.client.IncompleteRead):
+            # Authorization is checked before reading an untrusted request body.
+            # Closing with unread bytes can produce a Windows TCP reset before
+            # the client receives all of the 401. Both outcomes reject this
+            # transport; do not require production to drain unauthenticated data.
+            connection.close()
+        else:
+            self.assertEqual(response.status, 401)
+            self.assertEqual(response.getheader("Connection"), "close")
+            self.assertTrue(response.will_close)
+            self.assertIn("error", json.loads(data))
+        self.assertIsNone(connection.sock, "the rejected TCP transport cannot remain reusable")
+        self.assertEqual(self.manager.requests, [], "unauthenticated bytes must never reach inference")
+
+        fresh = self.connection()
+        fresh.request("GET", "/health")
+        healthy = fresh.getresponse()
         self.assertEqual(healthy.status, 200)
-        healthy.read()
+        self.assertEqual(json.loads(healthy.read())["instance_id"], "synthetic-instance")
         self.assertEqual(self.manager.requests, [])
+        response, data = self.post(connection=fresh)
+        self.assertEqual(response.status, 200)
+        self.assertEqual(json.loads(data)["choices"][0]["message"]["content"], "café 你好.")
+        self.assertEqual(len(self.manager.requests), 1, "only the fresh authenticated request may run")
 
     def test_nonstream_unicode_and_usage(self):
         response, data = self.post()

@@ -6,6 +6,8 @@ An experimental community companion for selecting CPU, Adreno GPU and Qualcomm H
 
 The companion exposes a local OpenAI-compatible provider. Models remain in Osaurus's model directory, and you explicitly select a companion profile in Osaurus. Downloading a model through Osaurus does not automatically enable NPU assistance. This repository contains source, setup scripts and sanitized experimental evidence; it contains no model weights or native runtime binaries.
 
+Companion 0.1.2 adds automatic lifecycle management: the normal installer enables a small hidden watcher for your Windows sign-in. It starts the companion server when you open the official Store version of Osaurus and stops it after Osaurus actually quits. Closing to the tray keeps Osaurus running. Models still load only when you request inference, and their idle interval follows your existing Osaurus setting.
+
 ## Why offer assistance?
 
 Prompt processing and token generation have different performance characteristics. For the tested Raptor model, NPU prompt processing followed by CPU generation improved warm response time. A separate Ornith strategy keeps routed experts on CPU while sending supported remaining work to the NPU. These strategies have different costs and are separate profile modes.
@@ -68,7 +70,7 @@ $AssistConfig = Join-Path $AssistRoot 'config.json'
 & $AssistPython -m osaurus_arm64_assist models discover
 ```
 
-The installer creates a private Python environment and installation-specific API key, obtains the pinned official GenieX archive, and verifies the archive and native-file hashes. It does not download models, install drivers, register startup tasks or change Windows power settings. If Python detection fails, rerun `Install.ps1` with `-PythonPath` pointing to your native ARM64 `python.exe`.
+The installer creates a private Python environment and installation-specific API key, obtains the pinned official GenieX archive, and verifies the archive and native-file hashes. Starting with 0.1.2, fresh setup also enables a new, owned shortcut in your **per-user Windows Startup folder**, launching the hidden lifecycle watcher at sign-in. It preserves your existing Osaurus shortcuts and Osaurus startup preference; updates respect a watcher entry you disabled in Windows Startup Apps. This user-level setup needs no administrator access; model downloads, driver provisioning and Windows power settings remain separate. If Python detection fails, rerun `Install.ps1` with `-PythonPath` pointing to your native ARM64 `python.exe`. Advanced manual-only installations can use `-NoAutoStart`.
 
 Use the exact `osaurus_model` filename stem printed by discovery. These examples match the tested files. Duplicate stems from different publishers are rejected; use `--path` with the explicit GGUF path, or `--models-dir` to narrow discovery.
 
@@ -84,7 +86,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Start.ps1 -Roo
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Doctor.ps1 -RootPath $AssistRoot -Json
 ```
 
-Start launches a hidden loopback server on `127.0.0.1:8082`. Models load on demand; starting the server alone does not load every profile or prove NPU execution. The server uses one admitted inference request at a time and releases the previous worker when switching profiles. By default it follows the **Idle unload** preference already selected in **Osaurus → Settings → Models → Local engine**. Historical results use a 2048-token context; raising it can materially increase memory and has not been validated here.
+During initial setup, `Start.ps1` can also launch the hidden loopback server on `127.0.0.1:8082` for testing. In everyday use, the watcher manages it with Osaurus. Models load on demand; starting the server alone does not load every profile or prove NPU execution. The server uses one admitted inference request at a time and releases the previous worker when switching profiles. By default it follows the **Idle unload** preference already selected in **Osaurus → Settings → Models → Local engine**. Historical results use a 2048-token context; raising it can materially increase memory and has not been validated here.
 
 Before connecting Osaurus, request an explicit model smoke test. This command checks a tiny arithmetic answer plus experimental JSON-object and forced-tool behavior. It can be expensive because it actually loads and runs the selected profile.
 
@@ -102,7 +104,13 @@ To compare optional Raptor baselines, register the same file under separate IDs 
 & $AssistPython -m osaurus_arm64_assist models add --config $AssistConfig --id raptor/npu --mode npu --osaurus-model Raptor-0.7-4B-Q6_K --context 2048 --threads 6 --batch-threads 10 --batch 512 --microbatch 512 --power-mode balanced --repack
 ```
 
-For an Ornith CPU baseline, use the same Q4 stem with `--id ornith-q4/cpu --mode cpu --no-repack`. Keep every other setting matched. Restart the companion after editing profiles/configuration, and refresh the provider's model list in Osaurus. To update an existing profile deliberately, repeat `models add` with `--replace`; `models remove --config ... --id ...` removes only the profile, never the model file.
+For an Ornith CPU baseline, use the same Q4 stem with `--id ornith-q4/cpu --mode cpu --no-repack`. Keep every other setting matched. Restart the companion after editing profiles/configuration. Managed startup refreshes Osaurus's provider discovery after the companion becomes ready. To update an existing profile deliberately, repeat `models add` with `--replace`; `models remove --config ... --id ...` removes only the profile, never the model file.
+
+## Automatic startup and shutdown with Osaurus
+
+With the default 0.1.2 installation, open Osaurus normally and select a companion profile. The watcher recognizes the official Store app in the same Windows user session, starts the server, and refreshes provider discovery when it is ready. Minimizing Osaurus or closing its window to the system tray keeps the app and companion running. A true app exit stops the companion server and model workers after a short confirmation delay.
+
+A small watcher remains in your signed-in session, waiting for Osaurus to open again. It has a memory cost; large model weights and NPU contexts are allocated only when inference is requested. Your existing Osaurus launch-at-login choice is preserved. See [automatic lifecycle](docs/automatic-lifecycle.md) for startup ownership, diagnostics, disabling the feature and manual operation.
 
 ## Idle unload follows Osaurus
 
@@ -146,6 +154,8 @@ $AssistBackup = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'osaurus
 & $AssistPython -m osaurus_arm64_assist config export --config $AssistConfig --output $AssistBackup
 ```
 
+`Stop.ps1` stops the watcher before stopping the companion server and workers. The login shortcut remains available for future sign-ins. To disable automatic lifecycle management persistently, use `scripts/Disable-AutoStart.ps1 -RootPath $AssistRoot`; it removes the owned startup registration and stops the watcher and its managed server. The advanced `auto_start: false` choice is retained in configuration backups. Manual `Start.ps1` starts only the server; `Enable-AutoStart.ps1` resumes the watcher within the current sign-in session.
+
 The settings backup omits the API key, but includes local model paths and settings; treat it as local configuration rather than public benchmark evidence. Re-running `Install.ps1` against a stopped, owned installation preserves its configuration and model references. To restore after a clean installation, use `Install.ps1 -ConfigBackup $AssistBackup`; it keeps the new installation's API key and runtime location. Model weights remain external and must still exist at the referenced paths.
 
 For removal, first select another model for any Osaurus agent/default that uses this provider. The disconnect guard refuses to rewrite those choices for you.
@@ -155,7 +165,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Disconnect-Osa
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Uninstall.ps1 -RootPath $AssistRoot -KeepConfig
 ```
 
-`-KeepConfig` writes a tokenless backup outside the removed directory and refuses to overwrite an existing backup; supply a new `-BackupPath` if needed. Uninstall stops only identified companion processes, removes only its owned provider/credential and dedicated installation, and preserves model files, other applications, device drivers and signed DSP provisioning. It rejects model paths inside the installation directory so removing the companion cannot remove its registered weights. Optional machine-wide driver/DSP maintenance is a separate operation.
+`-KeepConfig` writes a tokenless backup outside the removed directory and refuses to overwrite an existing backup; supply a new `-BackupPath` if needed. Uninstall stops only identified companion processes and removes its owned provider/credential, login shortcut and dedicated installation. It preserves model files, other startup entries, other applications, device drivers and signed DSP provisioning. It rejects model paths inside the installation directory so removing the companion cannot remove its registered weights. Optional machine-wide driver/DSP maintenance is a separate operation.
 
 ## Reproducibility and evidence
 
@@ -165,6 +175,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Uninstall.ps1 
 - [Machine-readable evidence](evidence/README.md): sanitized request/output records, CSV timing rows and a checksummed manifest; no raw chat history, local configuration, credentials or model weights.
 - [Support boundary](docs/support-and-troubleshooting.md): tested architectures, mapping/commit failures, provisioning and memory limitations.
 - [Idle policy](docs/idle-policy.md): automatic Osaurus preference following, cached/offline behavior and status diagnostics.
+- [Automatic lifecycle](docs/automatic-lifecycle.md): the owned login shortcut, app/tray/quit behavior and manual controls.
 
 `runtime.lock.json` pins the official GenieX **0.11.0** Windows ARM64 archive and every required native-file SHA-256. Its llama.cpp core revision is `93cf736a8d1d46aa922e27eb64aa712bcd5ebc30`; the Python declarations and packaged native allowlist are tied to it. `requirements.lock` pins Python distributions and hashes. These are reproducibility pins, not a claim that the versions are the newest available. Do not mix arbitrary replacement DLLs or DSP payloads into the bundle.
 
