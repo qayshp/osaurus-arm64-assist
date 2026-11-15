@@ -54,7 +54,7 @@ class Fixture(http.server.BaseHTTPRequestHandler):
                        Location="http://127.0.0.1:1/private")
         elif self.server.raw is not None:
             self.reply(200, self.server.raw, self.server.content_type)
-        elif body.get("stream"):
+        elif body.get("stream") or self.server.negotiate_accept and "text/event-stream" in self.headers.get("Accept", ""):
             self.send_response(200)
             self.send_header("Content-Type", "text/event-stream; charset=utf-8")
             self.send_header("Connection", "close")
@@ -94,6 +94,7 @@ class ProxyTests(unittest.TestCase):
         self.server.requests = []
         self.server.status, self.server.raw = 200, None
         self.server.get_redirect, self.server.pause_stream, self.server.slow_headers = False, False, False
+        self.server.negotiate_accept = False
         self.server.content_type = "application/json"
         self.server.client_closed = threading.Event()
         self.thread = threading.Thread(target=lambda: self.server.serve_forever(poll_interval=.01), daemon=True)
@@ -149,6 +150,19 @@ class ProxyTests(unittest.TestCase):
         with patch.dict(os.environ, {}, clear=True):
             self.run_proxy()
         self.assertNotIn("Authorization", self.server.requests[-1][2])
+
+    def test_accept_negotiation_matches_absent_false_and_true_stream_modes(self):
+        # Osaurus 1.0.3 selects SSE if Accept advertises it even when stream is
+        # false. Exercise that real HTTP negotiation rather than mocking headers.
+        self.server.negotiate_accept = True
+        for stream in (None, False, True):
+            with self.subTest(stream=stream):
+                events = self.run_proxy(**({} if stream is None else {"stream": stream}))
+                get, post = self.server.requests[-2:]
+                self.assertEqual(get[2]["Accept"], "application/json")
+                self.assertEqual(post[2]["Accept"], "text/event-stream" if stream else "application/json")
+                self.assertEqual(events[0]["type"], "sse" if stream else "json")
+                self.assertEqual(events[-1], {"type": "end"})
 
     def test_rejects_remote_ownership_before_post(self):
         self.server.models[0]["owned_by"] = "prov-companion"

@@ -48,7 +48,7 @@ def _json(raw):
 
 class _Response:
     """A direct connection with a total deadline, including slow HTTP headers."""
-    def __init__(self, endpoint, method, path, payload, timeout):
+    def __init__(self, endpoint, method, path, payload, timeout, *, stream=False):
         parsed = urlsplit(endpoint)
         self.connection = http.client.HTTPConnection(parsed.hostname, parsed.port, timeout=min(1.0, timeout))
         self.response = self.transport = self.timer = None
@@ -62,7 +62,7 @@ class _Response:
             self.timer = threading.Timer(max(.001, self.deadline - time.monotonic()), self._expire)
             self.timer.daemon = True
             self.timer.start()
-            headers = {"Accept": "application/json, text/event-stream", "Connection": "close"}
+            headers = {"Accept": "text/event-stream" if stream else "application/json", "Connection": "close"}
             key = os.environ.get("OSAURUS_API_KEY")
             if key:
                 headers["Authorization"] = "Bearer " + key
@@ -219,7 +219,8 @@ def proxy_events(profile, body):
             reason = "preferences_require_native_engine"
         assist = {"requested_mode": profile.get("_requested_mode", profile.get("mode", "auto")),
                   "actual_mode": "osaurus-native", "fallback_reason": reason, "source_model": identifier}
-        response = _Response(endpoint, "POST", "/v1/chat/completions", payload, timeout)
+        response = _Response(endpoint, "POST", "/v1/chat/completions", payload, timeout,
+                             stream=forwarded.get("stream", False))
         if forwarded.get("stream"):
             if response.response.getheader("Content-Type", "").split(";", 1)[0].strip().lower() != "text/event-stream":
                 _fail("invalid_stream", "Osaurus did not return an event stream.")
