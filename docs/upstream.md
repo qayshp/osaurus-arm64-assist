@@ -10,7 +10,7 @@ The public [documentation repository README](https://github.com/osaurus-ai/osaur
 
 The [public Windows documentation baseline](https://github.com/osaurus-ai/osaurus-docs/blob/master/windows-baseline.json) references a Windows release branch/commit but still describes an older 0.1.9 baseline, reviewed November 3. The locally tested app was 1.0.3. Do not treat the documentation baseline as a current release inventory.
 
-Public branding is ambiguous: the [About page](https://osaurus.ai/about) broadly describes an open-source/MIT Windows and Mac application, while the [download page](https://osaurus.ai/download) explicitly labels the Mac download open source and sends Windows users to the Store. The checked sources did not supply a public Windows implementation checkout or an official future source-release date. No checked official statement established that Windows must remain closed forever. A maintainer clarification is needed rather than inferring either a promise or a permanent refusal.
+The [About page](https://osaurus.ai/about), refreshed again before publication, explicitly identifies the **Mac app** as MIT licensed and open source. The [download page](https://osaurus.ai/download) also labels the Mac download open source and sends Windows users to the Store. Those statements do not establish the Windows implementation's source-release policy. The checked sources did not supply a usable public Windows checkout or an official future source-release date. No checked official statement established that Windows must remain closed forever. A maintainer clarification is needed rather than inferring either a promise or a permanent refusal.
 
 ## Where to ask
 
