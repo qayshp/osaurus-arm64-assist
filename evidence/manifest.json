@@ -3,8 +3,8 @@
   "files": [
     {
       "name": "README.md",
-      "sha256": "5eaa2104ee98c9a6bd4add07a0122aacfc7f6a0f1c4a0678c972ba6273390b9a",
-      "bytes": 5692
+      "sha256": "f8935e9ee6ca2552e3b07d4c988d8266c3a83ea5abe2f49a3f09259ad490794c",
+      "bytes": 6567
     },
     {
       "name": "check_public_evidence.py",
@@ -190,6 +190,11 @@
       "name": "shared-idle-live.json",
       "sha256": "2345a7905b92537dad873a854354968433c46a559a7e81bf48c0a02dee4b67f4",
       "bytes": 1231
+    },
+    {
+      "name": "automatic-lifecycle-live.json",
+      "sha256": "d255c7c5f5982932603ba6098c44b30ed44b843c48eafd46c40514f0221a00bd",
+      "bytes": 1150
     }
   ]
 }

@@ -67,6 +67,27 @@ Inspect the reported startup/watcher state, server readiness and idle policy. Th
 
 If the server does not follow the app, check that the official Store app is running in the same Windows user session and that automatic management is enabled. A deliberate manual stop ends the current watcher; a future sign-in can start it again through the retained login shortcut. Diagnose stale identities or blocked startup from the helper's state/logs instead of stopping every Python process.
 
+## Live verification on the test laptop
+
+The November 15, 2026 checks exercised companion **0.1.2** with Windows Osaurus **1.0.3** on the documented Snapdragon Surface laptop. A real Qwen3-0.6B CPU model worker was loaded and observed before the quit test. The [sanitized lifecycle receipt](../evidence/automatic-lifecycle-live.json) records these observations separately from the earlier inference benchmarks.
+
+| Check | Observation |
+|---|---|
+| Normal Osaurus quit through its own CLI | The managed companion server and the observed native model worker both stopped |
+| Quit-and-process-cleanup cycle | **8.656 seconds** in the measured cycle |
+| Watcher after the app quit | Remained running and waiting for the next app launch |
+| Waiting watcher memory | Two associated `pythonw` processes had **31.93 MiB summed full working set** and **14.55 MiB summed private committed bytes** |
+| Activation of the exact registered Startup shortcut in the current session | Started the waiting watcher while Osaurus was closed; the main companion server stayed off |
+| Osaurus launch using its own CLI | Automatically started the managed server; **seven profiles** were discovered without manual refresh, and no model was preloaded |
+| Disable automatic management | Removed the owned hook and stopped the managed server while Osaurus stayed running |
+| Enable → owned, healthy managed server | **3.253 seconds** in the measured cycle |
+| Repeat enable with the healthy watcher | Preserved the same server instance |
+| Preservation checks | Other Startup-folder entry hashes and the full Osaurus configuration export were unchanged; seven companion profiles remained available |
+
+The shutdown measurement includes the normal app quit and process-cleanup observation; it is not just the confirmation-delay setting or a promised shutdown deadline. The enable measurement covers the helper operation through owned-server readiness. These are observed cycles, rather than startup or shutdown guarantees. Application launch/quit used the Osaurus CLI. The registered companion shortcut was separately activated in the existing signed-in session; this does not establish a normal Osaurus desktop-shortcut launch, a reboot or a fresh Windows sign-in. No forced OS shutdown was used.
+
+The two memory figures describe different views and must not be added together. Summed working sets can count shared pages more than once, while private bytes describe committed memory. These values measure the waiting helper, with the model worker and main server stopped. See [memory measurement boundaries](methodology.md#memory-measurements) for the distinction from loaded-model memory.
+
 ## Why a Windows watcher
 
 The checked [Windows CLI/import interface](https://docs.osaurus.ai/windows/cli#osaurus-import) does not provide a documented executable lifecycle hook for an arbitrary OpenAI-compatible provider. Arbitrary bundle runtimes/executables are refused, and `serve --supervise` is Mac-only. MCP stdio starts MCP tool servers, which is a different protocol contract.

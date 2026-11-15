@@ -6,6 +6,8 @@ The `companion-*` files are a separate set of installed-companion acceptance obs
 
 `shared-idle-live.json` separately records 0.1.1 idle-policy verification: the unchanged live Osaurus setting was 300 seconds, and an isolated CPU worker unloaded after about 301.14 seconds despite 299 health polls. See [idle-policy behavior and limits](../docs/idle-policy.md). This is a cleanup observation, not a throughput or model-quality score.
 
+[automatic-lifecycle-live.json](automatic-lifecycle-live.json) separately records 0.1.2 lifecycle verification: normal Osaurus CLI quit stopped the managed server and a loaded CPU worker, the waiting watcher had a measured memory cost, the registered companion Startup shortcut was activated, and Osaurus CLI launch restored the server with seven automatically discovered profiles. It also records Disable/Enable, repeated-enable identity and preservation checks. These checks ran in the existing signed-in session; they do not establish reboot or fresh-sign-in behavior. See [automatic lifecycle and measurement boundaries](../docs/automatic-lifecycle.md#live-verification-on-the-test-laptop).
+
 The original raw results remain private/local. This public projection preserves selected numeric summaries, request timings, synthetic input/output text, token counts and model fingerprints. It omits local absolute paths, configuration exports, credentials, host identifiers, exact wall-clock timestamps, process inventories, private conversation, model weights and vendor binaries. Original artifact basenames in CSV/provenance fields are historical identifiers, not paths to a hidden public archive.
 
 | File | Purpose |
@@ -32,6 +34,7 @@ The original raw results remain private/local. This public projection preserves 
 | `companion-fixed-raptor-cpu.json`, `companion-fixed-raptor-npu.json`, `companion-fixed-raptor-gpu.json`, `companion-fixed-raptor-hybrid.json` | Current packaged 512-input/128-generated comparison: one complete warm-up and three measured runs per mode, including exact input/generated IDs and per-run stages |
 | `companion-fixed-raptor-validation.json` | Independent identical-input/exact-count/actual-mode/median checks, expected GGUF hash, implementation revision, summary ranges and comparability limits |
 | `companion-final-state.json` | Final healthy/connected loopback state after explicit model unload: seven profiles, no native workers, unchanged unrelated configuration and no startup task |
+| `automatic-lifecycle-live.json` | Separate 0.1.2 live lifecycle, registered-shortcut activation, seven-profile discovery, memory, Disable/Enable and preservation observations |
 | `manifest.json` | SHA-256 and size of the curated data files at publication |
 
 All favorable and unfavorable modes were retained in the summaries. Failed/memory-guarded/timed-out probes do not supply valid inference throughput. An interrupted child with no exception string can still be an incomplete timeout; inspect its completion and parent-monitor fields.
