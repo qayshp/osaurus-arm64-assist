@@ -19,12 +19,17 @@ def output(value, path=None):
     print(text)
 
 
-def api(config, path, body=None):
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, request, response, code, message, headers, new_url):
+        return None
+
+
+def api(config, path, body=None, timeout=360):
     url = f"http://127.0.0.1:{config.get('port',8082)}" + path
     data = json.dumps(body).encode("utf-8") if body is not None else None
     request = urllib.request.Request(url, data, {"Authorization": "Bearer "+config["api_key"], "Content-Type": "application/json"})
     try:
-        with urllib.request.build_opener(urllib.request.ProxyHandler({})).open(request, timeout=360) as response:
+        with urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect()).open(request, timeout=timeout) as response:
             return json.load(response)
     except urllib.error.HTTPError as error:
         try:
@@ -78,6 +83,10 @@ def main(argv=None):
     importing = config_sub.add_parser("import"); importing.add_argument("--config", type=Path, required=True); importing.add_argument("--input", type=Path, required=True)
     smoke = sub.add_parser("self-test"); smoke.add_argument("--config", type=Path, required=True); smoke.add_argument("--model", required=True)
     smoke.add_argument("--output", type=Path); smoke.add_argument("--tools", action="store_true"); smoke.add_argument("--json-object", action="store_true")
+    bench = sub.add_parser("benchmark"); bench.add_argument("--config", type=Path, required=True)
+    bench.add_argument("--model", required=True); bench.add_argument("--output", type=Path)
+    bench.add_argument("--prompt-tokens", type=int, default=512); bench.add_argument("--generated-tokens", type=int, default=128)
+    bench.add_argument("--repetitions", type=int, default=3); bench.add_argument("--warmup", type=int, default=1); bench.add_argument("--seed", type=int, default=42)
     unload = sub.add_parser("unload"); unload.add_argument("--config", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
@@ -153,6 +162,15 @@ def main(argv=None):
                 output({"imported":True,"new_installation_key_and_runtime_preserved":True,"restart_if_running":True})
         elif args.command == "unload":
             output(api(config,"/admin/unload",{}))
+        elif args.command == "benchmark":
+            from .benchmark import normalize_benchmark
+            profile=next((x for x in config["models"] if x["id"]==args.model and x.get("enabled",True)),None)
+            if not profile: raise ValueError("Unknown or disabled profile")
+            request=normalize_benchmark({"model":args.model,"prompt_tokens":args.prompt_tokens,
+                "generated_tokens":args.generated_tokens,"repetitions":args.repetitions,"warmup":args.warmup,
+                "seed":args.seed},profile.get("context",2048))
+            timeout=profile.get("load_timeout_seconds",300)+(args.repetitions+args.warmup)*profile.get("request_timeout_seconds",900)+30
+            output(api(config,"/admin/benchmark",request,timeout=timeout),args.output)
         elif args.command == "self-test":
             profile=next((x for x in config["models"] if x["id"]==args.model),None)
             if not profile: raise ValueError("Unknown profile")

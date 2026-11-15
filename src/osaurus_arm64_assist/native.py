@@ -106,6 +106,7 @@ class Api:
             (self.llama, "llama_init_from_model", P, [P, ContextParams]),
             (self.llama, "llama_free", None, [P]), (self.llama, "llama_n_ctx", U, [P]),
             (self.llama, "llama_model_get_vocab", P, [P]),
+            (self.llama, "llama_vocab_n_tokens", I, [P]),
             (self.llama, "llama_model_chat_template", C.c_char_p, [P, C.c_char_p]),
             (self.llama, "llama_model_meta_val_str", I, [P, C.c_char_p, P, C.c_size_t]),
             (self.llama, "llama_vocab_bos", I, [P]), (self.llama, "llama_vocab_eos", I, [P]),

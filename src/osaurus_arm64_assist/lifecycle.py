@@ -176,7 +176,7 @@ class Manager:
             self._stop()
             raise
 
-    def generate(self, profile, request):
+    def generate(self, profile, request, *, token_ids=None):
         actual = profile
         fallback_reason = None
         try:
@@ -188,7 +188,10 @@ class Manager:
             actual = {**profile, "mode": "cpu"}
             cold = self._load(actual)
         self.last_used = time.monotonic()
-        self.connection.send({"type": "generate", "request": request})
+        command = {"type": "generate", "request": request}
+        if token_ids is not None:
+            command.update(type="benchmark", token_ids=token_ids)
+        self.connection.send(command)
         deadline = time.monotonic() + actual.get("request_timeout_seconds", 900)
         try:
             while True:
@@ -215,6 +218,47 @@ class Manager:
         except BaseException:
             self._stop()
             raise
+
+    def benchmark(self, profile, body):
+        """Run under the caller's inference lock; warm-ups are kept separately."""
+        from .benchmark import input_ids, normalize_benchmark, summary
+        settings = normalize_benchmark(body, profile.get("context", 2048))
+        ids = input_ids(settings)
+        request = {"max_tokens": settings["generated_tokens"], "temperature": 0,
+                   "top_p": 1, "stop": [], "tools": [], "tool_choice": "none",
+                   "response_format": {"type": "text"}}
+        runs, warmups = [], []
+        for index in range(settings["warmup"] + settings["repetitions"]):
+            before = time.perf_counter()
+            events = self.generate(profile, request, token_ids=ids)
+            finished = None
+            try:
+                for event in events:
+                    if event["type"] == "done":
+                        finished = event
+            finally:
+                events.close()
+            if not finished or len(finished.get("generated_ids", [])) != settings["generated_tokens"]:
+                raise WorkerFailure("Fixed-token benchmark did not produce the requested number of tokens")
+            if finished["usage"]["prompt_tokens"] != settings["prompt_tokens"] or finished["usage"]["completion_tokens"] != settings["generated_tokens"]:
+                raise WorkerFailure("Fixed-token benchmark usage did not match the requested workload")
+            assist = dict(finished["assist"])
+            if assist.get("fallback_reason"):
+                assist["fallback_reason"] = "Explicit CPU fallback used; inspect the local worker log for details"
+            warmup = index < settings["warmup"]
+            run = {"repetition": index+1 if warmup else index-settings["warmup"]+1,
+                   "warmup": warmup, "manager_seconds": time.perf_counter()-before,
+                   "generated_ids": finished["generated_ids"], "usage": finished["usage"],
+                   "metrics": finished["metrics"], "assist": assist,
+                   "finish_reason": finished["finish_reason"]}
+            (warmups if warmup else runs).append(run)
+        allowed = ("id", "mode", "context", "threads", "batch_threads", "batch", "microbatch",
+                   "power_mode", "repack", "gpu_layers", "fallback_mode", "allow_experimental_architecture")
+        return {"schema_version": 1, "kind": "fixed_tokens", "model": profile["id"],
+                "settings": {**settings, "input_rng": "random.Random(seed).randrange(32000)",
+                             "input_id_range": [0, 31999], "sampling": "greedy", "ignore_eos": True},
+                "configuration": {key: profile[key] for key in allowed if key in profile},
+                "input_ids": ids, "warmup_runs": warmups, "runs": runs, "summary": summary(runs)}
 
     def close(self):
         self.closed.set()

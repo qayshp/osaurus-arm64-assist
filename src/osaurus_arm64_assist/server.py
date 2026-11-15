@@ -165,9 +165,26 @@ class Handler(BaseHTTPRequestHandler):
                 if not acquired:
                     self.error(409, "An inference request is active; cancel it before unloading"); return
                 manager._stop(); self.send_json(200, {"status": "unloaded"}); return
-            if path != "/v1/chat/completions":
+            if path not in ("/v1/chat/completions", "/admin/benchmark"):
                 self.error(404, "Unknown endpoint"); return
             config = manager.refresh()
+            if path == "/admin/benchmark":
+                from .benchmark import normalize_benchmark
+                # Validate primitive types before selecting/loading any worker.
+                request = normalize_benchmark(body, 131072)
+                profile = next((model for model in config["models"] if model["id"] == request["model"] and model.get("enabled", True)), None)
+                if not profile:
+                    self.error(404, "Unknown or disabled model profile"); return
+                normalize_benchmark(request, profile.get("context", 2048))
+                acquired = manager.lock.acquire(blocking=False)
+                if not acquired:
+                    self.error(429, "One model request is already running; retry after it completes", "rate_limit_error"); return
+                api_started = time.perf_counter()
+                report = manager.benchmark(profile, request)
+                report["api_seconds"] = time.perf_counter()-api_started
+                manager.last_metrics = {"model": profile["id"], "benchmark": True,
+                                        "summary": report["summary"], "api_seconds": report["api_seconds"]}
+                self.send_json(200, report); return
             request = normalize_request(body)
             profile = next((model for model in config["models"] if model["id"] == request.get("model") and model.get("enabled", True)), None)
             if not profile:
@@ -206,6 +223,7 @@ class Handler(BaseHTTPRequestHandler):
                     if not finished:
                         raise WorkerFailure("No completed response was received")
                 finished["assist"]["api_seconds"] = time.perf_counter()-api_started
+                manager.last_metrics = {"model": profile["id"], **finished["assist"]}
                 self.chunk(base, {}, finished["finish_reason"], assist=finished["assist"])
                 options = request.get("stream_options") or {}
                 if isinstance(options, dict) and options.get("include_usage"):
@@ -219,6 +237,7 @@ class Handler(BaseHTTPRequestHandler):
                 if not finished:
                     raise WorkerFailure("No completed response was received")
                 finished["assist"]["api_seconds"] = time.perf_counter()-api_started
+                manager.last_metrics = {"model": profile["id"], **finished["assist"]}
                 self.send_json(200, {**base, "object": "chat.completion", "choices": [{"index": 0,
                     "message": finished["message"], "finish_reason": finished["finish_reason"]}],
                     "usage": finished["usage"], "assist": finished["assist"]})

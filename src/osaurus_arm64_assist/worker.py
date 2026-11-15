@@ -42,18 +42,23 @@ def entry(connection, runtime_dir, profile, log_path, parent_pid):
                 command = connection.recv()
                 if command.get("type") == "unload":
                     break
-                if command.get("type") != "generate":
+                if command.get("type") not in ("generate", "benchmark"):
                     continue
                 request = command["request"]
                 try:
                     finished = None
-                    for event in engine.generate(request):
+                    benchmark = command["type"] == "benchmark"
+                    events = engine.generate(request, token_ids=command["token_ids"], ignore_eos=True) if benchmark else engine.generate(request)
+                    for event in events:
                         if event["type"] == "done":
                             finished = event
                         else:
                             connection.send(event)
                     if finished is None:
                         raise RuntimeError("Native generation did not finish")
+                    if benchmark:
+                        connection.send(finished)
+                        continue
                     started = time.perf_counter()
                     message = {"role": "assistant", "content": finished["text"]}
                     if request["response_format"]["type"] == "json_object":

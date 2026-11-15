@@ -103,15 +103,24 @@ class Engine:
             api.llama_sampler_free(chain)
             raise
 
-    def generate(self, request):
+    def generate(self, request, token_ids=None, ignore_eos=False):
         api, primary = self.api, self.primary
         started = time.perf_counter()
-        before = time.perf_counter(); formatted = self.template.render(request)
-        format_seconds = time.perf_counter() - before
-        if len(formatted) > 4 * 1024 * 1024:
-            raise ValueError("Formatted prompt is too large")
-        before = time.perf_counter(); ids = api.tokenize(primary.vocab, formatted)
-        tokenize_seconds = time.perf_counter() - before
+        if token_ids is None:
+            before = time.perf_counter(); formatted = self.template.render(request)
+            format_seconds = time.perf_counter() - before
+            if len(formatted) > 4 * 1024 * 1024:
+                raise ValueError("Formatted prompt is too large")
+            before = time.perf_counter(); ids = api.tokenize(primary.vocab, formatted)
+            tokenize_seconds = time.perf_counter() - before
+        else:
+            if not isinstance(token_ids, list) or len(token_ids) > self.context_limit:
+                raise ValueError("Direct token IDs must be a bounded list")
+            vocab_size = api.llama_vocab_n_tokens(primary.vocab)
+            if any(isinstance(token, bool) or not isinstance(token, int) or not 0 <= token < vocab_size for token in token_ids):
+                raise ValueError("Direct token ID is outside this model's vocabulary")
+            ids = list(token_ids)
+            format_seconds = tokenize_seconds = 0.0
         if not ids or len(ids) + request["max_tokens"] > self.context_limit:
             raise ValueError(f"Prompt ({len(ids)} tokens) plus requested output ({request['max_tokens']}) exceeds the configured {self.context_limit}-token context")
         before = time.perf_counter()
@@ -125,7 +134,8 @@ class Engine:
         stop_buffer = StopBuffer(request["stop"])
         active = primary.context
         first, sampled, transfer_seconds, state_bytes, decoding_seconds, sampling_seconds = None, 0, 0.0, 0, 0.0, 0.0
-        text_parts = []
+        first_token = None
+        text_parts, generated_ids = [], []
         try:
             before = time.perf_counter()
             batch = self.profile.get("batch", 512)
@@ -136,10 +146,13 @@ class Engine:
             for index in range(request["max_tokens"]):
                 before = time.perf_counter()
                 token = api.llama_sampler_sample(sampler, active, -1)
-                if api.llama_vocab_is_eog(primary.vocab, token):
+                if not ignore_eos and api.llama_vocab_is_eog(primary.vocab, token):
                     finish = "stop"; sampling_seconds += time.perf_counter() - before
                     break
                 sampled += 1
+                generated_ids.append(token)
+                if first_token is None:
+                    first_token = time.perf_counter() - started
                 fragment = decoder.decode(api.piece(primary.vocab, token))
                 delta = stop_buffer.push(fragment)
                 sampling_seconds += time.perf_counter() - before
@@ -174,14 +187,15 @@ class Engine:
                     yield {"type": "token", "text": final}
             perf = api.llama_perf_context(active)
             yield {"type": "done", "text": "".join(text_parts), "finish_reason": finish,
+                   "generated_ids": generated_ids,
                    "usage": {"prompt_tokens": len(ids), "completion_tokens": sampled, "total_tokens": len(ids)+sampled},
                    "metrics": {"request_seconds": time.perf_counter()-started, "format_seconds": format_seconds,
                         "tokenize_seconds": tokenize_seconds, "context_reset_seconds": reset_seconds,
-                        "prompt_seconds": prompt_seconds, "first_text_seconds": first,
+                        "prompt_seconds": prompt_seconds, "first_text_seconds": first, "first_token_seconds": first_token,
                         "sampling_and_text_seconds": sampling_seconds, "continuation_decode_seconds": decoding_seconds,
                         "state_transfer_seconds": transfer_seconds, "state_bytes": state_bytes,
                         "native_decode_tokens_per_second": perf.n_eval/(perf.t_eval_ms/1000) if perf.t_eval_ms else None,
-                        "token_count_convention": "sampled non-EOG output tokens; no billing"}}
+                        "token_count_convention": "all sampled output tokens including EOG; fixed-token benchmark" if ignore_eos else "sampled non-EOG output tokens; no billing"}}
         finally:
             api.llama_sampler_free(sampler)
 

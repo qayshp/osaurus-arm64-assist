@@ -129,9 +129,10 @@ class CommandLineTests(unittest.TestCase):
                 patch.object(cli.urllib.request, "build_opener", return_value=opener) as build:
             result = cli.api(config.load(self.settings), "/admin/unload", {})
         self.assertEqual(result, {"unloaded": True})
-        self.assertEqual(len(build.call_args.args), 1)
+        self.assertEqual(len(build.call_args.args), 2)
         self.assertIsInstance(build.call_args.args[0], cli.urllib.request.ProxyHandler)
         self.assertEqual(build.call_args.args[0].proxies, {})
+        self.assertIsInstance(build.call_args.args[1], cli.NoRedirect)
         request = opener.open.call_args.args[0]
         self.assertEqual(request.full_url, "http://127.0.0.1:8082/admin/unload")
         self.assertEqual(request.get_method(), "POST")
