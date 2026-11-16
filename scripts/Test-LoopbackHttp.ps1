@@ -36,12 +36,22 @@ try {
     if (-not $health.direct) {throw 'Loopback GET was redirected to the proxy.'}
     $shutdown=Invoke-AssistLocalJson -Url ($target+'/admin/shutdown') -Method POST -ApiKey 'loopback-test-key'
     if (-not $shutdown.direct -or -not $shutdown.authorized) {throw 'Authenticated loopback POST did not reach the target directly.'}
+    $label='NPU Hybrid '+[char]0x00E9
+    $renamed=Invoke-AssistLocalJson -Url ($target+'/admin/providers/fixture') -Method PUT -Body @{name=$label} -ApiKey 'loopback-test-key'
+    if (-not $renamed.direct -or -not $renamed.authorized -or $renamed.body.name -cne $label -or
+        @($renamed.body.PSObject.Properties).Count -ne 1 -or $renamed.content_type -notlike 'application/json*') {throw 'Name-only UTF-8 PUT was not preserved.'}
     $refused=$false
     try {$null=Invoke-AssistLocalJson -Url ($target+'/redirect') -ApiKey 'loopback-test-key'} catch {$refused=$true}
     if (-not $refused) {throw 'A redirect was followed.'}
+    $putRefused=$false
+    try {$null=Invoke-AssistLocalJson -Url ($target+'/redirect') -Method PUT -Body @{name=$label} -ApiKey 'loopback-test-key'} catch {$putRefused=$true}
+    if (-not $putRefused) {throw 'A JSON PUT redirect was followed.'}
+    $getBodyRefused=$false
+    try {$null=Invoke-AssistLocalJson -Url ($target+'/health') -Body @{name=$label}} catch {$getBodyRefused=$true}
+    if (-not $getBodyRefused) {throw 'A JSON body was accepted for GET.'}
     $after=(Invoke-AssistLocalJson -Url ($target+'/stats')).proxy_hits
     if ($after -ne $before) {throw 'A loopback request or redirect reached the proxy.'}
-    [pscustomobject]@{passed=4;negative_control_proxy_hits=$before;proxy_hits_after_local_get_post_and_redirect=$after;loopback_get_direct=$true;authenticated_post_direct=$true;redirect_refused=$true} | ConvertTo-Json
+    [pscustomobject]@{passed=7;negative_control_proxy_hits=$before;proxy_hits_after_local_requests=$after;loopback_get_direct=$true;authenticated_post_direct=$true;name_only_utf8_put_direct=$true;redirect_refused=$true;put_redirect_refused=$true;get_body_refused=$true} | ConvertTo-Json
 } finally {
     [Net.WebRequest]::DefaultWebProxy=$previousProxy
     $env:HTTP_PROXY=$previousHttp; $env:HTTPS_PROXY=$previousHttps; $env:NO_PROXY=$previousNoProxy
