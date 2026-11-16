@@ -194,13 +194,21 @@ class ModelSettingsTests(unittest.TestCase):
         self.assertEqual(profile(entry(architecture="unknown"), mode="hybrid")["mode"], "osaurus")
 
     def test_user_native_fields_and_f16_cache_settings_apply(self):
-        value = profile(s=settings({"threads": 4, "batchThreads": 8, "batchSize": 1024,
+        value = profile(s=settings({"contextSize": 2048, "threads": 4, "batchThreads": 8, "batchSize": 1024,
             "uBatchSize": 256, "flashAttention": False, "cacheTypeK": "F16", "cacheTypeV": "f16",
             "kvOffload": False, "opOffload": False, "kvUnified": False, "swaFull": True}))
         self.assertEqual((value["threads"], value["batch_threads"], value["batch"], value["microbatch"]), (4, 8, 1024, 256))
         self.assertFalse(value["flash_attention"]); self.assertFalse(value["kv_offload"])
         self.assertFalse(value["op_offload"]); self.assertFalse(value["kv_unified"]); self.assertTrue(value["swa_full"])
         self.assertEqual(value["mode"], "hybrid")
+
+    def test_long_hybrid_full_swa_preserves_preference_on_stock_engine(self):
+        for context in (4096, 8192, 16384):
+            with self.subTest(context=context):
+                value = profile(s=settings({"contextSize": context, "swaFull": True}))
+                self.assertEqual((value["mode"], value["context"]), ("osaurus", context))
+                self.assertEqual(value["_fallback_reason"], "hybrid_context_swa_memory_policy")
+                self.assertIn("swaFull", value["sync"]["unsupported"])
 
     def test_explicit_incompatible_settings_do_not_get_silently_ignored(self):
         changes = [{"cacheTypeK": "q8_0"}, {"cacheTypeV": "q4_0"}, {"useMmap": False},

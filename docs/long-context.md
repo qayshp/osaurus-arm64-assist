@@ -27,6 +27,8 @@ CPU weight repacking adds another substantial allocation. At 8K with repacking e
 
 For Raptor hybrid above 4096, the backend therefore selects `repack:false` when the source has no explicit repack preference. An explicit source `repack:true` there delegates to Osaurus to preserve the preference. This can reduce continuation speed: the resident 8K hybrid document request took **17.32 s**, and the conversation cases took **24.80 / 24.33 s**. The corresponding repacked CPU control took **131.37 s** for the resident document and **125.43 / 126.21 s** for conversation. Those are this specific short-output workload, with different load policies and variable system conditions, not a universal speed ratio.
 
+The larger-context checks use compact sliding-window storage (`swaFull:false`). Full-window storage above 2K delegates to Osaurus as well: it expands the cache substantially and is outside this validated hybrid memory policy.
+
 The 8K hybrid cold document request took **36.55 s**, including **14.70 s** loading. The 16K cold document request took **50.31 s**, including **10.84 s** loading; its resident conversation request took **39.09 s**. At 16K the populated handoff state was about **543–554 MiB**. Full load and inference stages are retained, rather than mixing load time with resident response time.
 
 Physical RAM remains tight: the near-boundary 16K run briefly sampled only about **4 MiB of available physical RAM**, despite roughly 2 GiB available commit. Paging and background activity can affect responsiveness. This is why 8K is the default and 16K is an explicit choice, not a comfortable-memory or stress-test certification.

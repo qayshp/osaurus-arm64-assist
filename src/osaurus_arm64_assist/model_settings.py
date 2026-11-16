@@ -336,6 +336,8 @@ def build_profile(entry, settings, resolved, runtime, path, *, identifier=None, 
         if type(profile[target]) is not bool:
             fallback("invalid_explicit_setting", name); profile[target] = default
         else: applied.add(name)
+    if known_spark and selected == "hybrid" and context > 2048 and profile["swa_full"]:
+        fallback("hybrid_context_swa_memory_policy", "swaFull")
     gpu_layers = overrides.get("gpuLayerCount", runtime.get("localGpuLayers"))
     if selected.startswith("gpu") and type(gpu_layers) is int and gpu_layers != 0:
         profile["gpu_layers"] = gpu_layers
