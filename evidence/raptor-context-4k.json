@@ -1,0 +1,1706 @@
+{
+  "schema_version": 1,
+  "kind": "long-context-acceptance",
+  "context": 4096,
+  "records": 204,
+  "expected_native_core": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30",
+  "minimum_actual_prompt_tokens": 2049,
+  "seed": 42,
+  "dry_run": false,
+  "scope": "Synthetic text quality plus exact random-token performance; no power or physical NPU counter sampling",
+  "warmth_note": "Resident weights/contexts; the current engine clears KV and prefills supplied history on every request",
+  "workloads": [
+    {
+      "id": "document_three_positions",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Extract facts exactly from the supplied synthetic shipping document."
+        },
+        {
+          "role": "user",
+          "content": "BEGIN DOCUMENT\nThe EARLY shipment approval code is 95822412.\nLine 00001: routine shipment checked and filed.\nLine 00002: routine shipment checked and filed.\nLine 00003: routine shipment checked and filed.\nLine 00004: routine shipment checked and filed.\nLine 00005: routine shipment checked and filed.\nLine 00006: routine shipment checked and filed.\nLine 00007: routine shipment checked and filed.\nLine 00008: routine shipment checked and filed.\nLine 00009: routine shipment checked and filed.\nLine 00010: routine shipment checked and filed.\nLine 00011: routine shipment checked and filed.\nLine 00012: routine shipment checked and filed.\nLine 00013: routine shipment checked and filed.\nLine 00014: routine shipment checked and filed.\nLine 00015: routine shipment checked and filed.\nLine 00016: routine shipment checked and filed.\nLine 00017: routine shipment checked and filed.\nLine 00018: routine shipment checked and filed.\nLine 00019: routine shipment checked and filed.\nLine 00020: routine shipment checked and filed.\nLine 00021: routine shipment checked and filed.\nLine 00022: routine shipment checked and filed.\nLine 00023: routine shipment checked and filed.\nLine 00024: routine shipment checked and filed.\nLine 00025: routine shipment checked and filed.\nLine 00026: routine shipment checked and filed.\nLine 00027: routine shipment checked and filed.\nLine 00028: routine shipment checked and filed.\nLine 00029: routine shipment checked and filed.\nLine 00030: routine shipment checked and filed.\nLine 00031: routine shipment checked and filed.\nLine 00032: routine shipment checked and filed.\nLine 00033: routine shipment checked and filed.\nLine 00034: routine shipment checked and filed.\nLine 00035: routine shipment checked and filed.\nLine 00036: routine shipment checked and filed.\nLine 00037: routine shipment checked and filed.\nLine 00038: routine shipment checked and filed.\nLine 00039: routine shipment checked and filed.\nLine 00040: routine shipment checked and filed.\nLine 00041: routine shipment checked and filed.\nLine 00042: routine shipment checked and filed.\nLine 00043: routine shipment checked and filed.\nLine 00044: routine shipment checked and filed.\nLine 00045: routine shipment checked and filed.\nLine 00046: routine shipment checked and filed.\nLine 00047: routine shipment checked and filed.\nLine 00048: routine shipment checked and filed.\nLine 00049: routine shipment checked and filed.\nLine 00050: routine shipment checked and filed.\nLine 00051: routine shipment checked and filed.\nLine 00052: routine shipment checked and filed.\nLine 00053: routine shipment checked and filed.\nLine 00054: routine shipment checked and filed.\nLine 00055: routine shipment checked and filed.\nLine 00056: routine shipment checked and filed.\nLine 00057: routine shipment checked and filed.\nLine 00058: routine shipment checked and filed.\nLine 00059: routine shipment checked and filed.\nLine 00060: routine shipment checked and filed.\nLine 00061: routine shipment checked and filed.\nLine 00062: routine shipment checked and filed.\nLine 00063: routine shipment checked and filed.\nLine 00064: routine shipment checked and filed.\nLine 00065: routine shipment checked and filed.\nLine 00066: routine shipment checked and filed.\nLine 00067: routine shipment checked and filed.\nLine 00068: routine shipment checked and filed.\nLine 00069: routine shipment checked and filed.\nLine 00070: routine shipment checked and filed.\nLine 00071: routine shipment checked and filed.\nLine 00072: routine shipment checked and filed.\nLine 00073: routine shipment checked and filed.\nLine 00074: routine shipment checked and filed.\nLine 00075: routine shipment checked and filed.\nLine 00076: routine shipment checked and filed.\nLine 00077: routine shipment checked and filed.\nLine 00078: routine shipment checked and filed.\nLine 00079: routine shipment checked and filed.\nLine 00080: routine shipment checked and filed.\nLine 00081: routine shipment checked and filed.\nLine 00082: routine shipment checked and filed.\nLine 00083: routine shipment checked and filed.\nLine 00084: routine shipment checked and filed.\nLine 00085: routine shipment checked and filed.\nLine 00086: routine shipment checked and filed.\nLine 00087: routine shipment checked and filed.\nLine 00088: routine shipment checked and filed.\nLine 00089: routine shipment checked and filed.\nLine 00090: routine shipment checked and filed.\nLine 00091: routine shipment checked and filed.\nLine 00092: routine shipment checked and filed.\nLine 00093: routine shipment checked and filed.\nLine 00094: routine shipment checked and filed.\nLine 00095: routine shipment checked and filed.\nLine 00096: routine shipment checked and filed.\nLine 00097: routine shipment checked and filed.\nLine 00098: routine shipment checked and filed.\nLine 00099: routine shipment checked and filed.\nLine 00100: routine shipment checked and filed.\nLine 00101: routine shipment checked and filed.\nThe MIDDLE shipment approval code is 24942603.\nLine 00103: routine shipment checked and filed.\nLine 00104: routine shipment checked and filed.\nLine 00105: routine shipment checked and filed.\nLine 00106: routine shipment checked and filed.\nLine 00107: routine shipment checked and filed.\nLine 00108: routine shipment checked and filed.\nLine 00109: routine shipment checked and filed.\nLine 00110: routine shipment checked and filed.\nLine 00111: routine shipment checked and filed.\nLine 00112: routine shipment checked and filed.\nLine 00113: routine shipment checked and filed.\nLine 00114: routine shipment checked and filed.\nLine 00115: routine shipment checked and filed.\nLine 00116: routine shipment checked and filed.\nLine 00117: routine shipment checked and filed.\nLine 00118: routine shipment checked and filed.\nLine 00119: routine shipment checked and filed.\nLine 00120: routine shipment checked and filed.\nLine 00121: routine shipment checked and filed.\nLine 00122: routine shipment checked and filed.\nLine 00123: routine shipment checked and filed.\nLine 00124: routine shipment checked and filed.\nLine 00125: routine shipment checked and filed.\nLine 00126: routine shipment checked and filed.\nLine 00127: routine shipment checked and filed.\nLine 00128: routine shipment checked and filed.\nLine 00129: routine shipment checked and filed.\nLine 00130: routine shipment checked and filed.\nLine 00131: routine shipment checked and filed.\nLine 00132: routine shipment checked and filed.\nLine 00133: routine shipment checked and filed.\nLine 00134: routine shipment checked and filed.\nLine 00135: routine shipment checked and filed.\nLine 00136: routine shipment checked and filed.\nLine 00137: routine shipment checked and filed.\nLine 00138: routine shipment checked and filed.\nLine 00139: routine shipment checked and filed.\nLine 00140: routine shipment checked and filed.\nLine 00141: routine shipment checked and filed.\nLine 00142: routine shipment checked and filed.\nLine 00143: routine shipment checked and filed.\nLine 00144: routine shipment checked and filed.\nLine 00145: routine shipment checked and filed.\nLine 00146: routine shipment checked and filed.\nLine 00147: routine shipment checked and filed.\nLine 00148: routine shipment checked and filed.\nLine 00149: routine shipment checked and filed.\nLine 00150: routine shipment checked and filed.\nLine 00151: routine shipment checked and filed.\nLine 00152: routine shipment checked and filed.\nLine 00153: routine shipment checked and filed.\nLine 00154: routine shipment checked and filed.\nLine 00155: routine shipment checked and filed.\nLine 00156: routine shipment checked and filed.\nLine 00157: routine shipment checked and filed.\nLine 00158: routine shipment checked and filed.\nLine 00159: routine shipment checked and filed.\nLine 00160: routine shipment checked and filed.\nLine 00161: routine shipment checked and filed.\nLine 00162: routine shipment checked and filed.\nLine 00163: routine shipment checked and filed.\nLine 00164: routine shipment checked and filed.\nLine 00165: routine shipment checked and filed.\nLine 00166: routine shipment checked and filed.\nLine 00167: routine shipment checked and filed.\nLine 00168: routine shipment checked and filed.\nLine 00169: routine shipment checked and filed.\nLine 00170: routine shipment checked and filed.\nLine 00171: routine shipment checked and filed.\nLine 00172: routine shipment checked and filed.\nLine 00173: routine shipment checked and filed.\nLine 00174: routine shipment checked and filed.\nLine 00175: routine shipment checked and filed.\nLine 00176: routine shipment checked and filed.\nLine 00177: routine shipment checked and filed.\nLine 00178: routine shipment checked and filed.\nLine 00179: routine shipment checked and filed.\nLine 00180: routine shipment checked and filed.\nLine 00181: routine shipment checked and filed.\nLine 00182: routine shipment checked and filed.\nLine 00183: routine shipment checked and filed.\nLine 00184: routine shipment checked and filed.\nLine 00185: routine shipment checked and filed.\nLine 00186: routine shipment checked and filed.\nLine 00187: routine shipment checked and filed.\nLine 00188: routine shipment checked and filed.\nLine 00189: routine shipment checked and filed.\nLine 00190: routine shipment checked and filed.\nLine 00191: routine shipment checked and filed.\nLine 00192: routine shipment checked and filed.\nLine 00193: routine shipment checked and filed.\nLine 00194: routine shipment checked and filed.\nLine 00195: routine shipment checked and filed.\nLine 00196: routine shipment checked and filed.\nLine 00197: routine shipment checked and filed.\nLine 00198: routine shipment checked and filed.\nLine 00199: routine shipment checked and filed.\nLine 00200: routine shipment checked and filed.\nLine 00201: routine shipment checked and filed.\nLine 00202: routine shipment checked and filed.\nThe LATE shipment approval code is 13356886.\nEND DOCUMENT\nReturn only a JSON object with string fields early, middle, late containing the three approval codes."
+        }
+      ],
+      "expected": {
+        "early": "95822412",
+        "middle": "24942603",
+        "late": "13356886"
+      },
+      "needle_positions": {
+        "early": 0,
+        "middle": 102,
+        "late": 203
+      }
+    },
+    {
+      "id": "conversation_three_positions",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Preserve the user's shipment approval codes throughout this conversation."
+        },
+        {
+          "role": "user",
+          "content": "The EARLY shipment approval code is 95822412."
+        },
+        {
+          "role": "assistant",
+          "content": "I have recorded the early approval code."
+        },
+        {
+          "role": "user",
+          "content": "Line 00001: routine shipment checked and filed.\nLine 00002: routine shipment checked and filed.\nLine 00003: routine shipment checked and filed.\nLine 00004: routine shipment checked and filed.\nLine 00005: routine shipment checked and filed.\nLine 00006: routine shipment checked and filed.\nLine 00007: routine shipment checked and filed.\nLine 00008: routine shipment checked and filed.\nLine 00009: routine shipment checked and filed.\nLine 00010: routine shipment checked and filed.\nLine 00011: routine shipment checked and filed.\nLine 00012: routine shipment checked and filed.\nLine 00013: routine shipment checked and filed.\nLine 00014: routine shipment checked and filed.\nLine 00015: routine shipment checked and filed.\nLine 00016: routine shipment checked and filed.\nLine 00017: routine shipment checked and filed.\nLine 00018: routine shipment checked and filed.\nLine 00019: routine shipment checked and filed.\nLine 00020: routine shipment checked and filed.\nLine 00021: routine shipment checked and filed.\nLine 00022: routine shipment checked and filed.\nLine 00023: routine shipment checked and filed.\nLine 00024: routine shipment checked and filed.\nLine 00025: routine shipment checked and filed.\nLine 00026: routine shipment checked and filed.\nLine 00027: routine shipment checked and filed.\nLine 00028: routine shipment checked and filed.\nLine 00029: routine shipment checked and filed.\nLine 00030: routine shipment checked and filed.\nLine 00031: routine shipment checked and filed.\nLine 00032: routine shipment checked and filed."
+        },
+        {
+          "role": "assistant",
+          "content": "The shipment records are noted."
+        },
+        {
+          "role": "user",
+          "content": "Line 00033: routine shipment checked and filed.\nLine 00034: routine shipment checked and filed.\nLine 00035: routine shipment checked and filed.\nLine 00036: routine shipment checked and filed.\nLine 00037: routine shipment checked and filed.\nLine 00038: routine shipment checked and filed.\nLine 00039: routine shipment checked and filed.\nLine 00040: routine shipment checked and filed.\nLine 00041: routine shipment checked and filed.\nLine 00042: routine shipment checked and filed.\nLine 00043: routine shipment checked and filed.\nLine 00044: routine shipment checked and filed.\nLine 00045: routine shipment checked and filed.\nLine 00046: routine shipment checked and filed.\nLine 00047: routine shipment checked and filed.\nLine 00048: routine shipment checked and filed.\nLine 00049: routine shipment checked and filed.\nLine 00050: routine shipment checked and filed.\nLine 00051: routine shipment checked and filed.\nLine 00052: routine shipment checked and filed.\nLine 00053: routine shipment checked and filed.\nLine 00054: routine shipment checked and filed.\nLine 00055: routine shipment checked and filed.\nLine 00056: routine shipment checked and filed.\nLine 00057: routine shipment checked and filed.\nLine 00058: routine shipment checked and filed.\nLine 00059: routine shipment checked and filed.\nLine 00060: routine shipment checked and filed.\nLine 00061: routine shipment checked and filed.\nLine 00062: routine shipment checked and filed.\nLine 00063: routine shipment checked and filed.\nLine 00064: routine shipment checked and filed."
+        },
+        {
+          "role": "assistant",
+          "content": "The shipment records are noted."
+        },
+        {
+          "role": "user",
+          "content": "Line 00065: routine shipment checked and filed.\nLine 00066: routine shipment checked and filed.\nLine 00067: routine shipment checked and filed.\nLine 00068: routine shipment checked and filed.\nLine 00069: routine shipment checked and filed.\nLine 00070: routine shipment checked and filed.\nLine 00071: routine shipment checked and filed.\nLine 00072: routine shipment checked and filed.\nLine 00073: routine shipment checked and filed.\nLine 00074: routine shipment checked and filed.\nLine 00075: routine shipment checked and filed.\nLine 00076: routine shipment checked and filed.\nLine 00077: routine shipment checked and filed.\nLine 00078: routine shipment checked and filed.\nLine 00079: routine shipment checked and filed.\nLine 00080: routine shipment checked and filed.\nLine 00081: routine shipment checked and filed.\nLine 00082: routine shipment checked and filed.\nLine 00083: routine shipment checked and filed.\nLine 00084: routine shipment checked and filed.\nLine 00085: routine shipment checked and filed.\nLine 00086: routine shipment checked and filed.\nLine 00087: routine shipment checked and filed.\nLine 00088: routine shipment checked and filed.\nLine 00089: routine shipment checked and filed.\nLine 00090: routine shipment checked and filed.\nLine 00091: routine shipment checked and filed.\nLine 00092: routine shipment checked and filed.\nLine 00093: routine shipment checked and filed.\nLine 00094: routine shipment checked and filed.\nLine 00095: routine shipment checked and filed.\nLine 00096: routine shipment checked and filed."
+        },
+        {
+          "role": "assistant",
+          "content": "The shipment records are noted."
+        },
+        {
+          "role": "user",
+          "content": "Line 00097: routine shipment checked and filed.\nLine 00098: routine shipment checked and filed.\nLine 00099: routine shipment checked and filed.\nLine 00100: routine shipment checked and filed.\nLine 00101: routine shipment checked and filed.\nThe MIDDLE shipment approval code is 24942603.\nLine 00103: routine shipment checked and filed.\nLine 00104: routine shipment checked and filed.\nLine 00105: routine shipment checked and filed.\nLine 00106: routine shipment checked and filed.\nLine 00107: routine shipment checked and filed.\nLine 00108: routine shipment checked and filed.\nLine 00109: routine shipment checked and filed.\nLine 00110: routine shipment checked and filed.\nLine 00111: routine shipment checked and filed.\nLine 00112: routine shipment checked and filed.\nLine 00113: routine shipment checked and filed.\nLine 00114: routine shipment checked and filed.\nLine 00115: routine shipment checked and filed.\nLine 00116: routine shipment checked and filed.\nLine 00117: routine shipment checked and filed.\nLine 00118: routine shipment checked and filed.\nLine 00119: routine shipment checked and filed.\nLine 00120: routine shipment checked and filed.\nLine 00121: routine shipment checked and filed.\nLine 00122: routine shipment checked and filed.\nLine 00123: routine shipment checked and filed.\nLine 00124: routine shipment checked and filed.\nLine 00125: routine shipment checked and filed.\nLine 00126: routine shipment checked and filed.\nLine 00127: routine shipment checked and filed.\nLine 00128: routine shipment checked and filed."
+        },
+        {
+          "role": "assistant",
+          "content": "The shipment records are noted."
+        },
+        {
+          "role": "user",
+          "content": "Line 00129: routine shipment checked and filed.\nLine 00130: routine shipment checked and filed.\nLine 00131: routine shipment checked and filed.\nLine 00132: routine shipment checked and filed.\nLine 00133: routine shipment checked and filed.\nLine 00134: routine shipment checked and filed.\nLine 00135: routine shipment checked and filed.\nLine 00136: routine shipment checked and filed.\nLine 00137: routine shipment checked and filed.\nLine 00138: routine shipment checked and filed.\nLine 00139: routine shipment checked and filed.\nLine 00140: routine shipment checked and filed.\nLine 00141: routine shipment checked and filed.\nLine 00142: routine shipment checked and filed.\nLine 00143: routine shipment checked and filed.\nLine 00144: routine shipment checked and filed.\nLine 00145: routine shipment checked and filed.\nLine 00146: routine shipment checked and filed.\nLine 00147: routine shipment checked and filed.\nLine 00148: routine shipment checked and filed.\nLine 00149: routine shipment checked and filed.\nLine 00150: routine shipment checked and filed.\nLine 00151: routine shipment checked and filed.\nLine 00152: routine shipment checked and filed.\nLine 00153: routine shipment checked and filed.\nLine 00154: routine shipment checked and filed.\nLine 00155: routine shipment checked and filed.\nLine 00156: routine shipment checked and filed.\nLine 00157: routine shipment checked and filed.\nLine 00158: routine shipment checked and filed.\nLine 00159: routine shipment checked and filed.\nLine 00160: routine shipment checked and filed."
+        },
+        {
+          "role": "assistant",
+          "content": "The shipment records are noted."
+        },
+        {
+          "role": "user",
+          "content": "Line 00161: routine shipment checked and filed.\nLine 00162: routine shipment checked and filed.\nLine 00163: routine shipment checked and filed.\nLine 00164: routine shipment checked and filed.\nLine 00165: routine shipment checked and filed.\nLine 00166: routine shipment checked and filed.\nLine 00167: routine shipment checked and filed.\nLine 00168: routine shipment checked and filed.\nLine 00169: routine shipment checked and filed.\nLine 00170: routine shipment checked and filed.\nLine 00171: routine shipment checked and filed.\nLine 00172: routine shipment checked and filed.\nLine 00173: routine shipment checked and filed.\nLine 00174: routine shipment checked and filed.\nLine 00175: routine shipment checked and filed.\nLine 00176: routine shipment checked and filed.\nLine 00177: routine shipment checked and filed.\nLine 00178: routine shipment checked and filed.\nLine 00179: routine shipment checked and filed.\nLine 00180: routine shipment checked and filed.\nLine 00181: routine shipment checked and filed.\nLine 00182: routine shipment checked and filed.\nLine 00183: routine shipment checked and filed.\nLine 00184: routine shipment checked and filed.\nLine 00185: routine shipment checked and filed.\nLine 00186: routine shipment checked and filed.\nLine 00187: routine shipment checked and filed.\nLine 00188: routine shipment checked and filed.\nLine 00189: routine shipment checked and filed.\nLine 00190: routine shipment checked and filed.\nLine 00191: routine shipment checked and filed.\nLine 00192: routine shipment checked and filed."
+        },
+        {
+          "role": "assistant",
+          "content": "The shipment records are noted."
+        },
+        {
+          "role": "user",
+          "content": "Line 00193: routine shipment checked and filed.\nLine 00194: routine shipment checked and filed.\nLine 00195: routine shipment checked and filed.\nLine 00196: routine shipment checked and filed.\nLine 00197: routine shipment checked and filed.\nLine 00198: routine shipment checked and filed.\nLine 00199: routine shipment checked and filed.\nLine 00200: routine shipment checked and filed.\nLine 00201: routine shipment checked and filed.\nLine 00202: routine shipment checked and filed."
+        },
+        {
+          "role": "assistant",
+          "content": "The shipment records are noted."
+        },
+        {
+          "role": "user",
+          "content": "The LATE shipment approval code is 13356886.\nReturn only a JSON object with string fields early, middle, late containing the three approval codes."
+        }
+      ],
+      "expected": {
+        "early": "95822412",
+        "middle": "24942603",
+        "late": "13356886"
+      },
+      "history_messages": 18
+    }
+  ],
+  "profiles": [
+    {
+      "id": "raptor-hybrid-4096",
+      "mode": "hybrid",
+      "context": 4096,
+      "model_basename": "Raptor-0.7-4B-Q6_K.gguf",
+      "configuration": {
+        "mode": "hybrid",
+        "context": 4096,
+        "batch": 2048,
+        "microbatch": 512,
+        "threads": 6,
+        "batch_threads": 10,
+        "power_mode": "balanced",
+        "repack": true,
+        "flash_attention": true,
+        "kv_unified": true,
+        "kv_offload": true,
+        "swa_full": false,
+        "op_offload": true,
+        "settings_source": "fixed"
+      }
+    }
+  ],
+  "cases": [
+    {
+      "case": "document_three_positions",
+      "model": "raptor-hybrid-4096",
+      "repeat": 0,
+      "warmth": "cold_model",
+      "expected": {
+        "early": "95822412",
+        "middle": "24942603",
+        "late": "13356886"
+      },
+      "request": {
+        "model": "raptor-hybrid-4096",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Extract facts exactly from the supplied synthetic shipping document."
+          },
+          {
+            "role": "user",
+            "content": "BEGIN DOCUMENT\nThe EARLY shipment approval code is 95822412.\nLine 00001: routine shipment checked and filed.\nLine 00002: routine shipment checked and filed.\nLine 00003: routine shipment checked and filed.\nLine 00004: routine shipment checked and filed.\nLine 00005: routine shipment checked and filed.\nLine 00006: routine shipment checked and filed.\nLine 00007: routine shipment checked and filed.\nLine 00008: routine shipment checked and filed.\nLine 00009: routine shipment checked and filed.\nLine 00010: routine shipment checked and filed.\nLine 00011: routine shipment checked and filed.\nLine 00012: routine shipment checked and filed.\nLine 00013: routine shipment checked and filed.\nLine 00014: routine shipment checked and filed.\nLine 00015: routine shipment checked and filed.\nLine 00016: routine shipment checked and filed.\nLine 00017: routine shipment checked and filed.\nLine 00018: routine shipment checked and filed.\nLine 00019: routine shipment checked and filed.\nLine 00020: routine shipment checked and filed.\nLine 00021: routine shipment checked and filed.\nLine 00022: routine shipment checked and filed.\nLine 00023: routine shipment checked and filed.\nLine 00024: routine shipment checked and filed.\nLine 00025: routine shipment checked and filed.\nLine 00026: routine shipment checked and filed.\nLine 00027: routine shipment checked and filed.\nLine 00028: routine shipment checked and filed.\nLine 00029: routine shipment checked and filed.\nLine 00030: routine shipment checked and filed.\nLine 00031: routine shipment checked and filed.\nLine 00032: routine shipment checked and filed.\nLine 00033: routine shipment checked and filed.\nLine 00034: routine shipment checked and filed.\nLine 00035: routine shipment checked and filed.\nLine 00036: routine shipment checked and filed.\nLine 00037: routine shipment checked and filed.\nLine 00038: routine shipment checked and filed.\nLine 00039: routine shipment checked and filed.\nLine 00040: routine shipment checked and filed.\nLine 00041: routine shipment checked and filed.\nLine 00042: routine shipment checked and filed.\nLine 00043: routine shipment checked and filed.\nLine 00044: routine shipment checked and filed.\nLine 00045: routine shipment checked and filed.\nLine 00046: routine shipment checked and filed.\nLine 00047: routine shipment checked and filed.\nLine 00048: routine shipment checked and filed.\nLine 00049: routine shipment checked and filed.\nLine 00050: routine shipment checked and filed.\nLine 00051: routine shipment checked and filed.\nLine 00052: routine shipment checked and filed.\nLine 00053: routine shipment checked and filed.\nLine 00054: routine shipment checked and filed.\nLine 00055: routine shipment checked and filed.\nLine 00056: routine shipment checked and filed.\nLine 00057: routine shipment checked and filed.\nLine 00058: routine shipment checked and filed.\nLine 00059: routine shipment checked and filed.\nLine 00060: routine shipment checked and filed.\nLine 00061: routine shipment checked and filed.\nLine 00062: routine shipment checked and filed.\nLine 00063: routine shipment checked and filed.\nLine 00064: routine shipment checked and filed.\nLine 00065: routine shipment checked and filed.\nLine 00066: routine shipment checked and filed.\nLine 00067: routine shipment checked and filed.\nLine 00068: routine shipment checked and filed.\nLine 00069: routine shipment checked and filed.\nLine 00070: routine shipment checked and filed.\nLine 00071: routine shipment checked and filed.\nLine 00072: routine shipment checked and filed.\nLine 00073: routine shipment checked and filed.\nLine 00074: routine shipment checked and filed.\nLine 00075: routine shipment checked and filed.\nLine 00076: routine shipment checked and filed.\nLine 00077: routine shipment checked and filed.\nLine 00078: routine shipment checked and filed.\nLine 00079: routine shipment checked and filed.\nLine 00080: routine shipment checked and filed.\nLine 00081: routine shipment checked and filed.\nLine 00082: routine shipment checked and filed.\nLine 00083: routine shipment checked and filed.\nLine 00084: routine shipment checked and filed.\nLine 00085: routine shipment checked and filed.\nLine 00086: routine shipment checked and filed.\nLine 00087: routine shipment checked and filed.\nLine 00088: routine shipment checked and filed.\nLine 00089: routine shipment checked and filed.\nLine 00090: routine shipment checked and filed.\nLine 00091: routine shipment checked and filed.\nLine 00092: routine shipment checked and filed.\nLine 00093: routine shipment checked and filed.\nLine 00094: routine shipment checked and filed.\nLine 00095: routine shipment checked and filed.\nLine 00096: routine shipment checked and filed.\nLine 00097: routine shipment checked and filed.\nLine 00098: routine shipment checked and filed.\nLine 00099: routine shipment checked and filed.\nLine 00100: routine shipment checked and filed.\nLine 00101: routine shipment checked and filed.\nThe MIDDLE shipment approval code is 24942603.\nLine 00103: routine shipment checked and filed.\nLine 00104: routine shipment checked and filed.\nLine 00105: routine shipment checked and filed.\nLine 00106: routine shipment checked and filed.\nLine 00107: routine shipment checked and filed.\nLine 00108: routine shipment checked and filed.\nLine 00109: routine shipment checked and filed.\nLine 00110: routine shipment checked and filed.\nLine 00111: routine shipment checked and filed.\nLine 00112: routine shipment checked and filed.\nLine 00113: routine shipment checked and filed.\nLine 00114: routine shipment checked and filed.\nLine 00115: routine shipment checked and filed.\nLine 00116: routine shipment checked and filed.\nLine 00117: routine shipment checked and filed.\nLine 00118: routine shipment checked and filed.\nLine 00119: routine shipment checked and filed.\nLine 00120: routine shipment checked and filed.\nLine 00121: routine shipment checked and filed.\nLine 00122: routine shipment checked and filed.\nLine 00123: routine shipment checked and filed.\nLine 00124: routine shipment checked and filed.\nLine 00125: routine shipment checked and filed.\nLine 00126: routine shipment checked and filed.\nLine 00127: routine shipment checked and filed.\nLine 00128: routine shipment checked and filed.\nLine 00129: routine shipment checked and filed.\nLine 00130: routine shipment checked and filed.\nLine 00131: routine shipment checked and filed.\nLine 00132: routine shipment checked and filed.\nLine 00133: routine shipment checked and filed.\nLine 00134: routine shipment checked and filed.\nLine 00135: routine shipment checked and filed.\nLine 00136: routine shipment checked and filed.\nLine 00137: routine shipment checked and filed.\nLine 00138: routine shipment checked and filed.\nLine 00139: routine shipment checked and filed.\nLine 00140: routine shipment checked and filed.\nLine 00141: routine shipment checked and filed.\nLine 00142: routine shipment checked and filed.\nLine 00143: routine shipment checked and filed.\nLine 00144: routine shipment checked and filed.\nLine 00145: routine shipment checked and filed.\nLine 00146: routine shipment checked and filed.\nLine 00147: routine shipment checked and filed.\nLine 00148: routine shipment checked and filed.\nLine 00149: routine shipment checked and filed.\nLine 00150: routine shipment checked and filed.\nLine 00151: routine shipment checked and filed.\nLine 00152: routine shipment checked and filed.\nLine 00153: routine shipment checked and filed.\nLine 00154: routine shipment checked and filed.\nLine 00155: routine shipment checked and filed.\nLine 00156: routine shipment checked and filed.\nLine 00157: routine shipment checked and filed.\nLine 00158: routine shipment checked and filed.\nLine 00159: routine shipment checked and filed.\nLine 00160: routine shipment checked and filed.\nLine 00161: routine shipment checked and filed.\nLine 00162: routine shipment checked and filed.\nLine 00163: routine shipment checked and filed.\nLine 00164: routine shipment checked and filed.\nLine 00165: routine shipment checked and filed.\nLine 00166: routine shipment checked and filed.\nLine 00167: routine shipment checked and filed.\nLine 00168: routine shipment checked and filed.\nLine 00169: routine shipment checked and filed.\nLine 00170: routine shipment checked and filed.\nLine 00171: routine shipment checked and filed.\nLine 00172: routine shipment checked and filed.\nLine 00173: routine shipment checked and filed.\nLine 00174: routine shipment checked and filed.\nLine 00175: routine shipment checked and filed.\nLine 00176: routine shipment checked and filed.\nLine 00177: routine shipment checked and filed.\nLine 00178: routine shipment checked and filed.\nLine 00179: routine shipment checked and filed.\nLine 00180: routine shipment checked and filed.\nLine 00181: routine shipment checked and filed.\nLine 00182: routine shipment checked and filed.\nLine 00183: routine shipment checked and filed.\nLine 00184: routine shipment checked and filed.\nLine 00185: routine shipment checked and filed.\nLine 00186: routine shipment checked and filed.\nLine 00187: routine shipment checked and filed.\nLine 00188: routine shipment checked and filed.\nLine 00189: routine shipment checked and filed.\nLine 00190: routine shipment checked and filed.\nLine 00191: routine shipment checked and filed.\nLine 00192: routine shipment checked and filed.\nLine 00193: routine shipment checked and filed.\nLine 00194: routine shipment checked and filed.\nLine 00195: routine shipment checked and filed.\nLine 00196: routine shipment checked and filed.\nLine 00197: routine shipment checked and filed.\nLine 00198: routine shipment checked and filed.\nLine 00199: routine shipment checked and filed.\nLine 00200: routine shipment checked and filed.\nLine 00201: routine shipment checked and filed.\nLine 00202: routine shipment checked and filed.\nThe LATE shipment approval code is 13356886.\nEND DOCUMENT\nReturn only a JSON object with string fields early, middle, late containing the three approval codes."
+          }
+        ],
+        "temperature": 0,
+        "seed": 42,
+        "max_tokens": 128,
+        "response_format": {
+          "type": "json_object"
+        },
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "passed": true,
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "strict_sse_completed": true,
+        "long_input_verified": true,
+        "within_context": true,
+        "actual_native_mode": true,
+        "actual_context": true,
+        "no_stock_engine_fallback": true,
+        "continuation_exercised": true,
+        "state_transferred": true,
+        "handoff_timed": true,
+        "cold_model_observed": true
+      },
+      "answer": "{\"early\": \"95822412\", \"middle\": \"24942603\", \"late\": \"13356886\"}",
+      "usage": {
+        "prompt_tokens": 3141,
+        "completion_tokens": 39,
+        "total_tokens": 3180
+      },
+      "client_timing": {
+        "headers_seconds": 57.4128483000095,
+        "first_wire_line_seconds": 57.41385549999541,
+        "first_text_seconds": 57.41430020000553,
+        "complete_seconds": 57.414933899999596
+      },
+      "assist": {
+        "requested_mode": "hybrid",
+        "actual_mode": "hybrid",
+        "cold_load": true,
+        "load_seconds_this_request": 37.124544499994954,
+        "architecture": "spark2_5",
+        "context_length": 4096,
+        "fallback_reason": null
+      },
+      "stages": {
+        "request_seconds": 19.93178139999509,
+        "format_seconds": 0.020777500001713634,
+        "tokenize_seconds": 0.07825900000170805,
+        "context_reset_seconds": 0.10881059999519493,
+        "prompt_seconds": 12.70260460001009,
+        "first_text_seconds": 12.991646099995705,
+        "first_token_seconds": 12.98607909999555,
+        "sampling_and_text_seconds": 0.6835273999895435,
+        "continuation_decode_seconds": 6.166430200028117,
+        "state_transfer_seconds": 0.15972619999956805,
+        "state_bytes": 229086936,
+        "native_decode_tokens_per_second": 6.326193115966419,
+        "postprocess_seconds": 0.0016854999994393438
+      },
+      "load_stages": {
+        "runtime_verify_and_backend_seconds": 0.3174552999989828,
+        "metadata_and_template_seconds": 0.2196272000001045,
+        "primary": {
+          "model_seconds": 9.012668899988057,
+          "context_seconds": 9.51937259999977
+        },
+        "secondary_cpu": {
+          "model_seconds": 17.774546699991333,
+          "context_seconds": 0.26936590000696015
+        }
+      },
+      "failure_category": null,
+      "memory": {
+        "scope": "global available physical RAM and commit, not per-process allocation or power",
+        "samples": [
+          {
+            "elapsed_seconds": 0.003800599995884113,
+            "available_physical_bytes": 4660293632,
+            "available_commit_bytes": 9527775232
+          },
+          {
+            "elapsed_seconds": 0.26630289999593515,
+            "available_physical_bytes": 4658606080,
+            "available_commit_bytes": 9511575552
+          },
+          {
+            "elapsed_seconds": 0.5252771999948891,
+            "available_physical_bytes": 4647010304,
+            "available_commit_bytes": 9515335680
+          },
+          {
+            "elapsed_seconds": 0.7812804999994114,
+            "available_physical_bytes": 4593713152,
+            "available_commit_bytes": 9446940672
+          },
+          {
+            "elapsed_seconds": 1.0361147999938112,
+            "available_physical_bytes": 4570550272,
+            "available_commit_bytes": 9431777280
+          },
+          {
+            "elapsed_seconds": 1.4379795999993803,
+            "available_physical_bytes": 3665453056,
+            "available_commit_bytes": 8493436928
+          },
+          {
+            "elapsed_seconds": 1.7279171999980463,
+            "available_physical_bytes": 2215194624,
+            "available_commit_bytes": 7039860736
+          },
+          {
+            "elapsed_seconds": 2.0521986999956425,
+            "available_physical_bytes": 1030303744,
+            "available_commit_bytes": 5772308480
+          },
+          {
+            "elapsed_seconds": 2.3090051999897696,
+            "available_physical_bytes": 4570140672,
+            "available_commit_bytes": 5522878464
+          },
+          {
+            "elapsed_seconds": 2.563275900000008,
+            "available_physical_bytes": 3832242176,
+            "available_commit_bytes": 5569077248
+          },
+          {
+            "elapsed_seconds": 2.8264750999951502,
+            "available_physical_bytes": 3100651520,
+            "available_commit_bytes": 5569843200
+          },
+          {
+            "elapsed_seconds": 3.0794517999893287,
+            "available_physical_bytes": 2793058304,
+            "available_commit_bytes": 5581697024
+          },
+          {
+            "elapsed_seconds": 3.3465031999949133,
+            "available_physical_bytes": 2382102528,
+            "available_commit_bytes": 5578850304
+          },
+          {
+            "elapsed_seconds": 3.6151850999885937,
+            "available_physical_bytes": 2112102400,
+            "available_commit_bytes": 5582163968
+          },
+          {
+            "elapsed_seconds": 3.8788169999897946,
+            "available_physical_bytes": 1750790144,
+            "available_commit_bytes": 5583396864
+          },
+          {
+            "elapsed_seconds": 4.130944599994109,
+            "available_physical_bytes": 1484279808,
+            "available_commit_bytes": 5532356608
+          },
+          {
+            "elapsed_seconds": 4.394348899993929,
+            "available_physical_bytes": 1195835392,
+            "available_commit_bytes": 5482217472
+          },
+          {
+            "elapsed_seconds": 4.64672900000005,
+            "available_physical_bytes": 990855168,
+            "available_commit_bytes": 5540724736
+          },
+          {
+            "elapsed_seconds": 4.913594400000875,
+            "available_physical_bytes": 717570048,
+            "available_commit_bytes": 5554728960
+          },
+          {
+            "elapsed_seconds": 5.180979999990086,
+            "available_physical_bytes": 515264512,
+            "available_commit_bytes": 5556109312
+          },
+          {
+            "elapsed_seconds": 5.444005699988338,
+            "available_physical_bytes": 259379200,
+            "available_commit_bytes": 5555920896
+          },
+          {
+            "elapsed_seconds": 5.711217999996734,
+            "available_physical_bytes": 475103232,
+            "available_commit_bytes": 5586391040
+          },
+          {
+            "elapsed_seconds": 5.979631499998504,
+            "available_physical_bytes": 423350272,
+            "available_commit_bytes": 5624975360
+          },
+          {
+            "elapsed_seconds": 6.232754600001499,
+            "available_physical_bytes": 475860992,
+            "available_commit_bytes": 5587472384
+          },
+          {
+            "elapsed_seconds": 6.49555639999744,
+            "available_physical_bytes": 391958528,
+            "available_commit_bytes": 5560991744
+          },
+          {
+            "elapsed_seconds": 6.763558799997554,
+            "available_physical_bytes": 478183424,
+            "available_commit_bytes": 5551996928
+          },
+          {
+            "elapsed_seconds": 7.031323299990618,
+            "available_physical_bytes": 476975104,
+            "available_commit_bytes": 5550329856
+          },
+          {
+            "elapsed_seconds": 7.299560599989491,
+            "available_physical_bytes": 477224960,
+            "available_commit_bytes": 5549400064
+          },
+          {
+            "elapsed_seconds": 7.562076399990474,
+            "available_physical_bytes": 399679488,
+            "available_commit_bytes": 5547298816
+          },
+          {
+            "elapsed_seconds": 7.815903499998967,
+            "available_physical_bytes": 475303936,
+            "available_commit_bytes": 5577863168
+          },
+          {
+            "elapsed_seconds": 8.078381799990893,
+            "available_physical_bytes": 421052416,
+            "available_commit_bytes": 5588938752
+          },
+          {
+            "elapsed_seconds": 8.331004799998482,
+            "available_physical_bytes": 701775872,
+            "available_commit_bytes": 5701808128
+          },
+          {
+            "elapsed_seconds": 8.598134100000607,
+            "available_physical_bytes": 820518912,
+            "available_commit_bytes": 5740068864
+          },
+          {
+            "elapsed_seconds": 8.901516400001128,
+            "available_physical_bytes": 1062293504,
+            "available_commit_bytes": 5781389312
+          },
+          {
+            "elapsed_seconds": 9.161112099987804,
+            "available_physical_bytes": 1360404480,
+            "available_commit_bytes": 5845852160
+          },
+          {
+            "elapsed_seconds": 9.414603199998965,
+            "available_physical_bytes": 1150291968,
+            "available_commit_bytes": 5844885504
+          },
+          {
+            "elapsed_seconds": 9.681717100000242,
+            "available_physical_bytes": 1014517760,
+            "available_commit_bytes": 5859151872
+          },
+          {
+            "elapsed_seconds": 9.95408789999783,
+            "available_physical_bytes": 893616128,
+            "available_commit_bytes": 5718986752
+          },
+          {
+            "elapsed_seconds": 10.211003199990955,
+            "available_physical_bytes": 640782336,
+            "available_commit_bytes": 5541240832
+          },
+          {
+            "elapsed_seconds": 10.46709479999845,
+            "available_physical_bytes": 598798336,
+            "available_commit_bytes": 5557784576
+          },
+          {
+            "elapsed_seconds": 10.729509199998574,
+            "available_physical_bytes": 658579456,
+            "available_commit_bytes": 5573201920
+          },
+          {
+            "elapsed_seconds": 10.983160599993425,
+            "available_physical_bytes": 687837184,
+            "available_commit_bytes": 5607587840
+          },
+          {
+            "elapsed_seconds": 11.247860999996192,
+            "available_physical_bytes": 615411712,
+            "available_commit_bytes": 5612994560
+          },
+          {
+            "elapsed_seconds": 11.515085699997144,
+            "available_physical_bytes": 590143488,
+            "available_commit_bytes": 5636001792
+          },
+          {
+            "elapsed_seconds": 11.781628400000045,
+            "available_physical_bytes": 560041984,
+            "available_commit_bytes": 5665964032
+          },
+          {
+            "elapsed_seconds": 12.035576999987825,
+            "available_physical_bytes": 534298624,
+            "available_commit_bytes": 5685514240
+          },
+          {
+            "elapsed_seconds": 12.299456599997939,
+            "available_physical_bytes": 510541824,
+            "available_commit_bytes": 5696778240
+          },
+          {
+            "elapsed_seconds": 12.56538489999366,
+            "available_physical_bytes": 535511040,
+            "available_commit_bytes": 5684834304
+          },
+          {
+            "elapsed_seconds": 12.831734599996707,
+            "available_physical_bytes": 471470080,
+            "available_commit_bytes": 5682872320
+          },
+          {
+            "elapsed_seconds": 13.08757269999478,
+            "available_physical_bytes": 480743424,
+            "available_commit_bytes": 5708062720
+          },
+          {
+            "elapsed_seconds": 13.352531199998339,
+            "available_physical_bytes": 478912512,
+            "available_commit_bytes": 5715488768
+          },
+          {
+            "elapsed_seconds": 13.616378499995335,
+            "available_physical_bytes": 482861056,
+            "available_commit_bytes": 5702762496
+          },
+          {
+            "elapsed_seconds": 13.880554999996093,
+            "available_physical_bytes": 714977280,
+            "available_commit_bytes": 5737754624
+          },
+          {
+            "elapsed_seconds": 14.13434309999866,
+            "available_physical_bytes": 1018834944,
+            "available_commit_bytes": 5753053184
+          },
+          {
+            "elapsed_seconds": 14.397115399988252,
+            "available_physical_bytes": 929251328,
+            "available_commit_bytes": 5752643584
+          },
+          {
+            "elapsed_seconds": 14.651654299988877,
+            "available_physical_bytes": 801509376,
+            "available_commit_bytes": 5761736704
+          },
+          {
+            "elapsed_seconds": 14.915581699999166,
+            "available_physical_bytes": 707031040,
+            "available_commit_bytes": 5777604608
+          },
+          {
+            "elapsed_seconds": 15.170388499987894,
+            "available_physical_bytes": 630169600,
+            "available_commit_bytes": 5776306176
+          },
+          {
+            "elapsed_seconds": 15.431648599987966,
+            "available_physical_bytes": 578666496,
+            "available_commit_bytes": 5776764928
+          },
+          {
+            "elapsed_seconds": 15.686080300001777,
+            "available_physical_bytes": 590737408,
+            "available_commit_bytes": 5756833792
+          },
+          {
+            "elapsed_seconds": 15.943750399994315,
+            "available_physical_bytes": 611950592,
+            "available_commit_bytes": 5770457088
+          },
+          {
+            "elapsed_seconds": 16.209742499995627,
+            "available_physical_bytes": 601989120,
+            "available_commit_bytes": 5770686464
+          },
+          {
+            "elapsed_seconds": 16.471872399997665,
+            "available_physical_bytes": 591679488,
+            "available_commit_bytes": 5768454144
+          },
+          {
+            "elapsed_seconds": 16.742887000000337,
+            "available_physical_bytes": 579837952,
+            "available_commit_bytes": 5767577600
+          },
+          {
+            "elapsed_seconds": 17.011802099994384,
+            "available_physical_bytes": 579997696,
+            "available_commit_bytes": 5776687104
+          },
+          {
+            "elapsed_seconds": 17.277420400001574,
+            "available_physical_bytes": 563576832,
+            "available_commit_bytes": 5772115968
+          },
+          {
+            "elapsed_seconds": 17.539772999996785,
+            "available_physical_bytes": 480849920,
+            "available_commit_bytes": 5436608512
+          },
+          {
+            "elapsed_seconds": 17.800099599990062,
+            "available_physical_bytes": 480874496,
+            "available_commit_bytes": 5437730816
+          },
+          {
+            "elapsed_seconds": 18.055664799991064,
+            "available_physical_bytes": 475615232,
+            "available_commit_bytes": 5438611456
+          },
+          {
+            "elapsed_seconds": 18.321142399989185,
+            "available_physical_bytes": 480919552,
+            "available_commit_bytes": 5438648320
+          },
+          {
+            "elapsed_seconds": 18.599085599998944,
+            "available_physical_bytes": 489607168,
+            "available_commit_bytes": 5458771968
+          },
+          {
+            "elapsed_seconds": 18.85539839998819,
+            "available_physical_bytes": 485433344,
+            "available_commit_bytes": 5458034688
+          },
+          {
+            "elapsed_seconds": 19.122111799995764,
+            "available_physical_bytes": 486486016,
+            "available_commit_bytes": 5459476480
+          },
+          {
+            "elapsed_seconds": 19.38678399998753,
+            "available_physical_bytes": 822906880,
+            "available_commit_bytes": 5692497920
+          },
+          {
+            "elapsed_seconds": 19.640348199987784,
+            "available_physical_bytes": 790409216,
+            "available_commit_bytes": 5646241792
+          },
+          {
+            "elapsed_seconds": 19.918903799989494,
+            "available_physical_bytes": 212926464,
+            "available_commit_bytes": 5081894912
+          },
+          {
+            "elapsed_seconds": 20.176833399993484,
+            "available_physical_bytes": 757063680,
+            "available_commit_bytes": 2006474752
+          },
+          {
+            "elapsed_seconds": 20.435722199996235,
+            "available_physical_bytes": 653295616,
+            "available_commit_bytes": 2008051712
+          },
+          {
+            "elapsed_seconds": 20.708975799992913,
+            "available_physical_bytes": 554156032,
+            "available_commit_bytes": 2020569088
+          },
+          {
+            "elapsed_seconds": 20.97123319999082,
+            "available_physical_bytes": 469917696,
+            "available_commit_bytes": 2033696768
+          },
+          {
+            "elapsed_seconds": 21.24003059999086,
+            "available_physical_bytes": 389300224,
+            "available_commit_bytes": 2034184192
+          },
+          {
+            "elapsed_seconds": 21.510550899998634,
+            "available_physical_bytes": 316133376,
+            "available_commit_bytes": 2036277248
+          },
+          {
+            "elapsed_seconds": 21.770510999995167,
+            "available_physical_bytes": 210034688,
+            "available_commit_bytes": 2018783232
+          },
+          {
+            "elapsed_seconds": 22.039007300001686,
+            "available_physical_bytes": 106180608,
+            "available_commit_bytes": 2018770944
+          },
+          {
+            "elapsed_seconds": 22.31686599999375,
+            "available_physical_bytes": 55160832,
+            "available_commit_bytes": 2035220480
+          },
+          {
+            "elapsed_seconds": 22.58216399999219,
+            "available_physical_bytes": 23425024,
+            "available_commit_bytes": 2019741696
+          },
+          {
+            "elapsed_seconds": 22.850588199988124,
+            "available_physical_bytes": 8781824,
+            "available_commit_bytes": 2023030784
+          },
+          {
+            "elapsed_seconds": 23.120876000000862,
+            "available_physical_bytes": 25792512,
+            "available_commit_bytes": 2022551552
+          },
+          {
+            "elapsed_seconds": 23.37997650000034,
+            "available_physical_bytes": 6942720,
+            "available_commit_bytes": 2021208064
+          },
+          {
+            "elapsed_seconds": 23.636775399994804,
+            "available_physical_bytes": 52490240,
+            "available_commit_bytes": 1995870208
+          },
+          {
+            "elapsed_seconds": 23.890593399992213,
+            "available_physical_bytes": 53764096,
+            "available_commit_bytes": 1954324480
+          },
+          {
+            "elapsed_seconds": 24.152648699993733,
+            "available_physical_bytes": 36540416,
+            "available_commit_bytes": 1941348352
+          },
+          {
+            "elapsed_seconds": 24.420292800001334,
+            "available_physical_bytes": 15626240,
+            "available_commit_bytes": 1920106496
+          },
+          {
+            "elapsed_seconds": 24.686839499991038,
+            "available_physical_bytes": 24489984,
+            "available_commit_bytes": 1931878400
+          },
+          {
+            "elapsed_seconds": 24.95386100000178,
+            "available_physical_bytes": 56532992,
+            "available_commit_bytes": 1946628096
+          },
+          {
+            "elapsed_seconds": 25.219473699995433,
+            "available_physical_bytes": 215412736,
+            "available_commit_bytes": 1970913280
+          },
+          {
+            "elapsed_seconds": 25.476812499997322,
+            "available_physical_bytes": 711319552,
+            "available_commit_bytes": 2011615232
+          },
+          {
+            "elapsed_seconds": 25.73916109999118,
+            "available_physical_bytes": 976707584,
+            "available_commit_bytes": 2015494144
+          },
+          {
+            "elapsed_seconds": 26.010246499994537,
+            "available_physical_bytes": 894844928,
+            "available_commit_bytes": 2014728192
+          },
+          {
+            "elapsed_seconds": 26.28969710000092,
+            "available_physical_bytes": 818216960,
+            "available_commit_bytes": 2034073600
+          },
+          {
+            "elapsed_seconds": 26.544908999989275,
+            "available_physical_bytes": 676519936,
+            "available_commit_bytes": 2036445184
+          },
+          {
+            "elapsed_seconds": 26.80373429998872,
+            "available_physical_bytes": 626282496,
+            "available_commit_bytes": 2037346304
+          },
+          {
+            "elapsed_seconds": 27.060008699991158,
+            "available_physical_bytes": 613400576,
+            "available_commit_bytes": 2037305344
+          },
+          {
+            "elapsed_seconds": 27.3219253999996,
+            "available_physical_bytes": 469151744,
+            "available_commit_bytes": 2040602624
+          },
+          {
+            "elapsed_seconds": 27.58920479999506,
+            "available_physical_bytes": 423923712,
+            "available_commit_bytes": 2040033280
+          },
+          {
+            "elapsed_seconds": 27.85622119999607,
+            "available_physical_bytes": 335065088,
+            "available_commit_bytes": 2045485056
+          },
+          {
+            "elapsed_seconds": 28.10901929999818,
+            "available_physical_bytes": 359170048,
+            "available_commit_bytes": 2031431680
+          },
+          {
+            "elapsed_seconds": 28.373240000000806,
+            "available_physical_bytes": 320782336,
+            "available_commit_bytes": 2046935040
+          },
+          {
+            "elapsed_seconds": 28.637618099994143,
+            "available_physical_bytes": 333004800,
+            "available_commit_bytes": 2046435328
+          },
+          {
+            "elapsed_seconds": 28.903120399991167,
+            "available_physical_bytes": 186703872,
+            "available_commit_bytes": 2046337024
+          },
+          {
+            "elapsed_seconds": 29.155610799993156,
+            "available_physical_bytes": 347983872,
+            "available_commit_bytes": 2029477888
+          },
+          {
+            "elapsed_seconds": 29.420988799989573,
+            "available_physical_bytes": 351780864,
+            "available_commit_bytes": 2026422272
+          },
+          {
+            "elapsed_seconds": 29.672772899997653,
+            "available_physical_bytes": 259039232,
+            "available_commit_bytes": 2023362560
+          },
+          {
+            "elapsed_seconds": 29.940322800001013,
+            "available_physical_bytes": 135544832,
+            "available_commit_bytes": 2049425408
+          },
+          {
+            "elapsed_seconds": 30.20811870000034,
+            "available_physical_bytes": 342548480,
+            "available_commit_bytes": 2046119936
+          },
+          {
+            "elapsed_seconds": 30.47194399998989,
+            "available_physical_bytes": 328978432,
+            "available_commit_bytes": 2043383808
+          },
+          {
+            "elapsed_seconds": 30.740185299990117,
+            "available_physical_bytes": 222310400,
+            "available_commit_bytes": 2040406016
+          },
+          {
+            "elapsed_seconds": 31.007619299998623,
+            "available_physical_bytes": 462565376,
+            "available_commit_bytes": 2031321088
+          },
+          {
+            "elapsed_seconds": 31.275448100001086,
+            "available_physical_bytes": 872767488,
+            "available_commit_bytes": 2029129728
+          },
+          {
+            "elapsed_seconds": 31.538040999992518,
+            "available_physical_bytes": 1180303360,
+            "available_commit_bytes": 2027298816
+          },
+          {
+            "elapsed_seconds": 31.795115599990822,
+            "available_physical_bytes": 1089241088,
+            "available_commit_bytes": 2025570304
+          },
+          {
+            "elapsed_seconds": 32.058166499991785,
+            "available_physical_bytes": 992768000,
+            "available_commit_bytes": 2027212800
+          },
+          {
+            "elapsed_seconds": 32.32348029999412,
+            "available_physical_bytes": 851132416,
+            "available_commit_bytes": 2039480320
+          },
+          {
+            "elapsed_seconds": 32.59112329999334,
+            "available_physical_bytes": 785502208,
+            "available_commit_bytes": 2041204736
+          },
+          {
+            "elapsed_seconds": 32.860040399988065,
+            "available_physical_bytes": 682876928,
+            "available_commit_bytes": 2041585664
+          },
+          {
+            "elapsed_seconds": 33.12292080000043,
+            "available_physical_bytes": 556531712,
+            "available_commit_bytes": 2044243968
+          },
+          {
+            "elapsed_seconds": 33.39386289998947,
+            "available_physical_bytes": 414126080,
+            "available_commit_bytes": 2047000576
+          },
+          {
+            "elapsed_seconds": 33.65618279999762,
+            "available_physical_bytes": 410693632,
+            "available_commit_bytes": 2032492544
+          },
+          {
+            "elapsed_seconds": 33.91128819998994,
+            "available_physical_bytes": 284696576,
+            "available_commit_bytes": 2039590912
+          },
+          {
+            "elapsed_seconds": 34.168562799997744,
+            "available_physical_bytes": 154968064,
+            "available_commit_bytes": 2035359744
+          },
+          {
+            "elapsed_seconds": 34.430343200001516,
+            "available_physical_bytes": 225832960,
+            "available_commit_bytes": 2036428800
+          },
+          {
+            "elapsed_seconds": 34.69215399998939,
+            "available_physical_bytes": 109051904,
+            "available_commit_bytes": 2037907456
+          },
+          {
+            "elapsed_seconds": 34.972939899991616,
+            "available_physical_bytes": 77410304,
+            "available_commit_bytes": 2039681024
+          },
+          {
+            "elapsed_seconds": 35.23884039999393,
+            "available_physical_bytes": 183386112,
+            "available_commit_bytes": 2031411200
+          },
+          {
+            "elapsed_seconds": 35.491638699997566,
+            "available_physical_bytes": 349700096,
+            "available_commit_bytes": 2035675136
+          },
+          {
+            "elapsed_seconds": 35.76022669998929,
+            "available_physical_bytes": 301948928,
+            "available_commit_bytes": 2034507776
+          },
+          {
+            "elapsed_seconds": 36.02707759999612,
+            "available_physical_bytes": 340172800,
+            "available_commit_bytes": 2020524032
+          },
+          {
+            "elapsed_seconds": 36.29053589999967,
+            "available_physical_bytes": 340168704,
+            "available_commit_bytes": 1983004672
+          },
+          {
+            "elapsed_seconds": 36.542526699995506,
+            "available_physical_bytes": 331423744,
+            "available_commit_bytes": 1974697984
+          },
+          {
+            "elapsed_seconds": 36.80462989999796,
+            "available_physical_bytes": 340811776,
+            "available_commit_bytes": 1962881024
+          },
+          {
+            "elapsed_seconds": 37.057107299988274,
+            "available_physical_bytes": 339378176,
+            "available_commit_bytes": 2013626368
+          },
+          {
+            "elapsed_seconds": 37.3246278000006,
+            "available_physical_bytes": 355803136,
+            "available_commit_bytes": 1744875520
+          },
+          {
+            "elapsed_seconds": 37.58623390000139,
+            "available_physical_bytes": 439136256,
+            "available_commit_bytes": 1604972544
+          },
+          {
+            "elapsed_seconds": 37.85822369999369,
+            "available_physical_bytes": 357384192,
+            "available_commit_bytes": 1597403136
+          },
+          {
+            "elapsed_seconds": 38.12596679999842,
+            "available_physical_bytes": 126238720,
+            "available_commit_bytes": 1613520896
+          },
+          {
+            "elapsed_seconds": 38.392556399994646,
+            "available_physical_bytes": 323506176,
+            "available_commit_bytes": 1606246400
+          },
+          {
+            "elapsed_seconds": 38.661292899996624,
+            "available_physical_bytes": 650010624,
+            "available_commit_bytes": 1603158016
+          },
+          {
+            "elapsed_seconds": 38.92496619999292,
+            "available_physical_bytes": 220725248,
+            "available_commit_bytes": 1580023808
+          },
+          {
+            "elapsed_seconds": 39.20471369998995,
+            "available_physical_bytes": 885579776,
+            "available_commit_bytes": 1581649920
+          },
+          {
+            "elapsed_seconds": 39.47231149999425,
+            "available_physical_bytes": 276832256,
+            "available_commit_bytes": 1586597888
+          },
+          {
+            "elapsed_seconds": 39.72493349999422,
+            "available_physical_bytes": 867303424,
+            "available_commit_bytes": 1586860032
+          },
+          {
+            "elapsed_seconds": 39.98599069999182,
+            "available_physical_bytes": 1004580864,
+            "available_commit_bytes": 1591910400
+          },
+          {
+            "elapsed_seconds": 40.252818499997375,
+            "available_physical_bytes": 464465920,
+            "available_commit_bytes": 1595691008
+          },
+          {
+            "elapsed_seconds": 40.50932589999866,
+            "available_physical_bytes": 680910848,
+            "available_commit_bytes": 1592872960
+          },
+          {
+            "elapsed_seconds": 40.76280019999831,
+            "available_physical_bytes": 53821440,
+            "available_commit_bytes": 1598271488
+          },
+          {
+            "elapsed_seconds": 41.032525999995414,
+            "available_physical_bytes": 489504768,
+            "available_commit_bytes": 1597571072
+          },
+          {
+            "elapsed_seconds": 41.2846453999955,
+            "available_physical_bytes": 110452736,
+            "available_commit_bytes": 1600126976
+          },
+          {
+            "elapsed_seconds": 41.55661489999329,
+            "available_physical_bytes": 589029376,
+            "available_commit_bytes": 1596211200
+          },
+          {
+            "elapsed_seconds": 41.81031289999373,
+            "available_physical_bytes": 480649216,
+            "available_commit_bytes": 1627516928
+          },
+          {
+            "elapsed_seconds": 42.07716289999371,
+            "available_physical_bytes": 1149186048,
+            "available_commit_bytes": 1620103168
+          },
+          {
+            "elapsed_seconds": 42.340849299987894,
+            "available_physical_bytes": 340742144,
+            "available_commit_bytes": 1606180864
+          },
+          {
+            "elapsed_seconds": 42.61386339999444,
+            "available_physical_bytes": 164425728,
+            "available_commit_bytes": 1625276416
+          },
+          {
+            "elapsed_seconds": 42.88224179999088,
+            "available_physical_bytes": 182202368,
+            "available_commit_bytes": 1617428480
+          },
+          {
+            "elapsed_seconds": 43.144561900000554,
+            "available_physical_bytes": 151363584,
+            "available_commit_bytes": 1626513408
+          },
+          {
+            "elapsed_seconds": 43.399844799991115,
+            "available_physical_bytes": 322473984,
+            "available_commit_bytes": 1624694784
+          },
+          {
+            "elapsed_seconds": 43.66406830000051,
+            "available_physical_bytes": 416874496,
+            "available_commit_bytes": 1639464960
+          },
+          {
+            "elapsed_seconds": 43.930803499999456,
+            "available_physical_bytes": 619401216,
+            "available_commit_bytes": 1629433856
+          },
+          {
+            "elapsed_seconds": 44.19502199999988,
+            "available_physical_bytes": 465666048,
+            "available_commit_bytes": 1647808512
+          },
+          {
+            "elapsed_seconds": 44.46202589999302,
+            "available_physical_bytes": 1181741056,
+            "available_commit_bytes": 1638551552
+          },
+          {
+            "elapsed_seconds": 44.7328611999983,
+            "available_physical_bytes": 743301120,
+            "available_commit_bytes": 1699495936
+          },
+          {
+            "elapsed_seconds": 44.99311840000155,
+            "available_physical_bytes": 277286912,
+            "available_commit_bytes": 1684877312
+          },
+          {
+            "elapsed_seconds": 45.250902599989786,
+            "available_physical_bytes": 477511680,
+            "available_commit_bytes": 1684865024
+          },
+          {
+            "elapsed_seconds": 45.51862209998944,
+            "available_physical_bytes": 811982848,
+            "available_commit_bytes": 1686540288
+          },
+          {
+            "elapsed_seconds": 45.771400199999334,
+            "available_physical_bytes": 1246502912,
+            "available_commit_bytes": 1717579776
+          },
+          {
+            "elapsed_seconds": 46.03842519999307,
+            "available_physical_bytes": 1338589184,
+            "available_commit_bytes": 1718075392
+          },
+          {
+            "elapsed_seconds": 46.2940804999962,
+            "available_physical_bytes": 1345859584,
+            "available_commit_bytes": 1709961216
+          },
+          {
+            "elapsed_seconds": 46.57644150000124,
+            "available_physical_bytes": 1306361856,
+            "available_commit_bytes": 1708163072
+          },
+          {
+            "elapsed_seconds": 46.82891169999493,
+            "available_physical_bytes": 1258242048,
+            "available_commit_bytes": 1709633536
+          },
+          {
+            "elapsed_seconds": 47.08499079999456,
+            "available_physical_bytes": 1214128128,
+            "available_commit_bytes": 1708892160
+          },
+          {
+            "elapsed_seconds": 47.34442679998756,
+            "available_physical_bytes": 1181462528,
+            "available_commit_bytes": 1707200512
+          },
+          {
+            "elapsed_seconds": 47.59787699999288,
+            "available_physical_bytes": 1195728896,
+            "available_commit_bytes": 1714941952
+          },
+          {
+            "elapsed_seconds": 47.86051359999692,
+            "available_physical_bytes": 1288441856,
+            "available_commit_bytes": 1719795712
+          },
+          {
+            "elapsed_seconds": 48.119751699996414,
+            "available_physical_bytes": 1289023488,
+            "available_commit_bytes": 1719926784
+          },
+          {
+            "elapsed_seconds": 48.383213900000555,
+            "available_physical_bytes": 1287761920,
+            "available_commit_bytes": 1717198848
+          },
+          {
+            "elapsed_seconds": 48.65026749999379,
+            "available_physical_bytes": 1330089984,
+            "available_commit_bytes": 1722806272
+          },
+          {
+            "elapsed_seconds": 48.91316109999025,
+            "available_physical_bytes": 1477124096,
+            "available_commit_bytes": 1726009344
+          },
+          {
+            "elapsed_seconds": 49.170951799998875,
+            "available_physical_bytes": 1634131968,
+            "available_commit_bytes": 1721823232
+          },
+          {
+            "elapsed_seconds": 49.42810720000125,
+            "available_physical_bytes": 1740742656,
+            "available_commit_bytes": 1671389184
+          },
+          {
+            "elapsed_seconds": 49.68295619999117,
+            "available_physical_bytes": 1813987328,
+            "available_commit_bytes": 1641971712
+          },
+          {
+            "elapsed_seconds": 49.94590549998975,
+            "available_physical_bytes": 1818759168,
+            "available_commit_bytes": 1614000128
+          },
+          {
+            "elapsed_seconds": 50.19990579999285,
+            "available_physical_bytes": 1924882432,
+            "available_commit_bytes": 1713733632
+          },
+          {
+            "elapsed_seconds": 50.46282259999134,
+            "available_physical_bytes": 1906032640,
+            "available_commit_bytes": 1693528064
+          },
+          {
+            "elapsed_seconds": 50.71580369998992,
+            "available_physical_bytes": 1828216832,
+            "available_commit_bytes": 1694011392
+          },
+          {
+            "elapsed_seconds": 50.977840699997614,
+            "available_physical_bytes": 1475321856,
+            "available_commit_bytes": 1708093440
+          },
+          {
+            "elapsed_seconds": 51.23216590000084,
+            "available_physical_bytes": 1081073664,
+            "available_commit_bytes": 1707094016
+          },
+          {
+            "elapsed_seconds": 51.49995409999974,
+            "available_physical_bytes": 563830784,
+            "available_commit_bytes": 1725440000
+          },
+          {
+            "elapsed_seconds": 51.767544499991345,
+            "available_physical_bytes": 390762496,
+            "available_commit_bytes": 1726525440
+          },
+          {
+            "elapsed_seconds": 52.028054199996404,
+            "available_physical_bytes": 403021824,
+            "available_commit_bytes": 1738223616
+          },
+          {
+            "elapsed_seconds": 52.282271099989885,
+            "available_physical_bytes": 348975104,
+            "available_commit_bytes": 1739378688
+          },
+          {
+            "elapsed_seconds": 52.548412099989946,
+            "available_physical_bytes": 370679808,
+            "available_commit_bytes": 1710252032
+          },
+          {
+            "elapsed_seconds": 52.80064269999275,
+            "available_physical_bytes": 404062208,
+            "available_commit_bytes": 1708818432
+          },
+          {
+            "elapsed_seconds": 53.06373999999778,
+            "available_physical_bytes": 411357184,
+            "available_commit_bytes": 1724575744
+          },
+          {
+            "elapsed_seconds": 53.333394199988106,
+            "available_physical_bytes": 420405248,
+            "available_commit_bytes": 1725095936
+          },
+          {
+            "elapsed_seconds": 53.586723599990364,
+            "available_physical_bytes": 412086272,
+            "available_commit_bytes": 1731022848
+          },
+          {
+            "elapsed_seconds": 53.8534709999949,
+            "available_physical_bytes": 413458432,
+            "available_commit_bytes": 1729294336
+          },
+          {
+            "elapsed_seconds": 54.1087062000006,
+            "available_physical_bytes": 413011968,
+            "available_commit_bytes": 1732743168
+          },
+          {
+            "elapsed_seconds": 54.37185869998939,
+            "available_physical_bytes": 414027776,
+            "available_commit_bytes": 1727025152
+          },
+          {
+            "elapsed_seconds": 54.624539399999776,
+            "available_physical_bytes": 414138368,
+            "available_commit_bytes": 1737240576
+          },
+          {
+            "elapsed_seconds": 54.88507269999536,
+            "available_physical_bytes": 409530368,
+            "available_commit_bytes": 1728110592
+          },
+          {
+            "elapsed_seconds": 55.14079279999714,
+            "available_physical_bytes": 402571264,
+            "available_commit_bytes": 1727238144
+          },
+          {
+            "elapsed_seconds": 55.41901079998934,
+            "available_physical_bytes": 406228992,
+            "available_commit_bytes": 1726525440
+          },
+          {
+            "elapsed_seconds": 55.67481620000035,
+            "available_physical_bytes": 414138368,
+            "available_commit_bytes": 1730494464
+          },
+          {
+            "elapsed_seconds": 55.93558150000172,
+            "available_physical_bytes": 405557248,
+            "available_commit_bytes": 1728548864
+          },
+          {
+            "elapsed_seconds": 56.19886319999932,
+            "available_physical_bytes": 406581248,
+            "available_commit_bytes": 1725407232
+          },
+          {
+            "elapsed_seconds": 56.45186449999164,
+            "available_physical_bytes": 394072064,
+            "available_commit_bytes": 1723736064
+          },
+          {
+            "elapsed_seconds": 56.704601199991885,
+            "available_physical_bytes": 392044544,
+            "available_commit_bytes": 1729294336
+          },
+          {
+            "elapsed_seconds": 56.95817479999096,
+            "available_physical_bytes": 336175104,
+            "available_commit_bytes": 1714253824
+          },
+          {
+            "elapsed_seconds": 57.21410599999945,
+            "available_physical_bytes": 312569856,
+            "available_commit_bytes": 1702899712
+          }
+        ],
+        "minimum_available": {
+          "available_physical_bytes": 6942720,
+          "available_commit_bytes": 1580023808
+        }
+      }
+    },
+    {
+      "case": "conversation_three_positions",
+      "model": "raptor-hybrid-4096",
+      "repeat": 0,
+      "warmth": "resident_model_full_history_reprefill",
+      "expected": {
+        "early": "95822412",
+        "middle": "24942603",
+        "late": "13356886"
+      },
+      "request": {
+        "model": "raptor-hybrid-4096",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Preserve the user's shipment approval codes throughout this conversation."
+          },
+          {
+            "role": "user",
+            "content": "The EARLY shipment approval code is 95822412."
+          },
+          {
+            "role": "assistant",
+            "content": "I have recorded the early approval code."
+          },
+          {
+            "role": "user",
+            "content": "Line 00001: routine shipment checked and filed.\nLine 00002: routine shipment checked and filed.\nLine 00003: routine shipment checked and filed.\nLine 00004: routine shipment checked and filed.\nLine 00005: routine shipment checked and filed.\nLine 00006: routine shipment checked and filed.\nLine 00007: routine shipment checked and filed.\nLine 00008: routine shipment checked and filed.\nLine 00009: routine shipment checked and filed.\nLine 00010: routine shipment checked and filed.\nLine 00011: routine shipment checked and filed.\nLine 00012: routine shipment checked and filed.\nLine 00013: routine shipment checked and filed.\nLine 00014: routine shipment checked and filed.\nLine 00015: routine shipment checked and filed.\nLine 00016: routine shipment checked and filed.\nLine 00017: routine shipment checked and filed.\nLine 00018: routine shipment checked and filed.\nLine 00019: routine shipment checked and filed.\nLine 00020: routine shipment checked and filed.\nLine 00021: routine shipment checked and filed.\nLine 00022: routine shipment checked and filed.\nLine 00023: routine shipment checked and filed.\nLine 00024: routine shipment checked and filed.\nLine 00025: routine shipment checked and filed.\nLine 00026: routine shipment checked and filed.\nLine 00027: routine shipment checked and filed.\nLine 00028: routine shipment checked and filed.\nLine 00029: routine shipment checked and filed.\nLine 00030: routine shipment checked and filed.\nLine 00031: routine shipment checked and filed.\nLine 00032: routine shipment checked and filed."
+          },
+          {
+            "role": "assistant",
+            "content": "The shipment records are noted."
+          },
+          {
+            "role": "user",
+            "content": "Line 00033: routine shipment checked and filed.\nLine 00034: routine shipment checked and filed.\nLine 00035: routine shipment checked and filed.\nLine 00036: routine shipment checked and filed.\nLine 00037: routine shipment checked and filed.\nLine 00038: routine shipment checked and filed.\nLine 00039: routine shipment checked and filed.\nLine 00040: routine shipment checked and filed.\nLine 00041: routine shipment checked and filed.\nLine 00042: routine shipment checked and filed.\nLine 00043: routine shipment checked and filed.\nLine 00044: routine shipment checked and filed.\nLine 00045: routine shipment checked and filed.\nLine 00046: routine shipment checked and filed.\nLine 00047: routine shipment checked and filed.\nLine 00048: routine shipment checked and filed.\nLine 00049: routine shipment checked and filed.\nLine 00050: routine shipment checked and filed.\nLine 00051: routine shipment checked and filed.\nLine 00052: routine shipment checked and filed.\nLine 00053: routine shipment checked and filed.\nLine 00054: routine shipment checked and filed.\nLine 00055: routine shipment checked and filed.\nLine 00056: routine shipment checked and filed.\nLine 00057: routine shipment checked and filed.\nLine 00058: routine shipment checked and filed.\nLine 00059: routine shipment checked and filed.\nLine 00060: routine shipment checked and filed.\nLine 00061: routine shipment checked and filed.\nLine 00062: routine shipment checked and filed.\nLine 00063: routine shipment checked and filed.\nLine 00064: routine shipment checked and filed."
+          },
+          {
+            "role": "assistant",
+            "content": "The shipment records are noted."
+          },
+          {
+            "role": "user",
+            "content": "Line 00065: routine shipment checked and filed.\nLine 00066: routine shipment checked and filed.\nLine 00067: routine shipment checked and filed.\nLine 00068: routine shipment checked and filed.\nLine 00069: routine shipment checked and filed.\nLine 00070: routine shipment checked and filed.\nLine 00071: routine shipment checked and filed.\nLine 00072: routine shipment checked and filed.\nLine 00073: routine shipment checked and filed.\nLine 00074: routine shipment checked and filed.\nLine 00075: routine shipment checked and filed.\nLine 00076: routine shipment checked and filed.\nLine 00077: routine shipment checked and filed.\nLine 00078: routine shipment checked and filed.\nLine 00079: routine shipment checked and filed.\nLine 00080: routine shipment checked and filed.\nLine 00081: routine shipment checked and filed.\nLine 00082: routine shipment checked and filed.\nLine 00083: routine shipment checked and filed.\nLine 00084: routine shipment checked and filed.\nLine 00085: routine shipment checked and filed.\nLine 00086: routine shipment checked and filed.\nLine 00087: routine shipment checked and filed.\nLine 00088: routine shipment checked and filed.\nLine 00089: routine shipment checked and filed.\nLine 00090: routine shipment checked and filed.\nLine 00091: routine shipment checked and filed.\nLine 00092: routine shipment checked and filed.\nLine 00093: routine shipment checked and filed.\nLine 00094: routine shipment checked and filed.\nLine 00095: routine shipment checked and filed.\nLine 00096: routine shipment checked and filed."
+          },
+          {
+            "role": "assistant",
+            "content": "The shipment records are noted."
+          },
+          {
+            "role": "user",
+            "content": "Line 00097: routine shipment checked and filed.\nLine 00098: routine shipment checked and filed.\nLine 00099: routine shipment checked and filed.\nLine 00100: routine shipment checked and filed.\nLine 00101: routine shipment checked and filed.\nThe MIDDLE shipment approval code is 24942603.\nLine 00103: routine shipment checked and filed.\nLine 00104: routine shipment checked and filed.\nLine 00105: routine shipment checked and filed.\nLine 00106: routine shipment checked and filed.\nLine 00107: routine shipment checked and filed.\nLine 00108: routine shipment checked and filed.\nLine 00109: routine shipment checked and filed.\nLine 00110: routine shipment checked and filed.\nLine 00111: routine shipment checked and filed.\nLine 00112: routine shipment checked and filed.\nLine 00113: routine shipment checked and filed.\nLine 00114: routine shipment checked and filed.\nLine 00115: routine shipment checked and filed.\nLine 00116: routine shipment checked and filed.\nLine 00117: routine shipment checked and filed.\nLine 00118: routine shipment checked and filed.\nLine 00119: routine shipment checked and filed.\nLine 00120: routine shipment checked and filed.\nLine 00121: routine shipment checked and filed.\nLine 00122: routine shipment checked and filed.\nLine 00123: routine shipment checked and filed.\nLine 00124: routine shipment checked and filed.\nLine 00125: routine shipment checked and filed.\nLine 00126: routine shipment checked and filed.\nLine 00127: routine shipment checked and filed.\nLine 00128: routine shipment checked and filed."
+          },
+          {
+            "role": "assistant",
+            "content": "The shipment records are noted."
+          },
+          {
+            "role": "user",
+            "content": "Line 00129: routine shipment checked and filed.\nLine 00130: routine shipment checked and filed.\nLine 00131: routine shipment checked and filed.\nLine 00132: routine shipment checked and filed.\nLine 00133: routine shipment checked and filed.\nLine 00134: routine shipment checked and filed.\nLine 00135: routine shipment checked and filed.\nLine 00136: routine shipment checked and filed.\nLine 00137: routine shipment checked and filed.\nLine 00138: routine shipment checked and filed.\nLine 00139: routine shipment checked and filed.\nLine 00140: routine shipment checked and filed.\nLine 00141: routine shipment checked and filed.\nLine 00142: routine shipment checked and filed.\nLine 00143: routine shipment checked and filed.\nLine 00144: routine shipment checked and filed.\nLine 00145: routine shipment checked and filed.\nLine 00146: routine shipment checked and filed.\nLine 00147: routine shipment checked and filed.\nLine 00148: routine shipment checked and filed.\nLine 00149: routine shipment checked and filed.\nLine 00150: routine shipment checked and filed.\nLine 00151: routine shipment checked and filed.\nLine 00152: routine shipment checked and filed.\nLine 00153: routine shipment checked and filed.\nLine 00154: routine shipment checked and filed.\nLine 00155: routine shipment checked and filed.\nLine 00156: routine shipment checked and filed.\nLine 00157: routine shipment checked and filed.\nLine 00158: routine shipment checked and filed.\nLine 00159: routine shipment checked and filed.\nLine 00160: routine shipment checked and filed."
+          },
+          {
+            "role": "assistant",
+            "content": "The shipment records are noted."
+          },
+          {
+            "role": "user",
+            "content": "Line 00161: routine shipment checked and filed.\nLine 00162: routine shipment checked and filed.\nLine 00163: routine shipment checked and filed.\nLine 00164: routine shipment checked and filed.\nLine 00165: routine shipment checked and filed.\nLine 00166: routine shipment checked and filed.\nLine 00167: routine shipment checked and filed.\nLine 00168: routine shipment checked and filed.\nLine 00169: routine shipment checked and filed.\nLine 00170: routine shipment checked and filed.\nLine 00171: routine shipment checked and filed.\nLine 00172: routine shipment checked and filed.\nLine 00173: routine shipment checked and filed.\nLine 00174: routine shipment checked and filed.\nLine 00175: routine shipment checked and filed.\nLine 00176: routine shipment checked and filed.\nLine 00177: routine shipment checked and filed.\nLine 00178: routine shipment checked and filed.\nLine 00179: routine shipment checked and filed.\nLine 00180: routine shipment checked and filed.\nLine 00181: routine shipment checked and filed.\nLine 00182: routine shipment checked and filed.\nLine 00183: routine shipment checked and filed.\nLine 00184: routine shipment checked and filed.\nLine 00185: routine shipment checked and filed.\nLine 00186: routine shipment checked and filed.\nLine 00187: routine shipment checked and filed.\nLine 00188: routine shipment checked and filed.\nLine 00189: routine shipment checked and filed.\nLine 00190: routine shipment checked and filed.\nLine 00191: routine shipment checked and filed.\nLine 00192: routine shipment checked and filed."
+          },
+          {
+            "role": "assistant",
+            "content": "The shipment records are noted."
+          },
+          {
+            "role": "user",
+            "content": "Line 00193: routine shipment checked and filed.\nLine 00194: routine shipment checked and filed.\nLine 00195: routine shipment checked and filed.\nLine 00196: routine shipment checked and filed.\nLine 00197: routine shipment checked and filed.\nLine 00198: routine shipment checked and filed.\nLine 00199: routine shipment checked and filed.\nLine 00200: routine shipment checked and filed.\nLine 00201: routine shipment checked and filed.\nLine 00202: routine shipment checked and filed."
+          },
+          {
+            "role": "assistant",
+            "content": "The shipment records are noted."
+          },
+          {
+            "role": "user",
+            "content": "The LATE shipment approval code is 13356886.\nReturn only a JSON object with string fields early, middle, late containing the three approval codes."
+          }
+        ],
+        "temperature": 0,
+        "seed": 42,
+        "max_tokens": 128,
+        "response_format": {
+          "type": "json_object"
+        },
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "passed": true,
+      "transport_ok": true,
+      "quality_ok": true,
+      "contract_checks": {
+        "usage_consistent": true,
+        "strict_sse_completed": true,
+        "long_input_verified": true,
+        "within_context": true,
+        "actual_native_mode": true,
+        "actual_context": true,
+        "no_stock_engine_fallback": true,
+        "continuation_exercised": true,
+        "state_transferred": true,
+        "handoff_timed": true
+      },
+      "answer": "{\"early\": \"95822412\", \"middle\": \"24942603\", \"late\": \"13356886\"}",
+      "usage": {
+        "prompt_tokens": 3232,
+        "completion_tokens": 39,
+        "total_tokens": 3271
+      },
+      "client_timing": {
+        "headers_seconds": 10.287184700006037,
+        "first_wire_line_seconds": 10.287223399995128,
+        "first_text_seconds": 10.287311199994292,
+        "complete_seconds": 10.287895300003584
+      },
+      "assist": {
+        "requested_mode": "hybrid",
+        "actual_mode": "hybrid",
+        "cold_load": false,
+        "load_seconds_this_request": 0,
+        "architecture": "spark2_5",
+        "context_length": 4096,
+        "fallback_reason": null
+      },
+      "stages": {
+        "request_seconds": 10.271988199994667,
+        "format_seconds": 0.001927300007082522,
+        "tokenize_seconds": 0.028326200001174584,
+        "context_reset_seconds": 0.04860520000511315,
+        "prompt_seconds": 5.581406799989054,
+        "first_text_seconds": 5.707711600000039,
+        "first_token_seconds": 5.707623299997067,
+        "sampling_and_text_seconds": 0.6112389999325387,
+        "continuation_decode_seconds": 3.818725900055142,
+        "state_transfer_seconds": 0.17803450000064913,
+        "state_bytes": 232442652,
+        "native_decode_tokens_per_second": 10.216506101611797,
+        "postprocess_seconds": 3.0800001695752144e-05
+      },
+      "load_stages": {},
+      "failure_category": null,
+      "memory": {
+        "scope": "global available physical RAM and commit, not per-process allocation or power",
+        "samples": [
+          {
+            "elapsed_seconds": 0.015785700001288205,
+            "available_physical_bytes": 280158208,
+            "available_commit_bytes": 1672187904
+          },
+          {
+            "elapsed_seconds": 0.28157310000096913,
+            "available_physical_bytes": 462622720,
+            "available_commit_bytes": 1696325632
+          },
+          {
+            "elapsed_seconds": 0.5389798999967752,
+            "available_physical_bytes": 472928256,
+            "available_commit_bytes": 1708298240
+          },
+          {
+            "elapsed_seconds": 0.7926072999980533,
+            "available_physical_bytes": 470249472,
+            "available_commit_bytes": 1694949376
+          },
+          {
+            "elapsed_seconds": 1.0588751000032062,
+            "available_physical_bytes": 426074112,
+            "available_commit_bytes": 1678008320
+          },
+          {
+            "elapsed_seconds": 1.3112755000038305,
+            "available_physical_bytes": 444203008,
+            "available_commit_bytes": 1682853888
+          },
+          {
+            "elapsed_seconds": 1.5723268000001553,
+            "available_physical_bytes": 404770816,
+            "available_commit_bytes": 1660719104
+          },
+          {
+            "elapsed_seconds": 1.8394115999981295,
+            "available_physical_bytes": 366043136,
+            "available_commit_bytes": 1641271296
+          },
+          {
+            "elapsed_seconds": 2.104480900001363,
+            "available_physical_bytes": 274763776,
+            "available_commit_bytes": 1598341120
+          },
+          {
+            "elapsed_seconds": 2.376223500003107,
+            "available_physical_bytes": 350154752,
+            "available_commit_bytes": 1579585536
+          },
+          {
+            "elapsed_seconds": 2.639634399994975,
+            "available_physical_bytes": 332451840,
+            "available_commit_bytes": 1567846400
+          },
+          {
+            "elapsed_seconds": 2.894206299999496,
+            "available_physical_bytes": 290402304,
+            "available_commit_bytes": 1560227840
+          },
+          {
+            "elapsed_seconds": 3.153449899997213,
+            "available_physical_bytes": 297304064,
+            "available_commit_bytes": 1534824448
+          },
+          {
+            "elapsed_seconds": 3.40642939999816,
+            "available_physical_bytes": 286842880,
+            "available_commit_bytes": 1527726080
+          },
+          {
+            "elapsed_seconds": 3.6719637000060175,
+            "available_physical_bytes": 268722176,
+            "available_commit_bytes": 1527185408
+          },
+          {
+            "elapsed_seconds": 3.926120300006005,
+            "available_physical_bytes": 283189248,
+            "available_commit_bytes": 1544269824
+          },
+          {
+            "elapsed_seconds": 4.19202889999724,
+            "available_physical_bytes": 283893760,
+            "available_commit_bytes": 1541648384
+          },
+          {
+            "elapsed_seconds": 4.451358200007235,
+            "available_physical_bytes": 273567744,
+            "available_commit_bytes": 1540014080
+          },
+          {
+            "elapsed_seconds": 4.709481900004903,
+            "available_physical_bytes": 274509824,
+            "available_commit_bytes": 1542250496
+          },
+          {
+            "elapsed_seconds": 5.006480800002464,
+            "available_physical_bytes": 171913216,
+            "available_commit_bytes": 1500884992
+          },
+          {
+            "elapsed_seconds": 5.269337899997481,
+            "available_physical_bytes": 238178304,
+            "available_commit_bytes": 1502605312
+          },
+          {
+            "elapsed_seconds": 5.547494300000835,
+            "available_physical_bytes": 231264256,
+            "available_commit_bytes": 1499226112
+          },
+          {
+            "elapsed_seconds": 5.805779699992854,
+            "available_physical_bytes": 95215616,
+            "available_commit_bytes": 1255133184
+          },
+          {
+            "elapsed_seconds": 6.076416299998527,
+            "available_physical_bytes": 261971968,
+            "available_commit_bytes": 1492430848
+          },
+          {
+            "elapsed_seconds": 6.33846870000707,
+            "available_physical_bytes": 269598720,
+            "available_commit_bytes": 1517109248
+          },
+          {
+            "elapsed_seconds": 6.606346899992786,
+            "available_physical_bytes": 253161472,
+            "available_commit_bytes": 1498017792
+          },
+          {
+            "elapsed_seconds": 6.874474600001122,
+            "available_physical_bytes": 259092480,
+            "available_commit_bytes": 1497309184
+          },
+          {
+            "elapsed_seconds": 7.127069099995424,
+            "available_physical_bytes": 247291904,
+            "available_commit_bytes": 1489330176
+          },
+          {
+            "elapsed_seconds": 7.390189600002486,
+            "available_physical_bytes": 243818496,
+            "available_commit_bytes": 1487585280
+          },
+          {
+            "elapsed_seconds": 7.6436990999936825,
+            "available_physical_bytes": 222064640,
+            "available_commit_bytes": 1476861952
+          },
+          {
+            "elapsed_seconds": 7.9056896999973105,
+            "available_physical_bytes": 226029568,
+            "available_commit_bytes": 1479352320
+          },
+          {
+            "elapsed_seconds": 8.158385799993994,
+            "available_physical_bytes": 226701312,
+            "available_commit_bytes": 1479168000
+          },
+          {
+            "elapsed_seconds": 8.42344410000078,
+            "available_physical_bytes": 228573184,
+            "available_commit_bytes": 1493618688
+          },
+          {
+            "elapsed_seconds": 8.69520129999728,
+            "available_physical_bytes": 235110400,
+            "available_commit_bytes": 1502838784
+          },
+          {
+            "elapsed_seconds": 8.956524599998374,
+            "available_physical_bytes": 238080000,
+            "available_commit_bytes": 1504587776
+          },
+          {
+            "elapsed_seconds": 9.22277629999735,
+            "available_physical_bytes": 239652864,
+            "available_commit_bytes": 1505628160
+          },
+          {
+            "elapsed_seconds": 9.488591500004986,
+            "available_physical_bytes": 239837184,
+            "available_commit_bytes": 1504911360
+          },
+          {
+            "elapsed_seconds": 9.750091699999757,
+            "available_physical_bytes": 235991040,
+            "available_commit_bytes": 1510014976
+          },
+          {
+            "elapsed_seconds": 10.007475799997337,
+            "available_physical_bytes": 235933696,
+            "available_commit_bytes": 1510518784
+          },
+          {
+            "elapsed_seconds": 10.262719799997285,
+            "available_physical_bytes": 235438080,
+            "available_commit_bytes": 1511251968
+          }
+        ],
+        "minimum_available": {
+          "available_physical_bytes": 95215616,
+          "available_commit_bytes": 1255133184
+        }
+      }
+    }
+  ],
+  "benchmarks": [],
+  "passed": true
+}

@@ -10,6 +10,20 @@ import re
 
 from .gguf_metadata import inspect_gguf
 
+# Raptor hybrid passed long document/history and state-handoff tests at 4K,
+# 8K and 16K on the documented 16 GB Surface. Other native strategies retain 2K.
+BASE_CONTEXT_POLICY = (2048, 2048)
+NATIVE_CONTEXT_POLICIES = {("spark2_5", "Q6_K", "hybrid"): (8192, 16384)}
+
+
+def _context_policy(architecture, quantization, mode, training):
+    default, maximum = NATIVE_CONTEXT_POLICIES.get((architecture, quantization, mode), BASE_CONTEXT_POLICY)
+    if training is not None:
+        maximum = min(maximum, training)
+        default = min(default, maximum)
+    return default, maximum
+
+
 SAMPLING = {
     "temperature": ("temperature", .8, 0, 2, False),
     "topK": ("top_k", 40, 0, 1000000, True),
@@ -202,17 +216,22 @@ def build_profile(entry, settings, resolved, runtime, path, *, identifier=None, 
         except ValueError: pass
     proxy_context = proxy_context or 2048
     explicit_context = overrides.get("contextSize", runtime.get("localContextSize"))
-    context = 2048
+    default_context, maximum_context = _context_policy(architecture, quantization, selected, training)
+    context = default_context
     if explicit_context is None:
         adapted.add("contextSize")
     else:
         try:
             context = _number(explicit_context, integer=True)
-            if not 128 <= context <= 2048 or training is not None and context > training:
+            # Delegation retains the deliberate source preference instead of
+            # advertising an unrelated cached/default Auto plan.
+            if 128 <= context <= 2**31-1:
+                proxy_context = context
+            if not 128 <= context <= maximum_context:
                 raise ValueError("Outside validated context")
             applied.add("contextSize")
         except ValueError:
-            fallback("context_outside_validated_range", "contextSize"); context = 2048
+            fallback("context_outside_validated_range", "contextSize"); context = default_context
 
     gpu_preference = overrides.get("gpuLayerCount", runtime.get("localGpuLayers"))
     for value in (gpu_preference,):
@@ -236,10 +255,14 @@ def build_profile(entry, settings, resolved, runtime, path, *, identifier=None, 
     size = entry.get("sizeBytes", header.get("size_bytes"))
     large = type(size) is not int or size > 8 * 1024**3
     expert = selected in ("cpu-experts", "gpu-experts")
-    repack = not large and not expert
+    # Larger hybrid contexts already need two native context objects. Avoid an
+    # additional repacked CPU weight allocation while retaining the same GGUF.
+    large_hybrid_context = known_spark and selected == "hybrid" and context > 4096
+    repack = not large and not expert and not large_hybrid_context
     if "repack" in overrides:
         repack = overrides["repack"]; applied.add("repack")
         if repack and (large or expert): fallback("large_or_expert_repack_unsupported", "repack")
+        if repack and large_hybrid_context: fallback("hybrid_context_repack_memory_policy", "repack")
     elif defaults.get("repack") is False:
         repack = False; applied.add("repack")
     elif not repack: adapted.add("repack")
@@ -296,6 +319,7 @@ def build_profile(entry, settings, resolved, runtime, path, *, identifier=None, 
     if not isinstance(identifier, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.:/-]{0,127}", identifier):
         identifier = "shared/" + hashlib.sha256(entry["id"].encode()).hexdigest()[:20]
     profile = {"id": identifier, "path": str(path), "mode": selected, "context": context,
+        "context_policy": {"default": default_context, "maximum": maximum_context, "training_limit": training},
         "batch": integer_value("batchSize", 2048, 1, 4096),
         "microbatch": integer_value("uBatchSize", 512, 1, 4096),
         "threads": integer_value("threads", 6, 1, 128), "batch_threads": integer_value("batchThreads", 10, 1, 128),

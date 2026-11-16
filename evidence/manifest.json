@@ -3,8 +3,8 @@
   "files": [
     {
       "name": "README.md",
-      "sha256": "3ed6c9dee9022d602d90d95bf8bad6e382f62c2b583fe4444b1c694ca39ff0d5",
-      "bytes": 7170
+      "sha256": "8fda0d0a0deaa7c5e7b5c56e00a3dd58a0f3e82c78de1c3a6f965521d037f6b0",
+      "bytes": 7805
     },
     {
       "name": "automatic-lifecycle-live.json",
@@ -162,9 +162,44 @@
       "bytes": 2905
     },
     {
+      "name": "provider-label-live.json",
+      "sha256": "e840d6dfeeeaa9224d77bd97685bcc52a43a34a30c6ceea494764deb49b2e718",
+      "bytes": 682
+    },
+    {
       "name": "qwen-control.json",
       "sha256": "9396922b90aa1505d29cec1434ee8ed01097da0f6a2f00ff61120406923e6efb",
       "bytes": 17819
+    },
+    {
+      "name": "raptor-context-16k-boundary.json",
+      "sha256": "46fff34d5005f2e9da7d5fb682d0fc7b528ac3a6515270b6b8340e1c41c41334",
+      "bytes": 67532
+    },
+    {
+      "name": "raptor-context-16k.json",
+      "sha256": "e0c6caed299a6f54ff3ba2d9affa0b1860a075615a56e6ab29ae0174454f9967",
+      "bytes": 241001
+    },
+    {
+      "name": "raptor-context-4k.json",
+      "sha256": "e2aa21f62b7c1f7479fb4cad67f423c21abce0e2a28446b8b2c72bb55e1cbba2",
+      "bytes": 99035
+    },
+    {
+      "name": "raptor-context-8k-repack.json",
+      "sha256": "12b73d81883ec896efec6a8531e08f13f941b400cb7cc83fd3d853900a28aa5a",
+      "bytes": 616744
+    },
+    {
+      "name": "raptor-context-8k.json",
+      "sha256": "924a9a003cbbc0d004b2b8261f3dfba9bcc5f15e1c6ef390cc694016f23cd518",
+      "bytes": 215300
+    },
+    {
+      "name": "raptor-context-provenance.json",
+      "sha256": "f49e979fb5635abd5c93998449ad8a1e87a5fc86791f6e946b4c2d766aef983e",
+      "bytes": 2712
     },
     {
       "name": "raptor-cpu-requests.json",

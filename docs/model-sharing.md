@@ -25,18 +25,18 @@ Stock delegation reports **`actual_mode: osaurus-native`**, with a safe fallback
 
 ## Context: Auto is a backend choice
 
-If the per-model `contextSize` and global `localContextSize` are both unset/Auto, the assisted backend uses the tested **2048-token context** and reports an adaptation. A stock-engine plan of 131072 tokens is not an explicit user request and is not copied into an NPU context.
+If the per-model `contextSize` and global `localContextSize` are both unset/Auto, **Raptor Q6_K hybrid uses 8192 tokens**. An explicit source preference up to **16384** is supported for that strategy, capped by model metadata. Other native models/modes retain their tested **2048-token policy**. A stock-engine plan of 131072 tokens is not copied into an NPU allocation.
 
-An explicit supported context up to 2048 is applied. An explicit larger context delegates to the source engine; it is not silently clamped while claiming the original request was honored. A stock profile advertises a bounded valid source plan/context consistent with model metadata. These routes can therefore expose different context limits for the same weights. Input, output and template tokens all consume context.
+To request 16K Raptor hybrid, set the Raptor local-model context to **16384 in Osaurus**; the companion follows it without separate registration or configuration. Explicit preferences above the applicable tested ceiling delegate to the source engine and preserve the requested context. Input, output and template tokens all consume context. See [long-context measurements and limits](long-context.md).
 
 ## Settings contract
 
 | Osaurus preference | Native assisted behavior |
 |---|---|
-| Context | Apply a supported explicit value; Auto uses 2048; a larger explicit preference uses the stock engine |
+| Context | Raptor Q6_K hybrid Auto 8192, explicit up to 16384; other native modes 2048; above-ceiling preferences use the stock engine |
 | Batch / microbatch | Apply typed values; source defaults are 2048 / 512; invalid combinations cannot silently change the request |
 | Threads / batch threads | Apply typed explicit values; backend Auto currently uses six / ten |
-| Repacking | Small non-expert models may repack; large files and expert profiles default to no repack; an incompatible explicit request uses the stock engine |
+| Repacking | Raptor hybrid above 4096 uses no CPU weight repack to retain memory headroom; an explicit repack-on preference there uses the stock engine. Other small non-expert models may repack; large/expert profiles default to no repack |
 | Flash attention | Honor supported CPU/HTP boolean preference; explicit OpenCL flash-on uses the stock engine |
 | K/V cache types | F16 is supported; other explicit cache types use the stock engine |
 | KV offload / operation offload / unified KV / full SWA | Map supported booleans to native context parameters |

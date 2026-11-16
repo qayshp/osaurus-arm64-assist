@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "kind": "Raptor hybrid long-context validation",
+  "date_local": "2026-11-15 America/Los_Angeles",
+  "hardware": "Surface Laptop 7, Snapdragon X Plus X1P64100, Hexagon v73, 16 GB",
+  "osaurus_version": "1.0.3",
+  "native_core": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30",
+  "model": "Raptor-0.7-4B-Q6_K.gguf",
+  "model_bytes": 3690735072,
+  "model_sha256": "d3ee40578d3c747697e76a1534551c4e6822b632f68e7c9a2b1508c94a2b9349",
+  "model_unchanged_quantization": "Q6_K",
+  "scope": "Synthetic document and multi-turn retention, actual context/mode/state transfer, load/inference stages and global memory. Not energy, battery, stress or universal model-quality certification.",
+  "method": {
+    "seed": 42,
+    "output": "JSON with exact early/middle/late eight-digit codes",
+    "max_output_tokens": 128,
+    "temperature": 0,
+    "batch": 2048,
+    "microbatch": 512,
+    "threads": 6,
+    "batch_threads": 10,
+    "swa_full": false,
+    "kv_unified": true,
+    "power_mode": "balanced",
+    "test_commit_floor_mib": 1024,
+    "model_cells": "sequential; one native worker at a time",
+    "prompt_cache": "KV cleared and full supplied history prefills every request",
+    "background": "Idle source CPU Raptor unloaded; optional Chrome closed; ChatGPT/Codex/Tailscale preserved; Windows AI/background/thermals not held constant",
+    "memory": "System-wide available RAM/commit sampled every250ms; not isolated process allocation.",
+    "client_ttft": "JSON is validated/buffered; client first text is complete validated object, not engine first-token timing"
+  },
+  "new_policy": {
+    "known_Raptor_Q6_hybrid_Auto": 8192,
+    "maximum_explicit_source_context": 16384,
+    "other_native_modes": 2048,
+    "hybrid_above_4096": "Auto no CPU weight repack; explicit repack=true delegates to source engine",
+    "above_context_ceiling": "delegate preserving explicit source context"
+  },
+  "retained_failures": [
+    {
+      "phase": "initial4K capacity attempt before memory cleanup and IPC hardening",
+      "request": {
+        "input_tokens": 3072,
+        "output_tokens": 16
+      },
+      "outcome": "RemoteDisconnected before a completion receipt; exact cause was not retained. Later4K quality checks passed."
+    },
+    {
+      "phase": "8K hybrid with repack enabled",
+      "outcome": "3/4 passed. Fourth returned HTTP503/native_worker_error with sampled available commit1004MiB below configured1024MiB floor. CPU4/4 passed. The new policy uses repack=false."
+    }
+  ],
+  "receipts": [
+    "raptor-context-4k.json",
+    "raptor-context-8k-repack.json",
+    "raptor-context-8k.json",
+    "raptor-context-16k.json"
+  ]
+}
