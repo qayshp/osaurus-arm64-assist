@@ -12,5 +12,7 @@
   "matching_provider_count": 1,
   "api_label_verified": true,
   "no_duplicate_provider": true,
-  "scope": "Installed migration observations; no raw provider configuration, credentials or chat content included."
+  "scope": "Installed migration observations; no raw provider configuration, credentials or chat content included.",
+  "visible_in_osaurus_model_sidebar": true,
+  "ui_model_context_display": "raptor-hybrid; 2.4K of 7K input budget shown under the 8K model limit"
 }

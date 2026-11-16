@@ -55,5 +55,15 @@
     "raptor-context-8k-repack.json",
     "raptor-context-8k.json",
     "raptor-context-16k.json"
-  ]
+  ],
+  "near_boundary": {
+    "receipt": "raptor-context-16k-boundary.json",
+    "input_tokens": 16128,
+    "output_tokens": 32,
+    "measured_runs": 2,
+    "passed": true,
+    "scope": "random-token capacity and state handoff; no answer quality claim"
+  },
+  "installed_acceptance": "raptor-context-installed.json",
+  "automated_tests": 269
 }

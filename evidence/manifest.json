@@ -163,8 +163,8 @@
     },
     {
       "name": "provider-label-live.json",
-      "sha256": "e840d6dfeeeaa9224d77bd97685bcc52a43a34a30c6ceea494764deb49b2e718",
-      "bytes": 682
+      "sha256": "05848062e2c7e8e6228413b2f8702032d227825bb3c4b088149497a1f89aefee",
+      "bytes": 831
     },
     {
       "name": "qwen-control.json",
@@ -197,9 +197,14 @@
       "bytes": 215300
     },
     {
+      "name": "raptor-context-installed.json",
+      "sha256": "332c6dbc09cdfb514514a0ca64fb557f787353b14d358a5c0f32eb6f1f4dfc47",
+      "bytes": 5913
+    },
+    {
       "name": "raptor-context-provenance.json",
-      "sha256": "f49e979fb5635abd5c93998449ad8a1e87a5fc86791f6e946b4c2d766aef983e",
-      "bytes": 2712
+      "sha256": "24538fe592969df948ebe1f5551088e43fb134f616ccafe35db65345637c4e6e",
+      "bytes": 3060
     },
     {
       "name": "raptor-cpu-requests.json",
