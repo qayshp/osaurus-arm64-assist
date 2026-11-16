@@ -11,8 +11,22 @@ if ($registration.installation_id -ne $marker.installation_id) { throw 'Registra
 if ($registration.key_ref -cne ('keychain:osaurus-arm64-assist/'+$marker.installation_id)) { throw 'Credential reference is not owned by this installation.' }
 $osaurus = Get-AssistOsaurus
 if (-not $PSCmdlet.ShouldProcess($registration.provider_name, 'Remove only the owned Osaurus provider and its unique credential')) { return }
+$providerOperation = Enter-AssistOperationLock $root 'Provider'
+try {
+$registration = Read-AssistJson $statePath
+if ($registration.installation_id -ne $marker.installation_id -or $registration.key_ref -cne ('keychain:osaurus-arm64-assist/'+$marker.installation_id)) {
+    throw 'Provider registration changed while waiting for the ownership lock; nothing was removed.'
+}
 $null = & $osaurus serve
 if ($LASTEXITCODE -ne 0) { throw 'Osaurus did not start. Launch it before disconnecting so its other settings can be preserved.' }
+if ($registration.PSObject.Properties['provider_name_pending']) {
+    $origin = 'http://127.0.0.1:1337'
+    $config = Read-AssistJson (Join-Path $root 'config.json')
+    if ($config.PSObject.Properties['osaurus_url'] -and $config.osaurus_url -and $config.osaurus_url -ne 'auto') { $origin = [string]$config.osaurus_url }
+    # Resolve an interrupted rename by its same provider ID before cleanup.
+    # ResolveOnly never issues PUT or guesses which label currently exists.
+    $registration = Set-AssistOwnedProviderName -RootPath $root -Osaurus $osaurus -OsaurusUrl $origin -Registration $registration -Name $registration.provider_name -ResolveOnly
+}
 $export = Read-AssistOsaurusExport $osaurus
 $matching = @($export.providers | Where-Object {$_.name -ieq $registration.provider_name})
 if ($matching.Count -gt 1) { throw 'Provider name is ambiguous; nothing was changed.' }
@@ -52,3 +66,4 @@ if ($registration.credential_created) {
 }
 Remove-Item -LiteralPath $statePath -Force
 Write-Host 'Owned Osaurus provider and credential disconnected. Other providers, agents and defaults were preserved.'
+} finally { Exit-AssistOperationLock $providerOperation }

@@ -30,6 +30,7 @@ class Proxy(QuietHandler):
         self.reply({"proxy": True})
 
     do_POST = do_GET
+    do_PUT = do_GET
 
 
 class Target(QuietHandler):
@@ -46,6 +47,15 @@ class Target(QuietHandler):
 
     def do_POST(self):
         self.reply({"direct": True, "authorized": self.headers.get("Authorization") == "Bearer loopback-test-key"})
+
+    def do_PUT(self):
+        body = self.rfile.read(int(self.headers.get("Content-Length", "0")))
+        if self.path == "/redirect":
+            self.do_GET()
+            return
+        data = json.loads(body.decode("utf-8"))
+        self.reply({"direct": True, "authorized": self.headers.get("Authorization") == "Bearer loopback-test-key",
+                    "content_type": self.headers.get("Content-Type"), "body": data})
 
 
 proxy = ThreadingHTTPServer(("127.0.0.1", 0), Proxy)

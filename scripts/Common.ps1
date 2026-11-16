@@ -1,6 +1,8 @@
 Set-StrictMode -Version Latest
 $script:AssistProduct = 'org.osaurus-community.arm64-assist'
 $script:AssistScriptsPath = $PSScriptRoot
+$script:AssistDefaultProviderName = 'NPU Hybrid'
+$script:AssistLegacyProviderName = 'Osaurus ARM64 Assist'
 
 function Resolve-AssistRoot {
     param([string]$RootPath)
@@ -146,8 +148,8 @@ function Get-AssistHealth {
 }
 
 function Invoke-AssistLocalJson {
-    param([Parameter(Mandatory=$true)][string]$Url, [ValidateSet('GET','POST')][string]$Method='GET',
-        [string]$ApiKey, [ValidateRange(1,60)][int]$TimeoutSec=2)
+    param([Parameter(Mandatory=$true)][string]$Url, [ValidateSet('GET','POST','PUT')][string]$Method='GET',
+        [string]$ApiKey, [ValidateRange(1,60)][int]$TimeoutSec=2, $Body)
     $uri = [Uri]$Url
     if ($uri.Scheme -ne 'http' -or -not $uri.IsLoopback -or $uri.UserInfo) { throw 'Companion HTTP requests must use a local loopback address.' }
     foreach ($address in [Net.Dns]::GetHostAddresses($uri.DnsSafeHost)) {
@@ -164,9 +166,19 @@ function Invoke-AssistLocalJson {
     $request.ReadWriteTimeout = $TimeoutSec * 1000
     $request.Accept = 'application/json'
     if ($ApiKey) { $request.Headers['Authorization'] = 'Bearer ' + $ApiKey }
-    if ($Method -eq 'POST') { $request.ContentLength = 0 }
+    $bytes = $null
+    if ($PSBoundParameters.ContainsKey('Body')) {
+        if ($Method -eq 'GET') { throw 'A local GET request cannot have a JSON body.' }
+        $bytes = [Text.Encoding]::UTF8.GetBytes(($Body | ConvertTo-Json -Depth 30 -Compress))
+        $request.ContentType = 'application/json; charset=utf-8'
+        $request.ContentLength = $bytes.Length
+    } elseif ($Method -in @('POST','PUT')) { $request.ContentLength = 0 }
     $response = $null; $reader = $null
     try {
+        if ($null -ne $bytes) {
+            $stream = $request.GetRequestStream()
+            try { $stream.Write($bytes,0,$bytes.Length) } finally { $stream.Dispose() }
+        }
         $response = $request.GetResponse()
         if ([int]$response.StatusCode -lt 200 -or [int]$response.StatusCode -ge 300) { throw 'The local endpoint returned a non-success status; redirects are not followed.' }
         $reader = New-Object IO.StreamReader($response.GetResponseStream(),[Text.Encoding]::UTF8,$true)
@@ -281,6 +293,117 @@ function Assert-AssistOwnedProvider {
     }
 }
 
+function Get-AssistProviderName {
+    param($Registration,[string]$RequestedName='NPU Hybrid',[bool]$ExplicitName=$false)
+    if ($Registration -and -not $ExplicitName) {
+        if ($Registration.PSObject.Properties['provider_name_pending']) { return [string]$Registration.provider_name_pending }
+        # Finish an interrupted initial registration under its recorded name.
+        # A user-selected custom label is never changed by an ordinary upgrade.
+        if ($Registration.status -ne 'connected' -or $Registration.provider_name -ine $script:AssistLegacyProviderName) {
+            return [string]$Registration.provider_name
+        }
+    }
+    return $RequestedName.Trim()
+}
+
+function Write-AssistProviderRegistration {
+    param([Parameter(Mandatory=$true)][string]$Path,[Parameter(Mandatory=$true)]$Value)
+    Assert-AssistPathAncestors $Path
+    $temporary = $Path + '.' + [guid]::NewGuid().ToString('N') + '.tmp'
+    try {
+        Write-AssistJson $temporary $Value
+        if (Test-Path -LiteralPath $Path) { [IO.File]::Replace($temporary,$Path,[System.Management.Automation.Language.NullString]::Value) }
+        else { [IO.File]::Move($temporary,$Path) }
+    } finally { if (Test-Path -LiteralPath $temporary) { Remove-Item -LiteralPath $temporary -Force } }
+}
+
+function Get-AssistProviderViewSignature {
+    param([Parameter(Mandatory=$true)]$Provider)
+    $text = $Provider | Select-Object * -ExcludeProperty name | ConvertTo-Json -Depth 30 -Compress
+    $hash = [Security.Cryptography.SHA256]::Create()
+    try { return ([BitConverter]::ToString($hash.ComputeHash([Text.Encoding]::UTF8.GetBytes($text)))).Replace('-','').ToLowerInvariant() }
+    finally { $hash.Dispose() }
+}
+
+function Set-AssistOwnedProviderName {
+    param([Parameter(Mandatory=$true)][string]$RootPath,[Parameter(Mandatory=$true)][string]$Osaurus,
+        [Parameter(Mandatory=$true)][string]$OsaurusUrl,[Parameter(Mandatory=$true)]$Registration,
+        [Parameter(Mandatory=$true)][string]$Name,[switch]$ResolveOnly)
+    $root = Assert-AssistInstallation $RootPath
+    $marker = Read-AssistJson (Join-Path $root '.osaurus-arm64-assist-install.json')
+    if ($Registration.installation_id -cne $marker.installation_id -or
+        $Registration.key_ref -cne ('keychain:osaurus-arm64-assist/'+$marker.installation_id)) {
+        throw 'Provider registration or credential ownership does not match this installation.'
+    }
+    if ([string]::IsNullOrWhiteSpace($Name) -or $Name.Length -gt 256) { throw 'The provider name must be nonempty and at most 256 characters.' }
+    $Name = $Name.Trim()
+    $uri = [Uri]$OsaurusUrl
+    if ($uri.Scheme -ne 'http' -or -not $uri.IsLoopback -or $uri.UserInfo -or $uri.Query -or $uri.Fragment -or $uri.AbsolutePath -ne '/') {
+        throw 'OsaurusUrl must be a loopback HTTP origin.'
+    }
+    $origin = $uri.GetLeftPart([UriPartial]::Authority)
+    $oldName = [string]$Registration.provider_name
+    $allowedNames = @($oldName)
+    if ($Registration.PSObject.Properties['provider_name_pending']) {
+        $pending = [string]$Registration.provider_name_pending
+        if ([string]::IsNullOrWhiteSpace($pending) -or $pending.Length -gt 256) { throw 'Pending provider rename state is invalid.' }
+        $allowedNames += $pending
+        if (-not $ResolveOnly -and $Name -cne $pending) { throw 'Finish the pending provider rename before selecting another label.' }
+    }
+    $export = Read-AssistOsaurusExport $Osaurus
+    $owned = @($export.providers | Where-Object {$_.name -in $allowedNames})
+    if ($owned.Count -ne 1) { throw 'Owned provider name is missing or ambiguous; no provider was changed.' }
+    $expected = $Registration | Select-Object *
+    $expected.provider_name = $owned[0].name
+    Assert-AssistOwnedProvider $owned[0] $expected
+    $catalog = Invoke-AssistLocalJson -Url ($origin+'/admin/providers') -TimeoutSec 10
+    $views = @($catalog.providers)
+    $sameName = @($views | Where-Object {$_.name -ieq $owned[0].name})
+    if ($sameName.Count -ne 1) { throw 'Owned provider API identity is missing or ambiguous.' }
+    $view = $sameName[0]
+    if (-not $view.id -or [string]$view.id -notmatch '^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$' -or
+        ($Registration.provider_id -and $view.id -cne $Registration.provider_id) -or
+        (Get-AssistProviderType $view.type) -ne $Registration.provider_type -or
+        $view.baseUrl.TrimEnd('/') -cne $Registration.base_url.TrimEnd('/') -or
+        [bool]$view.enabled -ne [bool]$Registration.enabled -or -not $view.hasApiKey) {
+        throw 'Owned provider API identity or settings changed; it was preserved.'
+    }
+    $signature = Get-AssistProviderViewSignature $view
+    if ($Registration.PSObject.Properties['provider_name_pending'] -and
+        (-not $Registration.PSObject.Properties['provider_rename_signature'] -or $Registration.provider_rename_signature -cne $signature)) {
+        throw 'Provider settings changed during the pending rename. Ownership state was retained for review.'
+    }
+    if ($ResolveOnly) { $Name = [string]$view.name }
+    $collision = @($views | Where-Object {$_.name -ieq $Name -and $_.id -cne $view.id})
+    if ($collision.Count -gt 0 -or @($export.providers | Where-Object {$_.name -ieq $Name -and $_.name -ine $owned[0].name}).Count -gt 0) {
+        throw 'Another provider already uses the requested name; no provider was changed.'
+    }
+    $statePath = Join-Path $root 'state/osaurus-registration.json'
+    $next = $Registration | Select-Object *
+    $next.provider_id = [string]$view.id
+    if ($view.name -cne $Name) {
+        # Persist intent before the API update. If a response/state write fails,
+        # reconnect/disconnect can identify either label using the same ID.
+        $next | Add-Member -NotePropertyName provider_name_pending -NotePropertyValue $Name -Force
+        $next | Add-Member -NotePropertyName provider_rename_signature -NotePropertyValue $signature -Force
+        Write-AssistProviderRegistration $statePath $next
+        # Osaurus's typed update preserves ID, API key/reference, URL, headers,
+        # enabled/default model and agent references when only name is supplied.
+        $null = Invoke-AssistLocalJson -Url ($origin+'/admin/providers/'+[Uri]::EscapeDataString([string]$view.id)) -Method PUT -Body @{name=$Name} -TimeoutSec 10
+        $afterCatalog = Invoke-AssistLocalJson -Url ($origin+'/admin/providers') -TimeoutSec 10
+        $after = @($afterCatalog.providers | Where-Object {$_.id -ceq $view.id})
+        if ($after.Count -ne 1 -or $after[0].name -cne $Name -or
+            (Get-AssistProviderViewSignature $after[0]) -cne $signature) {
+            throw 'Provider rename verification failed. Pending ownership state was retained; no credential was rewritten.'
+        }
+    }
+    $next.provider_name = $Name
+    $next.PSObject.Properties.Remove('provider_name_pending')
+    $next.PSObject.Properties.Remove('provider_rename_signature')
+    Write-AssistProviderRegistration $statePath $next
+    return $next
+}
+
 function Get-AssistInstallationId {
     param([Parameter(Mandatory=$true)][string]$RootPath)
     $root = Assert-AssistInstallation $RootPath
@@ -291,7 +414,7 @@ function Get-AssistInstallationId {
 }
 
 function Enter-AssistOperationLock {
-    param([Parameter(Mandatory=$true)][string]$RootPath,[ValidateSet('Server','Automatic')][string]$Kind='Server')
+    param([Parameter(Mandatory=$true)][string]$RootPath,[ValidateSet('Server','Automatic','Provider')][string]$Kind='Server')
     $id = Get-AssistInstallationId $RootPath
     $mutex = New-Object Threading.Mutex($false,('Local\OsaurusArm64Assist.' + $Kind + '.' + $id))
     try {

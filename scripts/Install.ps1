@@ -105,7 +105,13 @@ if ($autoEnabled) {
         & (Join-Path $PSScriptRoot 'Enable-AutoStart.ps1') -RootPath $root
     }
 } else { & (Join-Path $PSScriptRoot 'Disable-AutoStart.ps1') -RootPath $root }
-if ($ConnectOsaurus) { & (Join-Path $PSScriptRoot 'Connect-Osaurus.ps1') -RootPath $root -RespectStartupDisabled }
+$registeredProvider = Join-Path $root 'state/osaurus-registration.json'
+Assert-AssistPathAncestors $registeredProvider
+if ($ConnectOsaurus -or (Test-Path -LiteralPath $registeredProvider)) {
+    # Upgrades update an existing owned provider in place, including its old
+    # default label. Fresh installs still connect only when explicitly asked.
+    & (Join-Path $PSScriptRoot 'Connect-Osaurus.ps1') -RootPath $root -RespectStartupDisabled
+}
 Write-Host "Installed at $root"
 Write-Host 'Model weights and drivers were preserved. Automatic mode uses only this user''s owned Startup shortcut.'
 Write-Host 'Models and supported preferences are discovered from Osaurus automatically. Use -NoAutoStart for manual lifecycle.'
