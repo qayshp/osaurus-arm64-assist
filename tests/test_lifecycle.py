@@ -328,6 +328,115 @@ class WorkerLifecycleTests(unittest.TestCase):
         manager._stop.assert_called_once()
 
 
+class IPCFaultTests(unittest.TestCase):
+    def test_poll_failures_become_safe_worker_failures(self):
+        for error in (ConnectionResetError("PRIVATE_POLL_DETAIL"), ConnectionAbortedError("PRIVATE_POLL_DETAIL"),
+                      TimeoutError("PRIVATE_POLL_DETAIL"), ValueError("PRIVATE_CLOSED_HANDLE")):
+            with self.subTest(error=type(error).__name__):
+                manager = manager_without_thread()
+                manager.child = FakeProcess()
+                manager.connection = mock.Mock()
+                manager.connection.poll.side_effect = error
+                with self.assertRaises(lifecycle.WorkerFailure) as raised:
+                    manager._receive(1)
+                self.assertEqual(str(raised.exception), "Native worker IPC failed; inspect its local log")
+                self.assertNotIn("PRIVATE", str(raised.exception))
+
+    def test_memory_guard_reason_survives_a_reset_during_loading(self):
+        manager = manager_without_thread()
+        manager.config["idle_seconds"] = 0
+        manager.child = FakeProcess()
+        manager.connection = mock.Mock()
+        manager.closed = mock.Mock()
+        manager.closed.wait.side_effect = [False, True]
+        with mock.patch.object(lifecycle, "memory_status", return_value={"available_commit_bytes": 1}):
+            manager._guard()
+        self.assertTrue(manager.child.terminated)
+        manager.connection.poll.side_effect = ConnectionResetError("PRIVATE_OS_DETAIL")
+        with self.assertRaises(lifecycle.WorkerFailure) as raised:
+            manager._receive(1)
+        self.assertEqual(str(raised.exception), "Worker stopped because system commit fell below the configured safety floor")
+
+    def test_recv_error_preserves_known_failure(self):
+        manager = manager_without_thread()
+        manager.child = FakeProcess()
+        manager.connection = mock.Mock()
+        manager.connection.poll.return_value = True
+        manager.connection.recv.side_effect = ConnectionAbortedError("PRIVATE_RECV_DETAIL")
+        manager.failure = "Worker stopped because system commit fell below the configured safety floor"
+        with self.assertRaises(lifecycle.WorkerFailure) as raised:
+            manager._receive(1)
+        self.assertEqual(str(raised.exception), manager.failure)
+
+    def test_process_start_failures_clean_both_pipe_ends_and_state(self):
+        for error in (OSError("PRIVATE_SPAWN_PATH"), RuntimeError("PRIVATE_SPAWN_DETAIL")):
+            with self.subTest(error=type(error).__name__), tempfile.TemporaryDirectory() as folder:
+                manager = manager_without_thread()
+                manager.config_path = Path(folder) / "config.json"
+                model = Path(folder) / "fixture.gguf"; model.write_bytes(b"never loaded")
+                parent, child = FakeConnection(), FakeConnection()
+                process = FakeProcess(alive=False)
+                process.start = mock.Mock(side_effect=error)
+                manager.context = mock.Mock()
+                manager.context.Pipe.return_value = (parent, child)
+                manager.context.Process.return_value = process
+                with self.assertRaises(lifecycle.WorkerFailure) as raised:
+                    manager._load({"id": "fixture", "path": str(model), "mode": "cpu"})
+                self.assertEqual(str(raised.exception), "Native worker startup failed; inspect its local log")
+                self.assertTrue(parent.closed and child.closed and process.closed)
+                self.assertIsNone(manager.child)
+                self.assertIsNone(manager.connection)
+                self.assertIsNone(manager.job)
+                self.assertIsNone(manager.ready)
+
+    def test_process_constructor_failure_closes_unassigned_channels(self):
+        with tempfile.TemporaryDirectory() as folder:
+            manager = manager_without_thread()
+            manager.config_path = Path(folder) / "config.json"
+            model = Path(folder) / "fixture.gguf"; model.write_bytes(b"never loaded")
+            parent, child = FakeConnection(), FakeConnection()
+            manager.context = mock.Mock()
+            manager.context.Pipe.return_value = (parent, child)
+            manager.context.Process.side_effect = OSError("PRIVATE_CONSTRUCTOR_PATH")
+            with self.assertRaises(lifecycle.WorkerFailure):
+                manager._load({"id": "fixture", "path": str(model), "mode": "cpu"})
+            self.assertTrue(parent.closed and child.closed)
+            self.assertIsNone(manager.child)
+            self.assertIsNone(manager.connection)
+
+    def test_failed_command_and_unload_sends_still_terminate_owned_worker(self):
+        manager = manager_without_thread()
+        process = manager.child = FakeProcess()
+        connection = manager.connection = FakeConnection(process)
+        connection.send = mock.Mock(side_effect=ConnectionResetError("PRIVATE_SEND_DETAIL"))
+        job = manager.job = FakeJob()
+        manager._load = mock.Mock(return_value=False)
+        with self.assertRaises(lifecycle.WorkerFailure) as raised:
+            next(manager.generate({"id": "fixture", "mode": "cpu"}, {}))
+        self.assertEqual(str(raised.exception), "Native worker command IPC failed; inspect its local log")
+        self.assertTrue(process.terminated and process.closed and connection.closed and job.closed)
+        self.assertIsNone(manager.child)
+        self.assertIsNone(manager.connection)
+
+    def test_poll_error_is_not_masked_by_failed_unload_send(self):
+        manager = manager_without_thread()
+        process = manager.child = FakeProcess()
+        connection = manager.connection = FakeConnection(process)
+        original_send = connection.send
+        def send(message):
+            if message["type"] == "unload":
+                raise BrokenPipeError("PRIVATE_CLEANUP_DETAIL")
+            original_send(message)
+        connection.send = send
+        connection.poll = mock.Mock(side_effect=ConnectionAbortedError("PRIVATE_POLL_DETAIL"))
+        job = manager.job = FakeJob()
+        manager._load = mock.Mock(return_value=False)
+        with self.assertRaises(lifecycle.WorkerFailure) as raised:
+            next(manager.generate({"id": "fixture", "mode": "cpu"}, {}))
+        self.assertEqual(str(raised.exception), "Native worker IPC failed; inspect its local log")
+        self.assertTrue(process.terminated and process.closed and connection.closed and job.closed)
+
+
 class RuntimeIntegrityTests(unittest.TestCase):
     def test_hashes_and_native_allowlist_are_both_required(self):
         content = b"fixture bytes, never a real DLL"

@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "kind": "installed automatic Raptor context acceptance",
+  "checks": [
+    {
+      "name": "automatic_8k_hybrid_long_history",
+      "passed": true
+    },
+    {
+      "name": "osaurus_route_uses_hybrid_8k_for_long_history",
+      "passed": true
+    },
+    {
+      "name": "concise_provider_label",
+      "passed": true
+    },
+    {
+      "name": "version_0_1_4",
+      "passed": true
+    },
+    {
+      "name": "native_worker_unloaded_after_validation",
+      "passed": true
+    }
+  ],
+  "profile": {
+    "id": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+    "mode": "hybrid",
+    "context": 8192,
+    "repack": false,
+    "context_policy": {
+      "default": 8192,
+      "maximum": 16384,
+      "training_limit": 1048576
+    },
+    "batch": 2048,
+    "microbatch": 512,
+    "threads": 6,
+    "batch_threads": 10
+  },
+  "direct": {
+    "answer": "{\"early\": \"95822412\", \"middle\": \"24942603\", \"late\": \"13356886\"}",
+    "usage": {
+      "prompt_tokens": 6379,
+      "completion_tokens": 39,
+      "total_tokens": 6418
+    },
+    "assist": {
+      "requested_mode": "hybrid",
+      "actual_mode": "hybrid",
+      "fallback_reason": null,
+      "cold_load": true,
+      "load_seconds_this_request": 8.091406499996083,
+      "load_stages": {
+        "runtime_verify_and_backend_seconds": 0.16207060001033824,
+        "metadata_and_template_seconds": 0.16486420000728685,
+        "primary": {
+          "model_seconds": 3.052806199993938,
+          "context_seconds": 4.110612599994056
+        },
+        "secondary_cpu": {
+          "model_seconds": 0.4679886000085389,
+          "context_seconds": 0.13163649999478366
+        }
+      },
+      "architecture": "spark2_5",
+      "context_length": 8192,
+      "metrics": {
+        "request_seconds": 20.154284499993082,
+        "format_seconds": 0.004499799993936904,
+        "tokenize_seconds": 0.03649720000976231,
+        "context_reset_seconds": 0.08736810000846162,
+        "prompt_seconds": 12.385824400000274,
+        "first_text_seconds": 12.540428899999824,
+        "first_token_seconds": 12.540129399989382,
+        "sampling_and_text_seconds": 0.5967662999901222,
+        "continuation_decode_seconds": 6.860297000035644,
+        "state_transfer_seconds": 0.17787349999707658,
+        "state_bytes": 348491424,
+        "native_decode_tokens_per_second": 5.68591031424131,
+        "token_count_convention": "sampled non-EOG output tokens; no billing",
+        "postprocess_seconds": 0.00011309998808428645
+      },
+      "settings_source": "osaurus",
+      "source_model": "Raptor-0.7-4B-Q6_K",
+      "settings": {
+        "applied": [
+          "batchSize",
+          "chatTemplateKwargs",
+          "frequencyPenalty",
+          "kvOffload",
+          "kvUnified",
+          "minP",
+          "opOffload",
+          "presencePenalty",
+          "repeatLastN",
+          "repeatPenalty",
+          "seed",
+          "swaFull",
+          "temperature",
+          "topK",
+          "topP",
+          "uBatchSize"
+        ],
+        "adapted": [
+          "cachePrompt",
+          "contextSize",
+          "flashAttention",
+          "loadMode",
+          "repack"
+        ],
+        "unsupported": []
+      },
+      "api_seconds": 28.437138099994627
+    },
+    "seconds": 28.457543600001372
+  },
+  "routed": {
+    "answer": "{\"early\": \"95822412\", \"middle\": \"24942603\", \"late\": \"13356886\"}",
+    "usage": {
+      "prompt_tokens": 6533,
+      "completion_tokens": 32,
+      "total_tokens": 6565
+    },
+    "companion_metrics": {
+      "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+      "requested_mode": "hybrid",
+      "actual_mode": "hybrid",
+      "fallback_reason": null,
+      "cold_load": false,
+      "load_seconds_this_request": 0,
+      "load_stages": null,
+      "architecture": "spark2_5",
+      "context_length": 8192,
+      "metrics": {
+        "request_seconds": 16.083574299991596,
+        "format_seconds": 0.0003887000057147816,
+        "tokenize_seconds": 0.020317799993790686,
+        "context_reset_seconds": 0.04256829999212641,
+        "prompt_seconds": 11.72754900000291,
+        "first_text_seconds": 11.805564900001627,
+        "first_token_seconds": 11.805527099990286,
+        "sampling_and_text_seconds": 0.5064943000179483,
+        "continuation_decode_seconds": 3.6557442999619525,
+        "state_transfer_seconds": 0.12762089999159798,
+        "state_bytes": 354170328,
+        "native_decode_tokens_per_second": 8.755712076069626,
+        "token_count_convention": "sampled non-EOG output tokens; no billing",
+        "postprocess_seconds": 1.7400001524947584e-05
+      },
+      "settings_source": "osaurus",
+      "source_model": "Raptor-0.7-4B-Q6_K",
+      "settings": {
+        "applied": [
+          "batchSize",
+          "chatTemplateKwargs",
+          "frequencyPenalty",
+          "kvOffload",
+          "kvUnified",
+          "minP",
+          "opOffload",
+          "presencePenalty",
+          "repeatLastN",
+          "repeatPenalty",
+          "seed",
+          "swaFull",
+          "temperature",
+          "topK",
+          "topP",
+          "uBatchSize"
+        ],
+        "adapted": [
+          "cachePrompt",
+          "contextSize",
+          "flashAttention",
+          "loadMode",
+          "repack"
+        ],
+        "unsupported": []
+      },
+      "api_seconds": 16.085619999998016
+    },
+    "seconds": 20.71273139999539
+  },
+  "version": "0.1.4",
+  "idle_policy": {
+    "mode": "osaurus",
+    "seconds": 300,
+    "status": "live",
+    "error": null,
+    "setting": "idleUnloadSeconds"
+  },
+  "expected": {
+    "early": "95822412",
+    "middle": "24942603",
+    "late": "13356886"
+  },
+  "synthetic_history_records": 409,
+  "passed": true
+}

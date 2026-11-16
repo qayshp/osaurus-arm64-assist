@@ -140,32 +140,45 @@ class Manager:
         self.child = self.connection = self.job = None
         self.ready = self.active_profile = self.fingerprint = None
         if child:
+            def alive():
+                try:
+                    return child.is_alive()
+                except (OSError, ValueError):
+                    return False
+
+            def attempt(action, *args, **kwargs):
+                try:
+                    action(*args, **kwargs)
+                except (EOFError, OSError, ValueError):
+                    # The worker can exit or lose its IPC endpoint between
+                    # observations. Cleanup must not mask the original failure.
+                    pass
             try:
-                if child.is_alive() and connection:
-                    connection.send({"type": "unload"}); child.join(timeout=5)
-                if child.is_alive():
-                    child.terminate(); child.join(timeout=3)
-                if child.is_alive():
-                    child.kill(); child.join(timeout=2)
+                if alive() and connection:
+                    attempt(connection.send, {"type": "unload"}); attempt(child.join, timeout=5)
+                if alive():
+                    attempt(child.terminate); attempt(child.join, timeout=3)
+                if alive():
+                    attempt(child.kill); attempt(child.join, timeout=2)
             finally:
                 if connection:
-                    connection.close()
+                    attempt(connection.close)
                 if job:
-                    job.close()
-                if not child.is_alive():
-                    child.close()
+                    attempt(job.close)
+                if not alive():
+                    attempt(child.close)
 
     def _receive(self, timeout):
         deadline = time.monotonic()+timeout
         while time.monotonic() < deadline:
-            if self.connection and self.connection.poll(.2):
-                try:
+            try:
+                if self.connection and self.connection.poll(.2):
                     return self.connection.recv()
-                except (EOFError, OSError) as error:
-                    raise WorkerFailure(self.failure or "Native worker exited; inspect its local log") from error
-            if not self.child or not self.child.is_alive():
-                raise WorkerFailure(self.failure or "Native worker exited; inspect its local log")
-        raise WorkerFailure("Native worker exceeded the configured response deadline")
+                if not self.child or not self.child.is_alive():
+                    raise WorkerFailure(self.failure or "Native worker exited; inspect its local log")
+            except (EOFError, OSError, ValueError) as error:
+                raise WorkerFailure(self.failure or "Native worker IPC failed; inspect its local log") from error
+        raise WorkerFailure(self.failure or "Native worker exceeded the configured response deadline")
 
     def _load(self, profile):
         if profile.get("mode") not in configuration.MODES:
@@ -184,20 +197,35 @@ class Manager:
             return False
         self._stop(); self.failure = None
         from .worker import entry
-        parent, child = self.context.Pipe()
-        log_path = self.config_path.parent/"logs"/("worker-"+uuid.uuid4().hex+".log")
-        process = self.context.Process(target=entry, args=(child, self.config["runtime_dir"], profile, str(log_path), os.getpid()), daemon=True)
-        self.child, self.connection = process, parent
-        process.start(); child.close(); self.job = WorkerJob(process.pid)
+        parent = child = None
         try:
+            parent, child = self.context.Pipe()
+            log_path = self.config_path.parent/"logs"/("worker-"+uuid.uuid4().hex+".log")
+            process = self.context.Process(target=entry, args=(child, self.config["runtime_dir"], profile, str(log_path), os.getpid()), daemon=True)
+            self.child, self.connection = process, parent
+            process.start(); child.close(); child = None
+            self.job = WorkerJob(process.pid)
             ready = self._receive(profile.get("load_timeout_seconds", 300))
             if ready.get("type") != "ready":
                 raise WorkerFailure(ready.get("message", "Model failed to initialize"))
             self.ready, self.active_profile, self.fingerprint = ready, profile["id"], fingerprint
             return True
+        except WorkerFailure:
+            self._stop()
+            raise
+        except (EOFError, OSError, ValueError, RuntimeError) as error:
+            self._stop()
+            raise WorkerFailure(self.failure or "Native worker startup failed; inspect its local log") from error
         except BaseException:
             self._stop()
             raise
+        finally:
+            for endpoint in (child, parent if parent is not self.connection else None):
+                if endpoint is not None:
+                    try:
+                        endpoint.close()
+                    except (OSError, ValueError):
+                        pass
 
     def generate(self, profile, request, *, token_ids=None):
         actual = profile
@@ -214,9 +242,12 @@ class Manager:
         command = {"type": "generate", "request": request}
         if token_ids is not None:
             command.update(type="benchmark", token_ids=token_ids)
-        self.connection.send(command)
         deadline = time.monotonic() + actual.get("request_timeout_seconds", 900)
         try:
+            try:
+                self.connection.send(command)
+            except (EOFError, OSError, ValueError) as error:
+                raise WorkerFailure(self.failure or "Native worker command IPC failed; inspect its local log") from error
             while True:
                 remaining = deadline - time.monotonic()
                 if remaining <= 0:

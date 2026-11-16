@@ -49,7 +49,8 @@ class ModelSettingsTests(unittest.TestCase):
                 mock.patch.object(Path, "open", side_effect=AssertionError("mapper must not open weights")):
             value = build_profile(*inputs, "synthetic.gguf")
         self.assertEqual(inputs, before)
-        self.assertEqual((value["mode"], value["context"], value["batch"], value["microbatch"]), ("hybrid", 2048, 2048, 512))
+        self.assertEqual((value["mode"], value["context"], value["batch"], value["microbatch"]), ("hybrid", 8192, 2048, 512))
+        self.assertEqual(value["context_policy"], {"default": 8192, "maximum": 16384, "training_limit": 1048576})
         self.assertEqual((value["threads"], value["batch_threads"]), (6, 10))
         self.assertEqual(value["sampling_defaults"], {"temperature": .8, "top_k": 40, "top_p": .95,
             "min_p": .05, "repeat_penalty": 1., "presence_penalty": 0., "frequency_penalty": 0.,
@@ -59,12 +60,37 @@ class ModelSettingsTests(unittest.TestCase):
         self.assertIsNone(value["_fallback_reason"])
         self.assertEqual(value["_osaurus"], {"model_id": "Synthetic-Raptor-Q6_K"})
 
+    def test_longer_raptor_hybrid_context_uses_same_weights_without_repack(self):
+        value = profile()
+        self.assertEqual((value["mode"], value["context"], value["repack"]), ("hybrid", 8192, False))
+        self.assertIn("repack", value["sync"]["adapted"])
+        self.assertEqual(value["path"], "synthetic.gguf")
+        value = profile(s=settings({"contextSize": 4096}))
+        self.assertEqual((value["mode"], value["context"], value["repack"]), ("hybrid", 4096, True))
+        self.assertEqual(profile(s=settings({"contextSize": 4096, "repack": True}))["mode"], "hybrid")
+
+    def test_explicit_repack_preference_is_honored_or_delegates_at_larger_hybrid_context(self):
+        value = profile(s=settings({"contextSize": 8192, "repack": False}))
+        self.assertEqual((value["mode"], value["repack"]), ("hybrid", False))
+        self.assertIn("repack", value["sync"]["applied"])
+        value = profile(s=settings({"contextSize": 8192, "repack": True}))
+        self.assertEqual((value["mode"], value["context"], value["repack"]), ("osaurus", 8192, True))
+        self.assertEqual(value["_fallback_reason"], "hybrid_context_repack_memory_policy")
+        self.assertIn("repack", value["sync"]["unsupported"])
+
+    def test_larger_hybrid_repack_policy_leaves_cpu_and_expert_defaults_unchanged(self):
+        cpu = profile(mode="cpu")
+        self.assertEqual((cpu["mode"], cpu["context"], cpu["repack"]), ("cpu", 2048, True))
+        ornith = profile(entry(architecture="qwen35moe", quantization="Q4_K_M", sizeBytes=21713463040))
+        self.assertEqual((ornith["mode"], ornith["context"], ornith["repack"]), ("cpu-experts", 2048, False))
+
     def test_known_ornith_quantizations_choose_experts_without_repack(self):
         for quant in ("Q4_K_M", "Q2_K"):
             with self.subTest(quant=quant):
                 value = profile(entry(architecture="qwen35moe", quantization=quant, sizeBytes=21713463040),
                     r=resolved(temperature="0.6", top_k="20", chat_template_kwargs='{"preserve_thinking":true}'))
                 self.assertEqual(value["mode"], "cpu-experts")
+                self.assertEqual(value["context"], 2048)
                 self.assertFalse(value["repack"])
                 self.assertEqual(value["sampling_defaults"]["temperature"], .6)
                 self.assertEqual(value["template_kwargs"], {"preserve_thinking": True})
@@ -85,11 +111,60 @@ class ModelSettingsTests(unittest.TestCase):
     def test_explicit_context_and_global_context_are_honored_or_use_stock_engine(self):
         self.assertEqual(profile(s=settings({"contextSize": 1024}))["context"], 1024)
         self.assertEqual(profile(runtime={"localContextSize": 1536})["context"], 1536)
-        value = profile(s=settings({"contextSize": 8192}), r=resolved(context_size="8192"))
-        self.assertEqual((value["mode"], value["context"]), ("osaurus", 8192))
+        value = profile(s=settings({"contextSize": 32768}), r=resolved(context_size="32768"))
+        self.assertEqual((value["mode"], value["context"]), ("osaurus", 32768))
         self.assertIn("contextSize", value["sync"]["unsupported"])
         self.assertEqual(profile(s=settings({"contextSize": 1024}), runtime={"localContextSize": 8192})["mode"], "hybrid")
         self.assertEqual(profile(s=settings({"contextSize": "1024"}))["mode"], "osaurus")
+
+    def test_raptor_hybrid_explicit_context_policy_boundaries(self):
+        for context in (4096, 8192, 16384):
+            with self.subTest(context=context):
+                value = profile(s=settings({"contextSize": context}))
+                self.assertEqual((value["mode"], value["context"]), ("hybrid", context))
+                self.assertIn("contextSize", value["sync"]["applied"])
+        for context in (16385, 32768, 131072):
+            with self.subTest(context=context):
+                value = profile(s=settings({"contextSize": context}), r=resolved(context_size="131072"))
+                self.assertEqual((value["mode"], value["context"]), ("osaurus", context))
+                self.assertEqual(value["_fallback_reason"], "context_outside_validated_range")
+                self.assertEqual(value["context_policy"]["maximum"], 16384)
+
+    def test_global_context_and_per_model_override_follow_the_same_hybrid_policy(self):
+        for context in (4096, 8192, 16384):
+            with self.subTest(context=context):
+                value = profile(runtime={"localContextSize": context})
+                self.assertEqual((value["mode"], value["context"]), ("hybrid", context))
+        value = profile(s=settings({"contextSize": 8192}), runtime={"localContextSize": 32768})
+        self.assertEqual((value["mode"], value["context"]), ("hybrid", 8192))
+        value = profile(runtime={"localContextSize": 32768})
+        self.assertEqual((value["mode"], value["context"]), ("osaurus", 32768))
+
+    def test_training_metadata_caps_native_default_and_explicit_context(self):
+        value = profile(entry(contextLength=4096))
+        self.assertEqual((value["mode"], value["context"]), ("hybrid", 4096))
+        self.assertEqual(value["context_policy"], {"default": 4096, "maximum": 4096, "training_limit": 4096})
+        value = profile(entry(contextLength=4096), s=settings({"contextSize": 8192}))
+        self.assertEqual((value["mode"], value["context"]), ("osaurus", 8192))
+        value = profile(entry(_gguf={"architecture": "spark2_5", "quantization": "Q6_K", "context_length": 2048,
+                                   "has_chat_template": True}))
+        self.assertEqual((value["mode"], value["context"]), ("hybrid", 2048))
+        self.assertEqual(value["context_policy"]["maximum"], 2048)
+
+    def test_longer_context_policy_does_not_promote_other_modes_models_or_quantizations(self):
+        for mode in ("cpu", "npu", "gpu"):
+            with self.subTest(mode=mode):
+                self.assertEqual(profile(mode=mode)["context"], 2048)
+                value = profile(mode=mode, s=settings({"contextSize": 4096}))
+                self.assertEqual((value["mode"], value["context"]), ("osaurus", 4096))
+        value = profile(entry(architecture="qwen35moe", quantization="Q4_K_M", sizeBytes=21713463040),
+                        s=settings({"contextSize": 4096}))
+        self.assertEqual((value["mode"], value["context"]), ("osaurus", 4096))
+        for e in (entry(architecture="unknown"), entry(quantization="Q4_K_M")):
+            with self.subTest(entry=e):
+                value = profile(e)
+                self.assertEqual((value["mode"], value["context"]), ("osaurus", 131072))
+                self.assertEqual(value["context_policy"]["maximum"], 2048)
 
     def test_proxy_context_rejects_plan_above_training_or_invalid_display(self):
         value = profile(entry(architecture="unknown", contextLength=8192, bestFitContext=4096), r=resolved(context_size="131072"))
@@ -119,13 +194,21 @@ class ModelSettingsTests(unittest.TestCase):
         self.assertEqual(profile(entry(architecture="unknown"), mode="hybrid")["mode"], "osaurus")
 
     def test_user_native_fields_and_f16_cache_settings_apply(self):
-        value = profile(s=settings({"threads": 4, "batchThreads": 8, "batchSize": 1024,
+        value = profile(s=settings({"contextSize": 2048, "threads": 4, "batchThreads": 8, "batchSize": 1024,
             "uBatchSize": 256, "flashAttention": False, "cacheTypeK": "F16", "cacheTypeV": "f16",
             "kvOffload": False, "opOffload": False, "kvUnified": False, "swaFull": True}))
         self.assertEqual((value["threads"], value["batch_threads"], value["batch"], value["microbatch"]), (4, 8, 1024, 256))
         self.assertFalse(value["flash_attention"]); self.assertFalse(value["kv_offload"])
         self.assertFalse(value["op_offload"]); self.assertFalse(value["kv_unified"]); self.assertTrue(value["swa_full"])
         self.assertEqual(value["mode"], "hybrid")
+
+    def test_long_hybrid_full_swa_preserves_preference_on_stock_engine(self):
+        for context in (4096, 8192, 16384):
+            with self.subTest(context=context):
+                value = profile(s=settings({"contextSize": context, "swaFull": True}))
+                self.assertEqual((value["mode"], value["context"]), ("osaurus", context))
+                self.assertEqual(value["_fallback_reason"], "hybrid_context_swa_memory_policy")
+                self.assertIn("swaFull", value["sync"]["unsupported"])
 
     def test_explicit_incompatible_settings_do_not_get_silently_ignored(self):
         changes = [{"cacheTypeK": "q8_0"}, {"cacheTypeV": "q4_0"}, {"useMmap": False},

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "kind": "provider-label-migration",
+  "issue": "https://github.com/qayshp/osaurus-arm64-assist/issues/1",
+  "pull_request": "https://github.com/qayshp/osaurus-arm64-assist/pull/2",
+  "merge_commit": "397a5e26875fe248892227961fa9d357dc90241a",
+  "old_name": "Osaurus ARM64 Assist",
+  "new_name": "NPU Hybrid",
+  "provider_id_preserved": true,
+  "credential_reference_preserved": true,
+  "registered_model_ids_preserved": true,
+  "matching_provider_count": 1,
+  "api_label_verified": true,
+  "no_duplicate_provider": true,
+  "scope": "Installed migration observations; no raw provider configuration, credentials or chat content included.",
+  "visible_in_osaurus_model_sidebar": true,
+  "ui_model_context_display": "raptor-hybrid; 2.4K of 7K input budget shown under the 8K model limit"
+}
