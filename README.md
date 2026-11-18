@@ -8,6 +8,8 @@ The companion exposes the **NPU Hybrid** provider in Osaurus. It automatically f
 
 This repository contains source, setup scripts and sanitized experimental evidence; it contains no model weights or native runtime binaries. See [model and settings sharing](docs/model-sharing.md) for compatibility, context, offline behavior and fixed benchmark profiles. The [new live acceptance receipts](docs/companion-acceptance.md#automatic-model-and-settings-acceptance) include working inference, settings changes and failed short-budget Qwen answer checks. The [release listing](https://github.com/qayshp/osaurus-arm64-assist/releases) identifies published builds.
 
+**Windows version check, November 18, 2026:** companion 0.1.4 passed seven Raptor Auto 8K hybrid checks directly and the same seven through **Osaurus for Windows 1.0.4.0**. Fresh companion metrics confirmed the routed requests used hybrid execution without a stock-engine fallback. This verifies the tested path on this laptop; historical CPU/GPU/NPU timing tables retain their original application/runtime versions. See [Windows 1.0.4 compatibility](docs/osaurus-1.0.4-compatibility.md) for the receipt, routing/metrics details, new Pi RPC agent support and the separate installed InferSSD retest.
+
 Companion 0.1.2 adds automatic lifecycle management: the normal installer enables a small hidden watcher for your Windows sign-in. It starts the companion server when you open the official Store version of Osaurus and stops it after Osaurus actually quits. Closing to the tray keeps Osaurus running. Models still load only when you request inference, and their idle interval follows your existing Osaurus setting.
 
 ## Why offer assistance?
@@ -49,7 +51,7 @@ The same GGUF can have multiple profiles without copying its weights. Discovery 
 - Windows ARM64 on appropriate Snapdragon hardware, with supported OEM/Windows NPU, GPU and FastRPC drivers. Use Windows Update or the device manufacturer's supported route for hardware-driver updates.
 - **Native ARM64 CPython 3.11 or newer**, including `venv` and `pip`. Use an ARM64 Windows build from [python.org](https://www.python.org/downloads/windows/). An x64 Python running under emulation cannot load the ARM64 native libraries. Installation detects the interpreter and accepts an explicit `-PythonPath` when needed.
 - Windows PowerShell 5.1 or later, and Git if cloning the repository.
-- Osaurus for Windows with the custom-provider/CLI configuration support used by these scripts. The observed application version was 1.0.3; this is not a promise that every application release has the same CLI/schema.
+- Osaurus for Windows with the custom-provider/CLI configuration support used by these scripts. Initial acceptance used 1.0.3; the Raptor Auto 8K hybrid route was rechecked on 1.0.4.0. See the [version-qualified compatibility record](docs/osaurus-1.0.4-compatibility.md); internal CLI/API schemas still need checking after application updates.
 - A separately acquired, compatible GGUF already on disk. Respect its publisher's license and access conditions. The commands below reuse existing Osaurus downloads and download no weights.
 - Trusted signed HTP/DSP library provisioning for NPU execution. This is distinct from downloading the runtime or updating the hardware driver.
 
@@ -127,7 +129,7 @@ Starting with companion 0.1.1, set the idle interval in **Osaurus â†’ Settings â
 
 The companion tracks activity for its own model worker. Inference keeps that worker active; health checks, model discovery and preference polling leave its idle clock unchanged. Idle expiry waits for inference to finish. A previously read value is cached for the same Osaurus endpoint, including a zero/never value across companion restarts. If no valid value is available, the default fallback is 300 seconds. `Status.ps1 -Json` reports whether the effective policy is live, cached, fallback or a deliberate fixed override.
 
-See [idle policy and diagnostics](docs/idle-policy.md) for offline behavior, alternate Osaurus profiles and the advanced fixed override. Automatic following uses an internal Windows app API observed on Osaurus 1.0.3; it validates the response and reports a fallback if that interface changes. The packaged 0.1.0 acceptance records below retain their original version and behavior.
+See [idle policy and diagnostics](docs/idle-policy.md) for offline behavior, alternate Osaurus profiles and the advanced fixed override. Automatic following uses an internal Windows app API first observed on Osaurus 1.0.3; the 1.0.4.0 recheck also read the live idle preference successfully. It validates the response and reports a fallback if that interface changes. The packaged 0.1.0 acceptance records below retain their original version and behavior.
 
 ## Protocol and acceptance status
 
@@ -136,6 +138,8 @@ The native implementation includes text chat, multi-turn conversations using emb
 Automated tests cover request/config validation, embedded Spark/Qwen history rendering, tool delimiters inside JSON strings, schema validation, Unicode streaming, HTTP errors/authentication, serial request admission, worker lifecycle, runtime integrity and model-preserving registry/backup operations. These tests use synthetic files and mocked native workers. **They do not establish physical NPU execution or full Osaurus agent compatibility.**
 
 The packaged **0.1.0** companion was also exercised on the documented Snapdragon laptop. Raptor hybrid passed seven synthetic checks directly and the same seven through Osaurus 1.0.3, including a prompt longer than one native batch, conversation history, Unicode SSE, forced tool calls with a tool-result round trip, and JSON-object output. Ornith Q4 passed arithmetic and Unicode streaming in both CPU-expert/NPU and CPU-expert/Adreno modes. Clean removal and reinstall preserved the existing Osaurus configuration and model files, restored seven profiles, and rotated the installation credential. The small Qwen control's exact-answer failures are retained too. See [packaged companion acceptance](docs/companion-acceptance.md) for the receipts, timing boundaries and limits. Newer automatic model/settings acceptance is tracked separately; earlier passes do not certify that phase, every Osaurus agent or every model.
+
+The **0.1.4 / Windows 1.0.4.0** recheck passed all fourteen Raptor checks using the automatically shared profile at 8192 context. Through-app execution attribution comes from a fresh companion `/metrics` record around each serial request because Osaurus normalizes away the private `assist` response extension. The [new compatibility record](docs/osaurus-1.0.4-compatibility.md) preserves that distinction; a coherent answer or a provider listing alone does not establish the execution route.
 
 Historical arithmetic and exact fact-extraction answers were checked. Free-form replies/summaries were timed, not comprehensively quality-graded. Long-term stability, large contexts, sleep/resume, thermal behavior and energy per answer remain unproven. See [support and troubleshooting](docs/support-and-troubleshooting.md).
 
@@ -186,6 +190,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Uninstall.ps1 
 - [Idle policy](docs/idle-policy.md): automatic Osaurus preference following, cached/offline behavior and status diagnostics.
 - [Automatic lifecycle](docs/automatic-lifecycle.md): the owned login shortcut, app/tray/quit behavior and manual controls.
 - [Models and settings](docs/model-sharing.md): automatic inventory, inherited preferences, stock-engine fallback, offline state and benchmark opt-outs.
+- [Windows 1.0.4 compatibility](docs/osaurus-1.0.4-compatibility.md): current Raptor acceptance, official Windows release changes, routing attribution and the installed InferSSD retest.
 
 `runtime.lock.json` pins the official GenieX **0.11.0** Windows ARM64 archive and every required native-file SHA-256. Its llama.cpp core revision is `93cf736a8d1d46aa922e27eb64aa712bcd5ebc30`; the Python declarations and packaged native allowlist are tied to it. `requirements.lock` pins Python distributions and hashes. These are reproducibility pins, not a claim that the versions are the newest available. Do not mix arbitrary replacement DLLs or DSP payloads into the bundle.
 

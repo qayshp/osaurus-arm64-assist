@@ -1,0 +1,2176 @@
+{
+  "schema_version": 1,
+  "kind": "installed-version compatibility revalidation",
+  "date_utc": "2026-11-18",
+  "hardware": "Surface Laptop 7, Snapdragon X Plus X1P64100, Adreno X1-85, Hexagon v73, 16 GB RAM",
+  "versions": {
+    "osaurus_windows": "1.0.4.0",
+    "osaurus_assembly_commit": "81f0fc69a1ef4f42c19879087ac2a08fc097ccb2",
+    "companion": "0.1.4",
+    "companion_source_commit": "a6ea94d196e3bd802f8b6f2b6b44e48308c3d908",
+    "companion_native_core": "93cf736a8d1d46aa922e27eb64aa712bcd5ebc30",
+    "stock_osaurus_cpu_engine": "b12359 / b1b770d90 / Windows arm64 / Clang 20.1.8",
+    "wici_desktop": "0.1.3 x64",
+    "installed_inferssd": "261113.266.e91c7d7 x64 Vulkan"
+  },
+  "windows_release_notes": {
+    "version": "1.0.4",
+    "source": "http[local-path]",
+    "cross_check": "The matching whats-new.json embedded in the installed Windows package",
+    "features": [
+      "Review and undo upstream GitHub skill updates while preserving local edits",
+      "Run agent conversations with an installed program implementing Pi RPC"
+    ],
+    "fix_categories": [
+      "Speech model download",
+      "Long initial workflow setup",
+      "Command-capable agent delegation",
+      "Accurate available-tool reporting",
+      "Network peer loss",
+      "Invite handling during dialogs"
+    ]
+  },
+  "integration": {
+    "provider": {
+      "id": "prov-e000bcf60f3c",
+      "name": "NPU Hybrid",
+      "kind": null,
+      "type": "OpenAiCompatible",
+      "providerType": null,
+      "enabled": true
+    },
+    "idle_seconds_live": 300,
+    "model_sync": {
+      "source": "osaurus",
+      "status": "live",
+      "error": null,
+      "inventory_models": 4,
+      "excluded_models": 2,
+      "pending_downloads": 0,
+      "revision": 1,
+      "automatic_profiles": 4,
+      "manual_profiles": 7,
+      "native_profiles": 10,
+      "proxy_profiles": 1
+    },
+    "automatic_profiles": [
+      {
+        "id": "osaurus/Ornith-1.5-35B-A3B-Q2_K-31b0889eeec7531e",
+        "mode": "cpu-experts",
+        "context": 2048,
+        "synced": true,
+        "settings_source": "osaurus",
+        "fallback_reason": null,
+        "sync": {
+          "applied": [
+            "batchSize",
+            "frequencyPenalty",
+            "kvOffload",
+            "kvUnified",
+            "minP",
+            "opOffload",
+            "presencePenalty",
+            "repeatLastN",
+            "repeatPenalty",
+            "seed",
+            "swaFull",
+            "temperature",
+            "topK",
+            "topP",
+            "uBatchSize"
+          ],
+          "adapted": [
+            "cachePrompt",
+            "contextSize",
+            "flashAttention",
+            "loadMode",
+            "repack"
+          ],
+          "unsupported": []
+        }
+      },
+      {
+        "id": "osaurus/Ornith-1.5-35B-Q4_K_M-245fb0724ab09d51",
+        "mode": "cpu-experts",
+        "context": 2048,
+        "synced": true,
+        "settings_source": "osaurus",
+        "fallback_reason": null,
+        "sync": {
+          "applied": [
+            "batchSize",
+            "chatTemplateKwargs",
+            "frequencyPenalty",
+            "kvOffload",
+            "kvUnified",
+            "minP",
+            "opOffload",
+            "presencePenalty",
+            "repeatLastN",
+            "repeatPenalty",
+            "seed",
+            "swaFull",
+            "temperature",
+            "topK",
+            "topP",
+            "uBatchSize"
+          ],
+          "adapted": [
+            "cachePrompt",
+            "contextSize",
+            "flashAttention",
+            "loadMode",
+            "repack"
+          ],
+          "unsupported": []
+        }
+      },
+      {
+        "id": "osaurus/Qwen3-0.6B-Q4_0-abde4d1f386faf1b",
+        "mode": "osaurus",
+        "context": 40960,
+        "synced": true,
+        "settings_source": "osaurus",
+        "fallback_reason": "native_compatibility_unverified",
+        "sync": {
+          "applied": [
+            "batchSize",
+            "frequencyPenalty",
+            "kvOffload",
+            "kvUnified",
+            "minP",
+            "opOffload",
+            "presencePenalty",
+            "repeatLastN",
+            "repeatPenalty",
+            "seed",
+            "swaFull",
+            "temperature",
+            "topK",
+            "topP",
+            "uBatchSize"
+          ],
+          "adapted": [
+            "contextSize",
+            "flashAttention",
+            "loadMode"
+          ],
+          "unsupported": []
+        }
+      },
+      {
+        "id": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+        "mode": "hybrid",
+        "context": 8192,
+        "synced": true,
+        "settings_source": "osaurus",
+        "fallback_reason": null,
+        "sync": {
+          "applied": [
+            "batchSize",
+            "chatTemplateKwargs",
+            "frequencyPenalty",
+            "kvOffload",
+            "kvUnified",
+            "minP",
+            "opOffload",
+            "presencePenalty",
+            "repeatLastN",
+            "repeatPenalty",
+            "seed",
+            "swaFull",
+            "temperature",
+            "topK",
+            "topP",
+            "uBatchSize"
+          ],
+          "adapted": [
+            "cachePrompt",
+            "contextSize",
+            "flashAttention",
+            "loadMode",
+            "repack"
+          ],
+          "unsupported": []
+        }
+      }
+    ],
+    "source_model_residency_before": [
+      {
+        "id": "embeddinggemma-300M-Q8_0",
+        "state": "cold"
+      },
+      {
+        "id": "model.q8",
+        "state": "cold"
+      },
+      {
+        "id": "Ornith-1.5-35B-A3B-Q2_K",
+        "state": "cold"
+      },
+      {
+        "id": "Ornith-1.5-35B-Q4_K_M",
+        "state": "cold"
+      },
+      {
+        "id": "Qwen3-0.6B-Q4_0",
+        "state": "cold"
+      },
+      {
+        "id": "Raptor-0.7-4B-Q6_K",
+        "state": "cold"
+      }
+    ],
+    "startup": "watcher waiting while app absent; automatically healthy when Osaurus 1.0.4 started",
+    "shutdown": {
+      "running": false,
+      "supervisor_running": true,
+      "supervisor_status": "waiting",
+      "osaurus_app_state": "absent",
+      "automatic_error": null
+    }
+  },
+  "raptor_acceptance": {
+    "kind": "synthetic API regression checks",
+    "profile": {
+      "id": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+      "mode": "hybrid",
+      "context": 8192,
+      "synced": true,
+      "settings_source": "osaurus",
+      "fallback_reason": null,
+      "sync": {
+        "applied": [
+          "batchSize",
+          "chatTemplateKwargs",
+          "frequencyPenalty",
+          "kvOffload",
+          "kvUnified",
+          "minP",
+          "opOffload",
+          "presencePenalty",
+          "repeatLastN",
+          "repeatPenalty",
+          "seed",
+          "swaFull",
+          "temperature",
+          "topK",
+          "topP",
+          "uBatchSize"
+        ],
+        "adapted": [
+          "cachePrompt",
+          "contextSize",
+          "flashAttention",
+          "loadMode",
+          "repack"
+        ],
+        "unsupported": []
+      }
+    },
+    "routing_id": "prov-e000bcf60f3c/osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+    "scope": "Native route metadata and handoff metrics; no independent physical NPU counter sample",
+    "mode_evidence_provenance": {
+      "direct_companion": "response.assist",
+      "through_osaurus_104": "fresh companion /metrics before/after each serial app request; private assist extension is normalized out of app responses"
+    },
+    "cases": [
+      {
+        "case": "arithmetic",
+        "target": "direct_companion",
+        "request": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Reply with only the answer: what is 17 + 25?"
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 24
+        },
+        "expected": "42",
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "42"
+          },
+          "finish_reason": "stop"
+        },
+        "usage": {
+          "prompt_tokens": 32,
+          "completion_tokens": 2,
+          "total_tokens": 34
+        },
+        "client_timing": {
+          "headers_seconds": 22.175085099996068,
+          "complete_seconds": 22.1765321999992
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": true,
+          "load_seconds_this_request": 17.35729739999806,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 4.5923216999945,
+          "format_seconds": 0.0028975000022910535,
+          "tokenize_seconds": 0.009456800005864352,
+          "context_reset_seconds": 0.010539899987634271,
+          "prompt_seconds": 0.9136127999954624,
+          "first_text_seconds": 0.9394408999942243,
+          "first_token_seconds": 0.9385304999887012,
+          "sampling_and_text_seconds": 0.002727899991441518,
+          "continuation_decode_seconds": 3.64561560000584,
+          "state_transfer_seconds": 0.0059779000002890825,
+          "state_bytes": 4720284,
+          "native_decode_tokens_per_second": 0.5486348319476646,
+          "postprocess_seconds": 5.399997462518513e-06
+        },
+        "load_stages": {
+          "runtime_verify_and_backend_seconds": 0.47514910000609234,
+          "metadata_and_template_seconds": 0.16304450000461657,
+          "primary": {
+            "model_seconds": 9.34917879999557,
+            "context_seconds": 6.844735099992249
+          },
+          "secondary_cpu": {
+            "model_seconds": 0.3884825999994064,
+            "context_seconds": 0.12904390000039712
+          }
+        },
+        "failure_category": null
+      },
+      {
+        "case": "unicode_sse",
+        "target": "direct_companion",
+        "request": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Reply with exactly this text, without quotes: café 你好"
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 24,
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "expected": "café 你好",
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "message": {
+            "role": "assistant",
+            "content": "café 你好"
+          },
+          "finish_reason": "stop"
+        },
+        "usage": {
+          "prompt_tokens": 28,
+          "completion_tokens": 5,
+          "total_tokens": 33
+        },
+        "client_timing": {
+          "headers_seconds": 0.32708780000393745,
+          "first_wire_line_seconds": 0.3271361000079196,
+          "first_text_seconds": 0.32719660000293516,
+          "complete_seconds": 0.6088968999974895
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 0.5802218000026187,
+          "format_seconds": 0.0003837999975075945,
+          "tokenize_seconds": 0.01435890000720974,
+          "context_reset_seconds": 0.0887318999884883,
+          "prompt_seconds": 0.19391989998985082,
+          "first_text_seconds": 0.2981400999997277,
+          "first_token_seconds": 0.29807760000403505,
+          "sampling_and_text_seconds": 0.002691200017579831,
+          "continuation_decode_seconds": 0.27111830000649206,
+          "state_transfer_seconds": 0.0077815999975427985,
+          "state_bytes": 4130364,
+          "native_decode_tokens_per_second": 18.45488334668237,
+          "postprocess_seconds": 2.5000044843181968e-06
+        },
+        "load_stages": {},
+        "failure_category": null
+      },
+      {
+        "case": "conversation_history",
+        "target": "direct_companion",
+        "request": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Follow the conversation and preserve the user's code."
+            },
+            {
+              "role": "user",
+              "content": "The code for this conversation is ORCHID42. Remember it."
+            },
+            {
+              "role": "assistant",
+              "content": "I will remember the code."
+            },
+            {
+              "role": "user",
+              "content": "What is the code? Reply with only the code."
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 48
+        },
+        "expected": "ORCHID42",
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "ORCHID42"
+          },
+          "finish_reason": "stop"
+        },
+        "usage": {
+          "prompt_tokens": 67,
+          "completion_tokens": 5,
+          "total_tokens": 72
+        },
+        "client_timing": {
+          "headers_seconds": 0.5381634000077611,
+          "complete_seconds": 0.538415700008045
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 0.5103105000016512,
+          "format_seconds": 0.0002268999960506335,
+          "tokenize_seconds": 0.010721800004830584,
+          "context_reset_seconds": 0.012271699990378693,
+          "prompt_seconds": 0.20383009999932256,
+          "first_text_seconds": 0.22777519999362994,
+          "first_token_seconds": 0.22751509999216069,
+          "sampling_and_text_seconds": 0.0017091000045184046,
+          "continuation_decode_seconds": 0.27167699999699835,
+          "state_transfer_seconds": 0.009368700004415587,
+          "state_bytes": 9882084,
+          "native_decode_tokens_per_second": 18.415527973186993,
+          "postprocess_seconds": 1.700012944638729e-06
+        },
+        "load_stages": {},
+        "failure_category": null
+      },
+      {
+        "case": "harbor_extract",
+        "target": "direct_companion",
+        "request": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Request 1.\nProject Harbor launch handoff, collected messages:\nMonday, 09:00, Alex: The draft landing page is ready. Design has approved the new illustrations, but that approval does not cover the release notes. We can ship the website without the optional animated header. Please do not delay the launch for that animation.\nMonday, 10:15, Priya: The mobile layout passed checks at three screen sizes. The signup button is visible at each size. There is one cosmetic issue in the footer; I have moved it to the next release because it does not prevent signup.\nMonday, 11:40, Maya: I will own the final Harbor release notes. My first draft is due Thursday at noon. This is a draft deadline, not the deadline for the final approved version. Alex will review it after the draft is ready.\nMonday, 14:10, Sam: The newsletter campaign is called Cedar. Its owner is Noah and its deadline is Wednesday at 15:00. Cedar is a separate campaign. It does not change any Harbor deadline or owner.\nTuesday, 08:45, Alex: The Harbor pricing table still uses last month's figures. Finance needs to sign off the replacement before the landing page can go live. Everything else on the page is approved. The footer cosmetic issue is still deferred.\nTuesday, 09:20, Noah: Cedar newsletter copy is approved. The email send test passed. I will export the audience list on Wednesday morning, before the Cedar deadline. No action is required from Maya for this campaign.\nTuesday, 11:00, Priya: The signup flow works on desktop and mobile. I tested a new account and a returning account. Both received the expected confirmation email. We should keep the existing signup flow for the launch.\nTuesday, 13:30, Maya: My draft is on track. Please send corrections in one thread so that we do not merge competing edits. The approved final Harbor release notes are due Friday at 16:00. I still own them. Thursday noon is only the draft milestone.\nWednesday, 09:00, Alex: Finance has not yet approved the revised Harbor pricing table. That is the only remaining blocker for the landing page. The notes deadline remains Friday at 16:00. We can publish the notes even if the optional header animation is unfinished.\nWednesday, 10:10, Sam: We are also planning a project called Birch for next month. Its planning session is on Tuesday at 14:00. Birch has no shared release milestone with Harbor, and its planning invitation should not be added to the Harbor release checklist.\nWednesday, 11:45, Priya: I have documented the footer issue for the next release. No new launch blockers appeared in this morning's checks. Screenshots and test results are in the project folder. The signoff request for pricing is still with Finance.\nWednesday, 12:00, Maya: I confirm that I own the approved final Harbor release notes, due Friday at 16:00. Alex remains the reviewer. Please use this message if an earlier calendar invitation gives a different time.\n\nWho owns the approved final Harbor release notes, and when are they due? Reply with only the owner, weekday, and time, separated by vertical bars. Do not include the draft deadline."
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 48
+        },
+        "expected": {
+          "answer": "Maya|Friday|16:00",
+          "minimum_prompt_tokens_exclusive": 512
+        },
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "long_prompt_over_512_tokens": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "Maya|Friday|16:00"
+          },
+          "finish_reason": "stop"
+        },
+        "usage": {
+          "prompt_tokens": 750,
+          "completion_tokens": 10,
+          "total_tokens": 760
+        },
+        "client_timing": {
+          "headers_seconds": 2.176421800002572,
+          "complete_seconds": 2.1766330000100425
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 2.1702377000037814,
+          "format_seconds": 0.00018829999316949397,
+          "tokenize_seconds": 0.030800900000031106,
+          "context_reset_seconds": 0.008914399993955158,
+          "prompt_seconds": 1.2221288999862736,
+          "first_text_seconds": 1.2625123000034364,
+          "first_token_seconds": 1.2624439999926835,
+          "sampling_and_text_seconds": 0.0032244999893009663,
+          "continuation_decode_seconds": 0.8515805000206456,
+          "state_transfer_seconds": 0.05233030000817962,
+          "state_bytes": 110610924,
+          "native_decode_tokens_per_second": 11.748161706396992,
+          "postprocess_seconds": 3.5999983083456755e-06
+        },
+        "load_stages": {},
+        "failure_category": null
+      },
+      {
+        "case": "forced_tool",
+        "target": "direct_companion",
+        "request": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Use add_numbers to add 17 and 25."
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 128,
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "add_numbers",
+                "description": "Add two integers.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "a": {
+                      "type": "integer"
+                    },
+                    "b": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "a",
+                    "b"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          ],
+          "tool_choice": {
+            "type": "function",
+            "function": {
+              "name": "add_numbers"
+            }
+          }
+        },
+        "expected": {
+          "function": "add_numbers",
+          "arguments": {
+            "a": 17,
+            "b": 25
+          }
+        },
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_34cc354185b742528f70",
+                "type": "function",
+                "function": {
+                  "name": "add_numbers",
+                  "arguments": "{\"a\": 17, \"b\": 25}"
+                }
+              }
+            ]
+          },
+          "finish_reason": "tool_calls"
+        },
+        "usage": {
+          "prompt_tokens": 123,
+          "completion_tokens": 19,
+          "total_tokens": 142
+        },
+        "client_timing": {
+          "headers_seconds": 1.6966951999929734,
+          "complete_seconds": 1.6970144999941112
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 1.6449479000002611,
+          "format_seconds": 0.00189200000022538,
+          "tokenize_seconds": 0.008729900000616908,
+          "context_reset_seconds": 0.07510449999244884,
+          "prompt_seconds": 0.2541817000019364,
+          "first_text_seconds": 0.3751409000105923,
+          "first_token_seconds": 0.37508170001092367,
+          "sampling_and_text_seconds": 0.19327309996879194,
+          "continuation_decode_seconds": 1.0925985000067158,
+          "state_transfer_seconds": 0.013590099988505244,
+          "state_bytes": 18140964,
+          "native_decode_tokens_per_second": 17.399649809153313,
+          "postprocess_seconds": 0.023844100011046976
+        },
+        "load_stages": {},
+        "failure_category": null
+      },
+      {
+        "case": "tool_roundtrip",
+        "target": "direct_companion",
+        "request": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Use add_numbers to add 17 and 25."
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "tool_calls": [
+                {
+                  "id": "call_34cc354185b742528f70",
+                  "type": "function",
+                  "function": {
+                    "name": "add_numbers",
+                    "arguments": "{\"a\": 17, \"b\": 25}"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "tool_call_id": "call_34cc354185b742528f70",
+              "content": "42"
+            },
+            {
+              "role": "user",
+              "content": "Reply with only the numeric result returned by the tool."
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 48,
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "add_numbers",
+                "description": "Add two integers.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "a": {
+                      "type": "integer"
+                    },
+                    "b": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "a",
+                    "b"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          ],
+          "tool_choice": "none"
+        },
+        "expected": "42",
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "42"
+          },
+          "finish_reason": "stop"
+        },
+        "usage": {
+          "prompt_tokens": 74,
+          "completion_tokens": 2,
+          "total_tokens": 76
+        },
+        "client_timing": {
+          "headers_seconds": 0.3671455000003334,
+          "complete_seconds": 0.3674843999906443
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 0.3549568000016734,
+          "format_seconds": 0.000830000004498288,
+          "tokenize_seconds": 0.0009706999990157783,
+          "context_reset_seconds": 0.008282900002086535,
+          "prompt_seconds": 0.20847450000292156,
+          "first_text_seconds": 0.21934090000286233,
+          "first_token_seconds": 0.2193015000084415,
+          "sampling_and_text_seconds": 0.0010708999907365069,
+          "continuation_decode_seconds": 0.125761400006013,
+          "state_transfer_seconds": 0.009285299995099194,
+          "state_bytes": 10914444,
+          "native_decode_tokens_per_second": 15.91685037364806,
+          "postprocess_seconds": 3.5999983083456755e-06
+        },
+        "load_stages": {},
+        "failure_category": null
+      },
+      {
+        "case": "json_object",
+        "target": "direct_companion",
+        "request": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Return a JSON object with an integer field answer equal to 42."
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 64,
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "expected": {
+          "answer": 42
+        },
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\"answer\":42}"
+          },
+          "finish_reason": "stop"
+        },
+        "usage": {
+          "prompt_tokens": 42,
+          "completion_tokens": 6,
+          "total_tokens": 48
+        },
+        "client_timing": {
+          "headers_seconds": 0.625445799989393,
+          "complete_seconds": 0.6256372999923769
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 0.6113949999999022,
+          "format_seconds": 0.00012399999832268804,
+          "tokenize_seconds": 0.001205000007757917,
+          "context_reset_seconds": 0.007645899997442029,
+          "prompt_seconds": 0.17343499998969492,
+          "first_text_seconds": 0.19921779999276623,
+          "first_token_seconds": 0.19895209999231156,
+          "sampling_and_text_seconds": 0.10136129999591503,
+          "continuation_decode_seconds": 0.32065950000833254,
+          "state_transfer_seconds": 0.006346199996187352,
+          "state_bytes": 6195084,
+          "native_decode_tokens_per_second": 18.723202416541323,
+          "postprocess_seconds": 3.8700003642588854e-05
+        },
+        "load_stages": {},
+        "failure_category": null
+      },
+      {
+        "case": "arithmetic",
+        "target": "through_osaurus_104",
+        "request": {
+          "model": "prov-e000bcf60f3c/osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Reply with only the answer: what is 17 + 25?"
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 24
+        },
+        "expected": "42",
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "42"
+          },
+          "finish_reason": "stop"
+        },
+        "usage": {
+          "prompt_tokens": 32,
+          "completion_tokens": 2,
+          "total_tokens": 34
+        },
+        "client_timing": {
+          "headers_seconds": 12.5670272000134,
+          "complete_seconds": 12.567639100001543
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": true,
+          "load_seconds_this_request": 7.720927000002121,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 4.638755000007222,
+          "format_seconds": 0.0032147000019904226,
+          "tokenize_seconds": 0.003700000001117587,
+          "context_reset_seconds": 0.06518030000734143,
+          "prompt_seconds": 1.148271999991266,
+          "first_text_seconds": 1.222384000007878,
+          "first_token_seconds": 1.2218351000046823,
+          "sampling_and_text_seconds": 0.004231300015817396,
+          "continuation_decode_seconds": 3.406147800007602,
+          "state_transfer_seconds": 0.006253300001844764,
+          "state_bytes": 4720284,
+          "native_decode_tokens_per_second": 0.5872795829610226,
+          "postprocess_seconds": 5.200000305194408e-05
+        },
+        "load_stages": {
+          "runtime_verify_and_backend_seconds": 0.1674877000041306,
+          "metadata_and_template_seconds": 0.17269979999400675,
+          "primary": {
+            "model_seconds": 3.631455399998231,
+            "context_seconds": 3.088676100000157
+          },
+          "secondary_cpu": {
+            "model_seconds": 0.4823181999963708,
+            "context_seconds": 0.17362580000190064
+          }
+        },
+        "failure_category": null
+      },
+      {
+        "case": "unicode_sse",
+        "target": "through_osaurus_104",
+        "request": {
+          "model": "prov-e000bcf60f3c/osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Reply with exactly this text, without quotes: café 你好"
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 24,
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "expected": "café 你好",
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "message": {
+            "role": "assistant",
+            "content": "café 你好"
+          },
+          "finish_reason": "stop"
+        },
+        "usage": {
+          "prompt_tokens": 28,
+          "completion_tokens": 5,
+          "total_tokens": 33
+        },
+        "client_timing": {
+          "headers_seconds": 0.2514843999961158,
+          "first_wire_line_seconds": 0.2515657000039937,
+          "first_text_seconds": 0.2517105000006268,
+          "complete_seconds": 1.5565770999965025
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 1.5342291999986628,
+          "format_seconds": 0.0016678000101819634,
+          "tokenize_seconds": 0.006745200007571839,
+          "context_reset_seconds": 0.013446199998725206,
+          "prompt_seconds": 0.20034519999171607,
+          "first_text_seconds": 0.22408319999522064,
+          "first_token_seconds": 0.2240095999877667,
+          "sampling_and_text_seconds": 0.00576790000195615,
+          "continuation_decode_seconds": 1.292466799975955,
+          "state_transfer_seconds": 0.009767500014277175,
+          "state_bytes": 4130364,
+          "native_decode_tokens_per_second": 3.869693489318098,
+          "postprocess_seconds": 3.700013621710241e-06
+        },
+        "load_stages": {},
+        "failure_category": null
+      },
+      {
+        "case": "conversation_history",
+        "target": "through_osaurus_104",
+        "request": {
+          "model": "prov-e000bcf60f3c/osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "system",
+              "content": "Follow the conversation and preserve the user's code."
+            },
+            {
+              "role": "user",
+              "content": "The code for this conversation is ORCHID42. Remember it."
+            },
+            {
+              "role": "assistant",
+              "content": "I will remember the code."
+            },
+            {
+              "role": "user",
+              "content": "What is the code? Reply with only the code."
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 48
+        },
+        "expected": "ORCHID42",
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "ORCHID42"
+          },
+          "finish_reason": "stop"
+        },
+        "usage": {
+          "prompt_tokens": 67,
+          "completion_tokens": 5,
+          "total_tokens": 72
+        },
+        "client_timing": {
+          "headers_seconds": 0.6325166000024183,
+          "complete_seconds": 0.6327119000052335
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 0.6205935000034515,
+          "format_seconds": 0.0003622000076575205,
+          "tokenize_seconds": 0.0037023999902885407,
+          "context_reset_seconds": 0.08600999999907799,
+          "prompt_seconds": 0.2050738999969326,
+          "first_text_seconds": 0.2956500000000233,
+          "first_token_seconds": 0.2955557000095723,
+          "sampling_and_text_seconds": 0.0015198999899439514,
+          "continuation_decode_seconds": 0.3125751999905333,
+          "state_transfer_seconds": 0.010858900001039729,
+          "state_bytes": 9882084,
+          "native_decode_tokens_per_second": 16.010144027255667,
+          "postprocess_seconds": 2.2000021999701858e-06
+        },
+        "load_stages": {},
+        "failure_category": null
+      },
+      {
+        "case": "harbor_extract",
+        "target": "through_osaurus_104",
+        "request": {
+          "model": "prov-e000bcf60f3c/osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Request 1.\nProject Harbor launch handoff, collected messages:\nMonday, 09:00, Alex: The draft landing page is ready. Design has approved the new illustrations, but that approval does not cover the release notes. We can ship the website without the optional animated header. Please do not delay the launch for that animation.\nMonday, 10:15, Priya: The mobile layout passed checks at three screen sizes. The signup button is visible at each size. There is one cosmetic issue in the footer; I have moved it to the next release because it does not prevent signup.\nMonday, 11:40, Maya: I will own the final Harbor release notes. My first draft is due Thursday at noon. This is a draft deadline, not the deadline for the final approved version. Alex will review it after the draft is ready.\nMonday, 14:10, Sam: The newsletter campaign is called Cedar. Its owner is Noah and its deadline is Wednesday at 15:00. Cedar is a separate campaign. It does not change any Harbor deadline or owner.\nTuesday, 08:45, Alex: The Harbor pricing table still uses last month's figures. Finance needs to sign off the replacement before the landing page can go live. Everything else on the page is approved. The footer cosmetic issue is still deferred.\nTuesday, 09:20, Noah: Cedar newsletter copy is approved. The email send test passed. I will export the audience list on Wednesday morning, before the Cedar deadline. No action is required from Maya for this campaign.\nTuesday, 11:00, Priya: The signup flow works on desktop and mobile. I tested a new account and a returning account. Both received the expected confirmation email. We should keep the existing signup flow for the launch.\nTuesday, 13:30, Maya: My draft is on track. Please send corrections in one thread so that we do not merge competing edits. The approved final Harbor release notes are due Friday at 16:00. I still own them. Thursday noon is only the draft milestone.\nWednesday, 09:00, Alex: Finance has not yet approved the revised Harbor pricing table. That is the only remaining blocker for the landing page. The notes deadline remains Friday at 16:00. We can publish the notes even if the optional header animation is unfinished.\nWednesday, 10:10, Sam: We are also planning a project called Birch for next month. Its planning session is on Tuesday at 14:00. Birch has no shared release milestone with Harbor, and its planning invitation should not be added to the Harbor release checklist.\nWednesday, 11:45, Priya: I have documented the footer issue for the next release. No new launch blockers appeared in this morning's checks. Screenshots and test results are in the project folder. The signoff request for pricing is still with Finance.\nWednesday, 12:00, Maya: I confirm that I own the approved final Harbor release notes, due Friday at 16:00. Alex remains the reviewer. Please use this message if an earlier calendar invitation gives a different time.\n\nWho owns the approved final Harbor release notes, and when are they due? Reply with only the owner, weekday, and time, separated by vertical bars. Do not include the draft deadline."
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 48
+        },
+        "expected": {
+          "answer": "Maya|Friday|16:00",
+          "minimum_prompt_tokens_exclusive": 512
+        },
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "long_prompt_over_512_tokens": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "Maya|Friday|16:00"
+          },
+          "finish_reason": "stop"
+        },
+        "usage": {
+          "prompt_tokens": 983,
+          "completion_tokens": 14,
+          "total_tokens": 997
+        },
+        "client_timing": {
+          "headers_seconds": 3.379799500005902,
+          "complete_seconds": 3.3801974000089103
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 3.3407240999949863,
+          "format_seconds": 0.00017800000205170363,
+          "tokenize_seconds": 0.027282799987006,
+          "context_reset_seconds": 0.010261000003083609,
+          "prompt_seconds": 1.5901962999923853,
+          "first_text_seconds": 1.6286099999997532,
+          "first_token_seconds": 1.6283947000047192,
+          "sampling_and_text_seconds": 0.0049052999675041065,
+          "continuation_decode_seconds": 1.5258657000376843,
+          "state_transfer_seconds": 0.18037750000075903,
+          "state_bytes": 144973764,
+          "native_decode_tokens_per_second": 9.178413943846463,
+          "postprocess_seconds": 2.4000037228688598e-06
+        },
+        "load_stages": {},
+        "failure_category": null
+      },
+      {
+        "case": "forced_tool",
+        "target": "through_osaurus_104",
+        "request": {
+          "model": "prov-e000bcf60f3c/osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Use add_numbers to add 17 and 25."
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 128,
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "add_numbers",
+                "description": "Add two integers.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "a": {
+                      "type": "integer"
+                    },
+                    "b": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "a",
+                    "b"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          ],
+          "tool_choice": {
+            "type": "function",
+            "function": {
+              "name": "add_numbers"
+            }
+          }
+        },
+        "expected": {
+          "function": "add_numbers",
+          "arguments": {
+            "a": 17,
+            "b": 25
+          }
+        },
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_2da1d0dac0394f3ba29d",
+                "type": "function",
+                "function": {
+                  "name": "add_numbers",
+                  "arguments": "{\"a\": 17, \"b\": 25}"
+                }
+              }
+            ]
+          },
+          "finish_reason": "tool_calls"
+        },
+        "usage": {
+          "prompt_tokens": 123,
+          "completion_tokens": 19,
+          "total_tokens": 142
+        },
+        "client_timing": {
+          "headers_seconds": 1.9255084000033094,
+          "complete_seconds": 1.925824100006139
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 1.8845101000042632,
+          "format_seconds": 0.0026861000078497455,
+          "tokenize_seconds": 0.018136800004867837,
+          "context_reset_seconds": 0.09178269999392796,
+          "prompt_seconds": 0.2548547999904258,
+          "first_text_seconds": 0.400773700006539,
+          "first_token_seconds": 0.4007226000103401,
+          "sampling_and_text_seconds": 0.19806379996589385,
+          "continuation_decode_seconds": 1.2907244999951217,
+          "state_transfer_seconds": 0.01752209999540355,
+          "state_bytes": 18140964,
+          "native_decode_tokens_per_second": 14.727118127764728,
+          "postprocess_seconds": 0.027122599989525042
+        },
+        "load_stages": {},
+        "failure_category": null
+      },
+      {
+        "case": "tool_roundtrip",
+        "target": "through_osaurus_104",
+        "request": {
+          "model": "prov-e000bcf60f3c/osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Use add_numbers to add 17 and 25."
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "tool_calls": [
+                {
+                  "id": "call_2da1d0dac0394f3ba29d",
+                  "type": "function",
+                  "function": {
+                    "name": "add_numbers",
+                    "arguments": "{\"a\": 17, \"b\": 25}"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "tool_call_id": "call_2da1d0dac0394f3ba29d",
+              "content": "42"
+            },
+            {
+              "role": "user",
+              "content": "Reply with only the numeric result returned by the tool."
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 48,
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "add_numbers",
+                "description": "Add two integers.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "a": {
+                      "type": "integer"
+                    },
+                    "b": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "a",
+                    "b"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          ],
+          "tool_choice": "none"
+        },
+        "expected": "42",
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "42"
+          },
+          "finish_reason": "stop"
+        },
+        "usage": {
+          "prompt_tokens": 74,
+          "completion_tokens": 2,
+          "total_tokens": 76
+        },
+        "client_timing": {
+          "headers_seconds": 0.42595520000031684,
+          "complete_seconds": 0.42612639999424573
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 0.3969587000028696,
+          "format_seconds": 0.0011305000080028549,
+          "tokenize_seconds": 0.001560999997309409,
+          "context_reset_seconds": 0.044603700007428415,
+          "prompt_seconds": 0.20898090000264347,
+          "first_text_seconds": 0.25699490000260994,
+          "first_token_seconds": 0.2569511000037892,
+          "sampling_and_text_seconds": 0.0010048000112874433,
+          "continuation_decode_seconds": 0.12567479998688214,
+          "state_transfer_seconds": 0.01332840000395663,
+          "state_bytes": 10914444,
+          "native_decode_tokens_per_second": 15.923693659981367,
+          "postprocess_seconds": 3.6999990697950125e-06
+        },
+        "load_stages": {},
+        "failure_category": null
+      },
+      {
+        "case": "json_object",
+        "target": "through_osaurus_104",
+        "request": {
+          "model": "prov-e000bcf60f3c/osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Return a JSON object with an integer field answer equal to 42."
+            }
+          ],
+          "temperature": 0,
+          "max_tokens": 64,
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "expected": {
+          "answer": 42
+        },
+        "transport_ok": true,
+        "quality_ok": true,
+        "contract_checks": {
+          "usage_consistent": true,
+          "expected_native_mode": true,
+          "expected_context": true,
+          "state_handoff": true,
+          "no_stock_fallback": true
+        },
+        "passed": true,
+        "answer": {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\"answer\":42}"
+          },
+          "finish_reason": "stop"
+        },
+        "usage": {
+          "prompt_tokens": 42,
+          "completion_tokens": 6,
+          "total_tokens": 48
+        },
+        "client_timing": {
+          "headers_seconds": 0.8881603000045288,
+          "complete_seconds": 0.888309300004039
+        },
+        "assist": {
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "architecture": "spark2_5",
+          "context_length": 8192
+        },
+        "stages": {
+          "request_seconds": 0.8646443999896292,
+          "format_seconds": 0.00011369999265298247,
+          "tokenize_seconds": 0.0015877999976510182,
+          "context_reset_seconds": 0.009250500006601214,
+          "prompt_seconds": 0.17378790001384914,
+          "first_text_seconds": 0.1974560999951791,
+          "first_token_seconds": 0.19716609999886714,
+          "sampling_and_text_seconds": 0.11011339999095071,
+          "continuation_decode_seconds": 0.563707700028317,
+          "state_transfer_seconds": 0.004850899989833124,
+          "state_bytes": 6195084,
+          "native_decode_tokens_per_second": 10.647623982708259,
+          "postprocess_seconds": 0.00010130000009667128
+        },
+        "load_stages": {},
+        "failure_category": null
+      }
+    ],
+    "through_app_route_observations": [
+      {
+        "fresh_metrics_for_source_model": true,
+        "response_contains_assist": false,
+        "companion_metrics": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": true,
+          "load_seconds_this_request": 7.720927000002121,
+          "load_stages": {
+            "runtime_verify_and_backend_seconds": 0.1674877000041306,
+            "metadata_and_template_seconds": 0.17269979999400675,
+            "primary": {
+              "model_seconds": 3.631455399998231,
+              "context_seconds": 3.088676100000157
+            },
+            "secondary_cpu": {
+              "model_seconds": 0.4823181999963708,
+              "context_seconds": 0.17362580000190064
+            }
+          },
+          "architecture": "spark2_5",
+          "context_length": 8192,
+          "metrics": {
+            "request_seconds": 4.638755000007222,
+            "format_seconds": 0.0032147000019904226,
+            "tokenize_seconds": 0.003700000001117587,
+            "context_reset_seconds": 0.06518030000734143,
+            "prompt_seconds": 1.148271999991266,
+            "first_text_seconds": 1.222384000007878,
+            "first_token_seconds": 1.2218351000046823,
+            "sampling_and_text_seconds": 0.004231300015817396,
+            "continuation_decode_seconds": 3.406147800007602,
+            "state_transfer_seconds": 0.006253300001844764,
+            "state_bytes": 4720284,
+            "native_decode_tokens_per_second": 0.5872795829610226,
+            "token_count_convention": "sampled non-EOG output tokens; no billing",
+            "postprocess_seconds": 5.200000305194408e-05
+          },
+          "settings_source": "osaurus",
+          "source_model": "Raptor-0.7-4B-Q6_K",
+          "settings": {
+            "applied": [
+              "batchSize",
+              "chatTemplateKwargs",
+              "frequencyPenalty",
+              "kvOffload",
+              "kvUnified",
+              "minP",
+              "opOffload",
+              "presencePenalty",
+              "repeatLastN",
+              "repeatPenalty",
+              "seed",
+              "swaFull",
+              "temperature",
+              "topK",
+              "topP",
+              "uBatchSize"
+            ],
+            "adapted": [
+              "cachePrompt",
+              "contextSize",
+              "flashAttention",
+              "loadMode",
+              "repack"
+            ],
+            "unsupported": []
+          },
+          "api_seconds": 12.542549000005238
+        }
+      },
+      {
+        "fresh_metrics_for_source_model": true,
+        "response_contains_assist": false,
+        "companion_metrics": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "load_stages": null,
+          "architecture": "spark2_5",
+          "context_length": 8192,
+          "metrics": {
+            "request_seconds": 1.5342291999986628,
+            "format_seconds": 0.0016678000101819634,
+            "tokenize_seconds": 0.006745200007571839,
+            "context_reset_seconds": 0.013446199998725206,
+            "prompt_seconds": 0.20034519999171607,
+            "first_text_seconds": 0.22408319999522064,
+            "first_token_seconds": 0.2240095999877667,
+            "sampling_and_text_seconds": 0.00576790000195615,
+            "continuation_decode_seconds": 1.292466799975955,
+            "state_transfer_seconds": 0.009767500014277175,
+            "state_bytes": 4130364,
+            "native_decode_tokens_per_second": 3.869693489318098,
+            "token_count_convention": "sampled non-EOG output tokens; no billing",
+            "postprocess_seconds": 3.700013621710241e-06
+          },
+          "settings_source": "osaurus",
+          "source_model": "Raptor-0.7-4B-Q6_K",
+          "settings": {
+            "applied": [
+              "batchSize",
+              "chatTemplateKwargs",
+              "frequencyPenalty",
+              "kvOffload",
+              "kvUnified",
+              "minP",
+              "opOffload",
+              "presencePenalty",
+              "repeatLastN",
+              "repeatPenalty",
+              "seed",
+              "swaFull",
+              "temperature",
+              "topK",
+              "topP",
+              "uBatchSize"
+            ],
+            "adapted": [
+              "cachePrompt",
+              "contextSize",
+              "flashAttention",
+              "loadMode",
+              "repack"
+            ],
+            "unsupported": []
+          },
+          "api_seconds": 1.536623200008762
+        }
+      },
+      {
+        "fresh_metrics_for_source_model": true,
+        "response_contains_assist": false,
+        "companion_metrics": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "load_stages": null,
+          "architecture": "spark2_5",
+          "context_length": 8192,
+          "metrics": {
+            "request_seconds": 0.6205935000034515,
+            "format_seconds": 0.0003622000076575205,
+            "tokenize_seconds": 0.0037023999902885407,
+            "context_reset_seconds": 0.08600999999907799,
+            "prompt_seconds": 0.2050738999969326,
+            "first_text_seconds": 0.2956500000000233,
+            "first_token_seconds": 0.2955557000095723,
+            "sampling_and_text_seconds": 0.0015198999899439514,
+            "continuation_decode_seconds": 0.3125751999905333,
+            "state_transfer_seconds": 0.010858900001039729,
+            "state_bytes": 9882084,
+            "native_decode_tokens_per_second": 16.010144027255667,
+            "token_count_convention": "sampled non-EOG output tokens; no billing",
+            "postprocess_seconds": 2.2000021999701858e-06
+          },
+          "settings_source": "osaurus",
+          "source_model": "Raptor-0.7-4B-Q6_K",
+          "settings": {
+            "applied": [
+              "batchSize",
+              "chatTemplateKwargs",
+              "frequencyPenalty",
+              "kvOffload",
+              "kvUnified",
+              "minP",
+              "opOffload",
+              "presencePenalty",
+              "repeatLastN",
+              "repeatPenalty",
+              "seed",
+              "swaFull",
+              "temperature",
+              "topK",
+              "topP",
+              "uBatchSize"
+            ],
+            "adapted": [
+              "cachePrompt",
+              "contextSize",
+              "flashAttention",
+              "loadMode",
+              "repack"
+            ],
+            "unsupported": []
+          },
+          "api_seconds": 0.6213429999916116
+        }
+      },
+      {
+        "fresh_metrics_for_source_model": true,
+        "response_contains_assist": false,
+        "companion_metrics": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "load_stages": null,
+          "architecture": "spark2_5",
+          "context_length": 8192,
+          "metrics": {
+            "request_seconds": 3.3407240999949863,
+            "format_seconds": 0.00017800000205170363,
+            "tokenize_seconds": 0.027282799987006,
+            "context_reset_seconds": 0.010261000003083609,
+            "prompt_seconds": 1.5901962999923853,
+            "first_text_seconds": 1.6286099999997532,
+            "first_token_seconds": 1.6283947000047192,
+            "sampling_and_text_seconds": 0.0049052999675041065,
+            "continuation_decode_seconds": 1.5258657000376843,
+            "state_transfer_seconds": 0.18037750000075903,
+            "state_bytes": 144973764,
+            "native_decode_tokens_per_second": 9.178413943846463,
+            "token_count_convention": "sampled non-EOG output tokens; no billing",
+            "postprocess_seconds": 2.4000037228688598e-06
+          },
+          "settings_source": "osaurus",
+          "source_model": "Raptor-0.7-4B-Q6_K",
+          "settings": {
+            "applied": [
+              "batchSize",
+              "chatTemplateKwargs",
+              "frequencyPenalty",
+              "kvOffload",
+              "kvUnified",
+              "minP",
+              "opOffload",
+              "presencePenalty",
+              "repeatLastN",
+              "repeatPenalty",
+              "seed",
+              "swaFull",
+              "temperature",
+              "topK",
+              "topP",
+              "uBatchSize"
+            ],
+            "adapted": [
+              "cachePrompt",
+              "contextSize",
+              "flashAttention",
+              "loadMode",
+              "repack"
+            ],
+            "unsupported": []
+          },
+          "api_seconds": 3.342219900005148
+        }
+      },
+      {
+        "fresh_metrics_for_source_model": true,
+        "response_contains_assist": false,
+        "companion_metrics": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "load_stages": null,
+          "architecture": "spark2_5",
+          "context_length": 8192,
+          "metrics": {
+            "request_seconds": 1.8845101000042632,
+            "format_seconds": 0.0026861000078497455,
+            "tokenize_seconds": 0.018136800004867837,
+            "context_reset_seconds": 0.09178269999392796,
+            "prompt_seconds": 0.2548547999904258,
+            "first_text_seconds": 0.400773700006539,
+            "first_token_seconds": 0.4007226000103401,
+            "sampling_and_text_seconds": 0.19806379996589385,
+            "continuation_decode_seconds": 1.2907244999951217,
+            "state_transfer_seconds": 0.01752209999540355,
+            "state_bytes": 18140964,
+            "native_decode_tokens_per_second": 14.727118127764728,
+            "token_count_convention": "sampled non-EOG output tokens; no billing",
+            "postprocess_seconds": 0.027122599989525042
+          },
+          "settings_source": "osaurus",
+          "source_model": "Raptor-0.7-4B-Q6_K",
+          "settings": {
+            "applied": [
+              "batchSize",
+              "chatTemplateKwargs",
+              "frequencyPenalty",
+              "kvOffload",
+              "kvUnified",
+              "minP",
+              "opOffload",
+              "presencePenalty",
+              "repeatLastN",
+              "repeatPenalty",
+              "seed",
+              "swaFull",
+              "temperature",
+              "topK",
+              "topP",
+              "uBatchSize"
+            ],
+            "adapted": [
+              "cachePrompt",
+              "contextSize",
+              "flashAttention",
+              "loadMode",
+              "repack"
+            ],
+            "unsupported": []
+          },
+          "api_seconds": 1.9138761999929557
+        }
+      },
+      {
+        "fresh_metrics_for_source_model": true,
+        "response_contains_assist": false,
+        "companion_metrics": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "load_stages": null,
+          "architecture": "spark2_5",
+          "context_length": 8192,
+          "metrics": {
+            "request_seconds": 0.3969587000028696,
+            "format_seconds": 0.0011305000080028549,
+            "tokenize_seconds": 0.001560999997309409,
+            "context_reset_seconds": 0.044603700007428415,
+            "prompt_seconds": 0.20898090000264347,
+            "first_text_seconds": 0.25699490000260994,
+            "first_token_seconds": 0.2569511000037892,
+            "sampling_and_text_seconds": 0.0010048000112874433,
+            "continuation_decode_seconds": 0.12567479998688214,
+            "state_transfer_seconds": 0.01332840000395663,
+            "state_bytes": 10914444,
+            "native_decode_tokens_per_second": 15.923693659981367,
+            "token_count_convention": "sampled non-EOG output tokens; no billing",
+            "postprocess_seconds": 3.6999990697950125e-06
+          },
+          "settings_source": "osaurus",
+          "source_model": "Raptor-0.7-4B-Q6_K",
+          "settings": {
+            "applied": [
+              "batchSize",
+              "chatTemplateKwargs",
+              "frequencyPenalty",
+              "kvOffload",
+              "kvUnified",
+              "minP",
+              "opOffload",
+              "presencePenalty",
+              "repeatLastN",
+              "repeatPenalty",
+              "seed",
+              "swaFull",
+              "temperature",
+              "topK",
+              "topP",
+              "uBatchSize"
+            ],
+            "adapted": [
+              "cachePrompt",
+              "contextSize",
+              "flashAttention",
+              "loadMode",
+              "repack"
+            ],
+            "unsupported": []
+          },
+          "api_seconds": 0.3978517999930773
+        }
+      },
+      {
+        "fresh_metrics_for_source_model": true,
+        "response_contains_assist": false,
+        "companion_metrics": {
+          "model": "osaurus/Raptor-0.7-4B-Q6_K-102eb98cc712b01c",
+          "requested_mode": "hybrid",
+          "actual_mode": "hybrid",
+          "fallback_reason": null,
+          "cold_load": false,
+          "load_seconds_this_request": 0,
+          "load_stages": null,
+          "architecture": "spark2_5",
+          "context_length": 8192,
+          "metrics": {
+            "request_seconds": 0.8646443999896292,
+            "format_seconds": 0.00011369999265298247,
+            "tokenize_seconds": 0.0015877999976510182,
+            "context_reset_seconds": 0.009250500006601214,
+            "prompt_seconds": 0.17378790001384914,
+            "first_text_seconds": 0.1974560999951791,
+            "first_token_seconds": 0.19716609999886714,
+            "sampling_and_text_seconds": 0.11011339999095071,
+            "continuation_decode_seconds": 0.563707700028317,
+            "state_transfer_seconds": 0.004850899989833124,
+            "state_bytes": 6195084,
+            "native_decode_tokens_per_second": 10.647623982708259,
+            "token_count_convention": "sampled non-EOG output tokens; no billing",
+            "postprocess_seconds": 0.00010130000009667128
+          },
+          "settings_source": "osaurus",
+          "source_model": "Raptor-0.7-4B-Q6_K",
+          "settings": {
+            "applied": [
+              "batchSize",
+              "chatTemplateKwargs",
+              "frequencyPenalty",
+              "kvOffload",
+              "kvUnified",
+              "minP",
+              "opOffload",
+              "presencePenalty",
+              "repeatLastN",
+              "repeatPenalty",
+              "seed",
+              "swaFull",
+              "temperature",
+              "topK",
+              "topP",
+              "uBatchSize"
+            ],
+            "adapted": [
+              "cachePrompt",
+              "contextSize",
+              "flashAttention",
+              "loadMode",
+              "repack"
+            ],
+            "unsupported": []
+          },
+          "api_seconds": 0.8663936000084504
+        }
+      }
+    ],
+    "passed": true,
+    "unload": {
+      "status": "unloaded"
+    }
+  },
+  "test_development_observations": [
+    "First app request used a bare automatic ID and was rejected. Older successful tests also required provider-qualified IDs; this was a harness mistake, not an update regression.",
+    "A second harness assertion expected private assist fields in Osaurus responses. The app normalizes those out, as already recorded on 1.0.3. Final checks used changed companion /metrics snapshots after each serial routed request."
+  ],
+  "inferssd_rechecks": [
+    {
+      "package_revision": "e91c7d7a000b69ef69ee0e20fd1345254a504bd7",
+      "package_build": 266,
+      "context": 512,
+      "mode": "x64 emulated CPU SSD experts",
+      "test_scope": "startup regression only",
+      "fresh_machine_profile_performed": false,
+      "startup_succeeded": false,
+      "launch_to_ready_seconds": null,
+      "error": "RuntimeError('Launcher exited before readiness with code 2')",
+      "total_test_seconds": 14.299586099994485,
+      "cleanup_confirmed": true,
+      "model_basename": "Ornith-1.5-35B-Q4_K_M.gguf",
+      "requests": [],
+      "machine_profile_reused": true,
+      "same_missing_tensor_error": true,
+      "failure_stage": "model tensor loading before readiness/inference"
+    },
+    {
+      "package_revision": "e91c7d7a000b69ef69ee0e20fd1345254a504bd7",
+      "package_build": 266,
+      "context": 512,
+      "mode": "x64 emulated CPU ordinary model control",
+      "test_scope": "two-prompt inference control",
+      "fresh_machine_profile_performed": false,
+      "startup_succeeded": true,
+      "launch_to_ready_seconds": 1.5767231000063475,
+      "error": null,
+      "total_test_seconds": 3.3229627999971854,
+      "cleanup_confirmed": true,
+      "model_basename": "Qwen3-0.6B-Q4_0.gguf",
+      "requests": [
+        {
+          "prompt": "What is 17 + 25? Reply with only the number.",
+          "ttft_seconds": 0.5557612000120571,
+          "first_content_seconds": 0.5557612000120571,
+          "request_to_done_seconds": 0.5559065000124974,
+          "content": "17 + 25 = 42.",
+          "reasoning": "",
+          "done_received": true,
+          "quality_passed": false,
+          "usage": {
+            "completion_tokens": 12,
+            "prompt_tokens": 28,
+            "total_tokens": 40,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "server_timings": {
+            "cache_n": 0,
+            "prompt_n": 28,
+            "prompt_ms": 299.619,
+            "prompt_per_token_ms": 10.700678571428572,
+            "prompt_per_second": 93.45201739542551,
+            "predicted_n": 12,
+            "predicted_ms": 211.323,
+            "predicted_per_token_ms": 17.61025,
+            "predicted_per_second": 56.785110943910496
+          },
+          "contains_correct_values": true
+        },
+        {
+          "prompt": "Extract the invoice number and amount from this text. Reply only with JSON using invoice and amount. Text: Invoice INV-2047. Total due USD 83.50.",
+          "ttft_seconds": 0.5478457999997772,
+          "first_content_seconds": 0.5478457999997772,
+          "request_to_done_seconds": 1.151177399995504,
+          "content": "```json\n{\n  \"invoice\": \"INV-2047\",\n  \"amount\": \"83.50\"\n}\n```",
+          "reasoning": "",
+          "done_received": true,
+          "quality_passed": false,
+          "usage": {
+            "completion_tokens": 30,
+            "prompt_tokens": 51,
+            "total_tokens": 81,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "server_timings": {
+            "cache_n": 0,
+            "prompt_n": 51,
+            "prompt_ms": 513.657,
+            "prompt_per_token_ms": 10.071705882352942,
+            "prompt_per_second": 99.28804630327241,
+            "predicted_n": 30,
+            "predicted_ms": 603.288,
+            "predicted_per_token_ms": 20.1096,
+            "predicted_per_second": 49.72749333651589
+          },
+          "contains_correct_values": true
+        }
+      ]
+    },
+    {
+      "package_revision": "e91c7d7a000b69ef69ee0e20fd1345254a504bd7",
+      "package_build": 266,
+      "context": 512,
+      "mode": "x64 host with Adreno Vulkan ordinary model control",
+      "test_scope": "two-prompt inference control",
+      "fresh_machine_profile_performed": false,
+      "startup_succeeded": true,
+      "launch_to_ready_seconds": 3.6496365999919362,
+      "error": null,
+      "total_test_seconds": 7.312898699994548,
+      "cleanup_confirmed": true,
+      "model_basename": "Qwen3-0.6B-Q4_0.gguf",
+      "requests": [
+        {
+          "prompt": "What is 17 + 25? Reply with only the number.",
+          "ttft_seconds": 1.0120064000075217,
+          "first_content_seconds": 1.0120064000075217,
+          "request_to_done_seconds": 1.5082184000057168,
+          "content": "lysaqueViewsiediche样子doorsibilutiveimportculosigliuelleodalmediculos就来看看ocationristoleonocopidental<System pouchculosdooruarocomculostedories夙",
+          "reasoning": "",
+          "done_received": true,
+          "quality_passed": false,
+          "usage": {
+            "completion_tokens": 32,
+            "prompt_tokens": 28,
+            "total_tokens": 60,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "server_timings": {
+            "cache_n": 0,
+            "prompt_n": 28,
+            "prompt_ms": 781.213,
+            "prompt_per_token_ms": 27.900464285714285,
+            "prompt_per_second": 35.84169746279184,
+            "predicted_n": 32,
+            "predicted_ms": 693.664,
+            "predicted_per_token_ms": 21.677,
+            "predicted_per_second": 46.13184481247405
+          },
+          "contains_correct_values": false
+        },
+        {
+          "prompt": "Extract the invoice number and amount from this text. Reply only with JSON using invoice and amount. Text: Invoice INV-2047. Total due USD 83.50.",
+          "ttft_seconds": 1.5040632000018377,
+          "first_content_seconds": 1.5040632000018377,
+          "request_to_done_seconds": 2.1186186999984784,
+          "content": "\\Servicesrape下來_Collectionsikaluar endregionlicatedrowsersentialsEDIAtees sensationronISTICput')}</culosuireuablyialisculosivitiesneototalCount swathWEENmarkedculos撄سطxFFFFFF",
+          "reasoning": "",
+          "done_received": true,
+          "quality_passed": false,
+          "usage": {
+            "completion_tokens": 32,
+            "prompt_tokens": 51,
+            "total_tokens": 83,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "server_timings": {
+            "cache_n": 0,
+            "prompt_n": 51,
+            "prompt_ms": 1376.985,
+            "prompt_per_token_ms": 26.999705882352938,
+            "prompt_per_second": 37.0374404949945,
+            "predicted_n": 32,
+            "predicted_ms": 694.534,
+            "predicted_per_token_ms": 21.7041875,
+            "predicted_per_second": 46.074058289442995
+          },
+          "contains_correct_values": false
+        }
+      ]
+    }
+  ],
+  "upstream_not_installed": {
+    "ornith_nextn_fix": "http[local-path]",
+    "merged_utc_date": "2026-11-17",
+    "merge_commit": "c037ae26e5da9048295785bfceefcc1472a84b01",
+    "current_main_observed": "b7f54b714f9be7731ebadb69585ed1de0466f77f",
+    "latest_published_release_observed": "v0.1.4 / 02ed6a88b4de01d1f99cc57550a91581a86e61ee",
+    "limitation": "Merged source fix is not a successful Ornith run on this laptop; no new package was installed."
+  },
+  "official_update_feeds_read_only": {
+    "checked_utc": "2026-11-18T10:03:16.5606344Z",
+    "windows_vulkan_engine": {
+      "version": "0.1.4",
+      "build": 266,
+      "revision": "e91c7d7a000b69ef69ee0e20fd1345254a504bd7",
+      "date": "2026-11-13",
+      "label": "261113.266.e91c7d7"
+    },
+    "desktop": {
+      "version": "0.1.3",
+      "build": "124",
+      "date": "261114"
+    },
+    "signature_verification_claimed": false,
+    "observation": "The current Windows Vulkan feed offers the same build266/e91c7d7 as installed; it does not yet offer PR294."
+  },
+  "limits": [
+    "Seven synthetic capabilities, each checked directly and through the app; not fourteen different capabilities.",
+    "Raptor configured context is 8192; this suite max input is 983 tokens and does not repeat the prior near-8K/16K capacity tests.",
+    "API route/state-transfer evidence is not an independent physical NPU utilization or power measurement.",
+    "The live shared 300-second idle preference was read; timer expiry itself was not waited out in this recheck. Models were explicitly unloaded after inference.",
+    "Cold model means new model/context objects; OS file cache and Prism translation cache were not flushed.",
+    "Optional Beeper and iCloud user processes were closed; startup settings were not changed.",
+    "This is compatibility/quality revalidation, not a repeated CPU/GPU/NPU fixed-token performance ranking.",
+    "InferSSD GPU controls use Vulkan, distinct from the companion Adreno OpenCL runtime.",
+    "InferSSD CPU answers contain correct values but fail the strict requested presentation; GPU answers are garbled.",
+    "No Pi RPC runtime was installed or tested, and no Windows ARM64 InferSSD build was compiled."
+  ]
+}
