@@ -6,7 +6,7 @@ import tempfile
 import threading
 import unittest
 
-from osaurus_arm64_assist.lifecycle import WorkerFailure
+from osaurus_arm64_assist.lifecycle import MemoryPressure, WorkerFailure
 from osaurus_arm64_assist.idle_policy import IdlePolicy
 from osaurus_arm64_assist.server import AssistServer
 
@@ -36,6 +36,8 @@ class FakeManager:
         self.requests.append((profile, request))
         if self.failure == "native":
             raise WorkerFailure("Synthetic worker stopped")
+        if self.failure == "memory_pressure":
+            raise MemoryPressure()
         if self.failure == "invalid":
             raise ValueError("Synthetic invalid model output")
         if request["tools"] and request["tool_choice"] != "none":
@@ -312,6 +314,16 @@ class ServerContractTests(unittest.TestCase):
         response, data = self.post()
         self.assertEqual(response.status, 503)
         self.assertEqual(json.loads(data)["error"]["type"], "native_worker_error")
+
+    def test_memory_pressure_rejects_before_stream_and_allows_retry(self):
+        self.manager.failure = "memory_pressure"
+        response, data = self.post(self.body(stream=True))
+        self.assertEqual(response.status, 503)
+        self.assertIn("application/json", response.getheader("Content-Type"))
+        self.assertEqual(json.loads(data)["error"]["code"], "memory_pressure")
+        self.manager.failure = None
+        response, _ = self.post()
+        self.assertEqual(response.status, 200)
 
     def test_invalid_model_output_returns_json_error_before_stream_headers(self):
         self.manager.failure = "invalid"

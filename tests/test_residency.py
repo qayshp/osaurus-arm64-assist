@@ -1,4 +1,7 @@
 import copy
+from pathlib import Path
+import tempfile
+import threading
 import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
@@ -60,14 +63,55 @@ class ResidencyTests(unittest.TestCase):
             self.assertIsNone(residency.native_admission({**self.profile, **changes}, self.config, reader=reader))
         reader.assert_not_called()
 
-    def test_live_owned_worker_bypasses_query_and_dead_worker_checks_source(self):
-        manager = Manager.__new__(Manager)
-        manager.child = SimpleNamespace(is_alive=lambda: True)
-        with patch("osaurus_arm64_assist.residency.native_admission", return_value=residency.POLICY) as check:
-            self.assertIsNone(manager.native_admission(self.profile, self.config)); check.assert_not_called()
-            manager.child = SimpleNamespace(is_alive=lambda: False)
-            self.assertEqual(manager.native_admission(self.profile, self.config), residency.POLICY)
-            check.assert_called_once_with(self.profile, self.config)
+    def test_only_a_reusable_ready_worker_bypasses_source_residency(self):
+        with tempfile.TemporaryDirectory() as folder:
+            model = Path(folder) / "synthetic.gguf"; model.write_bytes(b"never loaded")
+            profile = {**self.profile, "path": str(model), "context": 8192, "repack": False}
+            manager = Manager.__new__(Manager)
+            manager.config = {"runtime_dir": "synthetic-runtime"}
+            manager.lock = threading.Lock()
+            manager.child = SimpleNamespace(is_alive=lambda: True)
+            manager.ready = {"type": "ready"}
+            manager.fingerprint = manager._load_fingerprint(profile)
+            with manager.lock, patch("osaurus_arm64_assist.residency.native_admission", return_value=residency.POLICY) as check:
+                # Sampling/default refreshes and aliases do not allocate again.
+                for candidate in (profile, {**profile, "id": "another-alias"},
+                                  {**profile, "sampling_defaults": {"temperature": .25}}):
+                    self.assertIsNone(manager.native_admission(candidate, self.config))
+                check.assert_not_called()
+                for changes in ({"mode": "cpu"}, {"context": 16384}, {"repack": True}, {"threads": 2}):
+                    with self.subTest(changes=changes):
+                        candidate = {**profile, **changes}
+                        self.assertEqual(manager.native_admission(candidate, self.config), residency.POLICY)
+                        check.assert_called_with(candidate, self.config)
+                check.reset_mock()
+                manager.config["runtime_dir"] = "different-runtime"
+                self.assertEqual(manager.native_admission(profile, self.config), residency.POLICY)
+                check.assert_called_once_with(profile, self.config)
+
+    def test_dead_unready_changed_or_inaccessible_model_rechecks_residency(self):
+        with tempfile.TemporaryDirectory() as folder:
+            model = Path(folder) / "synthetic.gguf"; model.write_bytes(b"never loaded")
+            profile = {**self.profile, "path": str(model)}
+            manager = Manager.__new__(Manager)
+            manager.config = {"runtime_dir": "synthetic-runtime"}
+            manager.child = SimpleNamespace(is_alive=lambda: True)
+            manager.ready = {"type": "ready"}
+            manager.fingerprint = manager._load_fingerprint(profile)
+            with patch("osaurus_arm64_assist.residency.native_admission", return_value=residency.POLICY) as check:
+                manager.ready = None
+                self.assertEqual(manager.native_admission(profile, self.config), residency.POLICY)
+                manager.ready = {"type": "ready"}
+                manager.child = SimpleNamespace(is_alive=lambda: False)
+                self.assertEqual(manager.native_admission(profile, self.config), residency.POLICY)
+                manager.child = SimpleNamespace(is_alive=Mock(side_effect=ValueError("closed process")))
+                self.assertEqual(manager.native_admission(profile, self.config), residency.POLICY)
+                manager.child = SimpleNamespace(is_alive=lambda: True)
+                model.write_bytes(b"changed model metadata, no inference")
+                self.assertEqual(manager.native_admission(profile, self.config), residency.POLICY)
+                model.unlink()
+                self.assertEqual(manager.native_admission(profile, self.config), residency.POLICY)
+                self.assertEqual(check.call_count, 5)
 
 
 class ResidencyHttpIntegrationTests(unittest.TestCase):

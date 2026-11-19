@@ -18,6 +18,14 @@ class WorkerFailure(RuntimeError):
     pass
 
 
+class MemoryPressure(WorkerFailure):
+    """A retryable refusal to allocate, distinct from a failed native backend."""
+    code = "memory_pressure"
+
+    def __init__(self):
+        super().__init__("Windows is low on memory for new allocations. Close an unused app or wait for other work to finish, then retry loading the model.")
+
+
 class MemoryStatus(C.Structure):
     _fields_ = [("length", C.c_ulong), ("load", C.c_ulong)] + [(name, C.c_ulonglong) for name in
         ["total_phys", "avail_phys", "total_page", "avail_page", "total_virtual", "avail_virtual", "avail_extended"]]
@@ -180,7 +188,8 @@ class Manager:
                 raise WorkerFailure(self.failure or "Native worker IPC failed; inspect its local log") from error
         raise WorkerFailure(self.failure or "Native worker exceeded the configured response deadline")
 
-    def _load(self, profile):
+    def _load_fingerprint(self, profile):
+        """Use the same allocation identity for admission and actual loading."""
         if profile.get("mode") not in configuration.MODES:
             raise ValueError("Only native companion modes may load a native worker")
         path = Path(profile["path"])
@@ -191,11 +200,31 @@ class Manager:
                      "repack", "gpu_layers", "flash_attention", "swa_full", "kv_unified", "kv_offload", "op_offload",
                      "allow_experimental_architecture", "chat_template", "template_kwargs")
         load_settings = {name: profile[name] for name in load_keys if name in profile}
-        fingerprint = hashlib.sha256(json.dumps([load_settings, stat.st_size, stat.st_mtime_ns], sort_keys=True).encode()).hexdigest()
-        if self.child and self.child.is_alive() and fingerprint == self.fingerprint:
+        # Runtime paths are restart-only configuration. Normalize aliases/case
+        # without rehashing native libraries on every resident request.
+        runtime = os.path.normcase(str(Path(self.config["runtime_dir"]).resolve()))
+        return hashlib.sha256(json.dumps([load_settings, stat.st_size, stat.st_mtime_ns, runtime], sort_keys=True).encode()).hexdigest()
+
+    def _worker_reusable(self, fingerprint):
+        try:
+            return bool(self.ready and self.child and self.child.is_alive() and fingerprint == self.fingerprint)
+        except (OSError, ValueError):
+            return False
+
+    def _load(self, profile):
+        fingerprint = self._load_fingerprint(profile)
+        if self._worker_reusable(fingerprint):
             self.active_profile = profile["id"]
             return False
         self._stop(); self.failure = None
+        # Reclaim an incompatible worker before sampling. This is only the
+        # existing safety floor, not an estimate that a model will fit. The
+        # background guard remains necessary if pressure changes after spawn.
+        memory = memory_status()
+        if memory and memory["available_commit_bytes"] < self.config.get("memory_floor_mib", 512)*1024**2:
+            error = MemoryPressure()
+            self.failure = str(error)
+            raise error
         from .worker import entry
         parent = child = None
         try:
@@ -232,6 +261,9 @@ class Manager:
         fallback_reason = None
         try:
             cold = self._load(profile)
+        except MemoryPressure:
+            # A second allocation is not a safe remedy for low system commit.
+            raise
         except WorkerFailure as error:
             if profile.get("fallback_mode") != "cpu" or profile["mode"] == "cpu":
                 raise
@@ -279,11 +311,10 @@ class Manager:
 
     def native_admission(self, profile, config):
         """Avoid adding a new worker while Osaurus already retains a model."""
-        child = self.child
         try:
-            if child and child.is_alive():
+            if self._worker_reusable(self._load_fingerprint(profile)):
                 return None
-        except (OSError, ValueError):
+        except (OSError, ValueError, KeyError, TypeError):
             pass
         from .residency import native_admission
         return native_admission(profile, config)

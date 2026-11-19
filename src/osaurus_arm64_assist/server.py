@@ -10,7 +10,7 @@ from urllib.parse import urlsplit
 import uuid
 
 from . import __version__
-from .lifecycle import Manager, WorkerFailure, memory_status
+from .lifecycle import Manager, MemoryPressure, WorkerFailure, memory_status
 from .osaurus_proxy import ProxyError, proxy_events
 from .protocol import normalize_request
 
@@ -379,6 +379,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header("Content-Length", "0"); self.end_headers()
         except (ValueError, TypeError, KeyError, AttributeError, StopIteration) as error:
             self.error(400, str(error))
+        except MemoryPressure as error:
+            self.error(503, str(error), "native_worker_error", error.code)
         except WorkerFailure as error:
             self.error(503, str(error), "native_worker_error")
         except ProxyError as error:

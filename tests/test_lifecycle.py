@@ -243,6 +243,11 @@ class GuardTests(unittest.TestCase):
 
 
 class WorkerLifecycleTests(unittest.TestCase):
+    def setUp(self):
+        # Unit tests must not depend on live machine pressure during other work.
+        memory = mock.patch.object(lifecycle, "memory_status", return_value=None)
+        memory.start(); self.addCleanup(memory.stop)
+
     def test_reusing_profile_avoids_reload_and_switching_closes_old_worker(self):
         manager = manager_without_thread()
         children, channels, jobs = [], [], []
@@ -287,6 +292,109 @@ class WorkerLifecycleTests(unittest.TestCase):
             manager._stop()
             self.assertTrue(children[1].closed and jobs[1].closed)
 
+    def test_low_commit_refuses_spawn_and_preserves_model_and_retry(self):
+        with tempfile.TemporaryDirectory() as folder:
+            manager = manager_without_thread()
+            manager.config_path = Path(folder) / "config.json"
+            manager.config["memory_floor_mib"] = 1024
+            model = Path(folder) / "synthetic.gguf"
+            payload = b"synthetic model fixture; never loaded"
+            model.write_bytes(payload)
+            manager.context = mock.Mock()
+            profile = {"id": "sample", "mode": "hybrid", "path": str(model), "context": 8192}
+            with mock.patch.object(lifecycle, "memory_status", return_value={"available_commit_bytes": 1024**3 - 1}):
+                with self.assertRaises(lifecycle.MemoryPressure) as raised:
+                    manager._load(profile)
+            self.assertEqual(raised.exception.code, "memory_pressure")
+            self.assertIn("retry", str(raised.exception))
+            manager.context.Pipe.assert_not_called()
+            manager.context.Process.assert_not_called()
+            self.assertIsNone(manager.child)
+            self.assertIsNone(manager.ready)
+            self.assertEqual(model.read_bytes(), payload)
+
+            # Exactly the user's configured floor is allowed; no extra estimate
+            # or permanent rejection state is introduced by the preflight.
+            ready = {"type": "ready", "load_seconds": .1, "load_stages": {},
+                     "architecture": "spark2_5", "context_length": 8192}
+            process = FakeProcess(alive=False)
+            parent, child = FakeConnection(process, [ready]), FakeConnection()
+            manager.context.Pipe.return_value = (parent, child)
+            manager.context.Process.return_value = process
+            with mock.patch.object(lifecycle, "memory_status", return_value={"available_commit_bytes": 1024**3}), \
+                    mock.patch.object(lifecycle, "WorkerJob", side_effect=FakeJob):
+                self.assertTrue(manager._load(profile))
+            self.assertIsNone(manager.failure)
+            self.assertEqual(manager.active_profile, "sample")
+            manager._stop()
+
+    def test_profile_switch_releases_old_worker_before_commit_sample(self):
+        with tempfile.TemporaryDirectory() as folder:
+            manager = manager_without_thread()
+            manager.config_path = Path(folder) / "config.json"
+            model = Path(folder) / "synthetic.gguf"; model.write_bytes(b"never loaded")
+            profile = {"id": "sample", "mode": "hybrid", "path": str(model), "context": 8192}
+            process = manager.child = FakeProcess()
+            connection = manager.connection = FakeConnection(process)
+            job = manager.job = FakeJob()
+            manager.ready = {"type": "ready"}
+            manager.fingerprint = manager._load_fingerprint({**profile, "context": 2048})
+            manager.context = mock.Mock()
+            def memory_after_cleanup():
+                self.assertTrue(process.closed and connection.closed and job.closed)
+                self.assertIsNone(manager.child)
+                return {"available_commit_bytes": 1}
+            with mock.patch.object(lifecycle, "memory_status", side_effect=memory_after_cleanup):
+                with self.assertRaises(lifecycle.MemoryPressure):
+                    manager._load(profile)
+            manager.context.Pipe.assert_not_called()
+
+    def test_reusable_worker_does_not_run_a_new_allocation_preflight(self):
+        with tempfile.TemporaryDirectory() as folder:
+            manager = manager_without_thread()
+            model = Path(folder) / "synthetic.gguf"; model.write_bytes(b"never loaded")
+            profile = {"id": "sample", "mode": "hybrid", "path": str(model), "context": 8192}
+            manager.child = FakeProcess()
+            manager.ready = {"type": "ready"}
+            manager.fingerprint = manager._load_fingerprint(profile)
+            with mock.patch.object(lifecycle, "memory_status", side_effect=AssertionError("No new allocation")):
+                self.assertFalse(manager._load({**profile, "id": "alias"}))
+            self.assertEqual(manager.active_profile, "alias")
+            self.assertTrue(manager.child.alive)
+
+    def test_commit_rejection_never_attempts_optional_cpu_fallback(self):
+        manager = manager_without_thread()
+        manager._load = mock.Mock(side_effect=lifecycle.MemoryPressure())
+        profile = {"id": "sample", "mode": "hybrid", "fallback_mode": "cpu"}
+        with self.assertRaises(lifecycle.MemoryPressure):
+            next(manager.generate(profile, {}))
+        manager._load.assert_called_once_with(profile)
+
+    def test_runtime_aliases_share_identity_but_another_runtime_does_not(self):
+        with tempfile.TemporaryDirectory() as folder:
+            manager = manager_without_thread()
+            model = Path(folder) / "synthetic.gguf"; model.write_bytes(b"never loaded")
+            profile = {"id": "sample", "mode": "cpu", "path": str(model)}
+            manager.config["runtime_dir"] = str(Path(folder) / "runtime")
+            fingerprint = manager._load_fingerprint(profile)
+            manager.config["runtime_dir"] = str(Path(folder) / "unused" / ".." / "runtime")
+            self.assertEqual(manager._load_fingerprint(profile), fingerprint)
+            manager.config["runtime_dir"] = str(Path(folder) / "another-runtime")
+            self.assertNotEqual(manager._load_fingerprint(profile), fingerprint)
+
+    def test_missing_replacement_is_rejected_before_stopping_existing_worker(self):
+        with tempfile.TemporaryDirectory() as folder:
+            manager = manager_without_thread()
+            process = manager.child = FakeProcess()
+            manager.context = mock.Mock()
+            profile = {"id": "missing", "mode": "cpu", "path": str(Path(folder) / "missing.gguf")}
+            with mock.patch.object(lifecycle, "memory_status", side_effect=AssertionError("No allocation for missing file")):
+                with self.assertRaisesRegex(ValueError, "GGUF is missing"):
+                    manager._load(profile)
+            self.assertIs(manager.child, process)
+            self.assertTrue(process.alive)
+            manager.context.Pipe.assert_not_called()
+
     def test_tokens_do_not_restart_whole_response_deadline(self):
         manager = manager_without_thread()
         manager._load = mock.Mock(return_value=False)
@@ -329,6 +437,10 @@ class WorkerLifecycleTests(unittest.TestCase):
 
 
 class IPCFaultTests(unittest.TestCase):
+    def setUp(self):
+        memory = mock.patch.object(lifecycle, "memory_status", return_value=None)
+        memory.start(); self.addCleanup(memory.stop)
+
     def test_poll_failures_become_safe_worker_failures(self):
         for error in (ConnectionResetError("PRIVATE_POLL_DETAIL"), ConnectionAbortedError("PRIVATE_POLL_DETAIL"),
                       TimeoutError("PRIVATE_POLL_DETAIL"), ValueError("PRIVATE_CLOSED_HANDLE")):
