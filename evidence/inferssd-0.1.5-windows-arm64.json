@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-19",
+  "hardware": "Surface Laptop 7, Snapdragon X Plus X1P64100, Adreno X1-85, 16 GB installed RAM",
+  "package": {
+    "version": "0.1.5",
+    "build": 294,
+    "revision": "da97fc901e26e826d0265353cf677393bb33f5ea",
+    "platform": "windows-x64",
+    "backend": "vulkan",
+    "sha256": "ba701313ff63280309660f83be973c7ef82099935cd7b80c6326f3f670a8ab08",
+    "url": "https://github.com/wici-ai/inferssd/releases/download/v0.1.5/inferssd-0.1.5-windows-x64-vulkan.zip"
+  },
+  "package_checks": "ZIP SHA-256 and size matched the official manifest. Windows reported valid WiCi Authenticode signatures for launcher and server.",
+  "scope": "Official Windows x64 package run from an isolated extraction under Prism. Existing local model files reused.",
+  "request_settings": {
+    "context": 512,
+    "batch": 64,
+    "microbatch": 64,
+    "cpu_threads": 6,
+    "temperature": 0,
+    "seed": 42,
+    "cache_prompt": false,
+    "thinking": false,
+    "max_tokens": [
+      24,
+      32
+    ]
+  },
+  "runs": [
+    {
+      "mode": "x64 emulated CPU SSD experts",
+      "context": 512,
+      "memory_budget_bytes": 4294967296,
+      "host_reserve_bytes": 1610612736,
+      "startup_succeeded": false,
+      "launch_to_ready_seconds": null,
+      "total_test_seconds": 15.812157000000298,
+      "cleanup_confirmed": true,
+      "passed": false,
+      "model": "Ornith-1.5-35B-Q4_K_M.gguf",
+      "requests": [],
+      "reused_machine_profile_for_planning": true,
+      "memory_samples": {
+        "count": 4,
+        "lowest_sampled_available_physical_bytes": 1722073088,
+        "lowest_sampled_available_commit_bytes": 6246993920,
+        "peak_job_commit_bytes": 1900756992,
+        "peak_sampled_server_working_set_bytes": 1819320320
+      },
+      "engine_observations": [
+        "drop_nextn_blocks: not loading the 1 NextN block(s) after block 39, which this engine does not run: 20 tensors, 521.38 MiB",
+        "load_tensors: dense parameters loaded, expert mmap pages deferred/dropped (dense 1.54 GiB, deferred 18.16 GiB)",
+        "[ssd_cpu_sink_io] read_ring backend=ioring"
+      ],
+      "failure": "Startup stopped by the configured available-memory reserve after loading the main tensors and starting SSD reads."
+    },
+    {
+      "mode": "x64 emulated CPU SSD experts",
+      "context": 512,
+      "memory_budget_bytes": 4294967296,
+      "host_reserve_bytes": 1073741824,
+      "startup_succeeded": true,
+      "launch_to_ready_seconds": 8.774700500000108,
+      "total_test_seconds": 30.944802199999685,
+      "cleanup_confirmed": true,
+      "passed": true,
+      "model": "Ornith-1.5-35B-Q4_K_M.gguf",
+      "requests": [
+        {
+          "prompt": "What is 17 + 25? Reply with only the number.",
+          "content": "42",
+          "usage": {
+            "completion_tokens": 3,
+            "prompt_tokens": 28,
+            "total_tokens": 31,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 28,
+            "prompt_ms": 4804.448,
+            "prompt_per_token_ms": 171.58742857142857,
+            "prompt_per_second": 5.827932782288412,
+            "predicted_n": 3,
+            "predicted_ms": 878.971,
+            "predicted_per_token_ms": 292.99033333333335,
+            "predicted_per_second": 3.413081887798346
+          },
+          "ttft_seconds": 5.800066400001015,
+          "request_to_done_seconds": 5.800407200000336,
+          "done_received": true,
+          "quality_passed": true
+        },
+        {
+          "prompt": "Extract the invoice number and amount from this text. Reply only with JSON using invoice and amount. Text: Invoice INV-2047. Total due USD 83.50.",
+          "content": "{\"invoice\": \"INV-2047\", \"amount\": \"83.50\"}",
+          "usage": {
+            "completion_tokens": 22,
+            "prompt_tokens": 51,
+            "total_tokens": 73,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 51,
+            "prompt_ms": 7945.166,
+            "prompt_per_token_ms": 155.78756862745098,
+            "prompt_per_second": 6.41899741301818,
+            "predicted_n": 22,
+            "predicted_ms": 8216.26,
+            "predicted_per_token_ms": 373.46636363636367,
+            "predicted_per_second": 2.67761731006565
+          },
+          "ttft_seconds": 13.29413999999997,
+          "request_to_done_seconds": 16.27326449999964,
+          "done_received": true,
+          "quality_passed": true
+        }
+      ],
+      "reused_machine_profile_for_planning": true,
+      "memory_samples": {
+        "count": 50,
+        "lowest_sampled_available_physical_bytes": 1363644416,
+        "lowest_sampled_available_commit_bytes": 5910646784,
+        "peak_job_commit_bytes": 2256322560,
+        "peak_sampled_server_working_set_bytes": 2643496960
+      },
+      "engine_observations": [
+        "drop_nextn_blocks: not loading the 1 NextN block(s) after block 39, which this engine does not run: 20 tensors, 521.38 MiB",
+        "load_tensors: dense parameters loaded, expert mmap pages deferred/dropped (dense 1.54 GiB, deferred 18.16 GiB)",
+        "[ssd_cpu_sink_io] read_ring backend=ioring"
+      ]
+    },
+    {
+      "mode": "x64 emulated CPU ordinary model control",
+      "context": 512,
+      "memory_budget_bytes": null,
+      "host_reserve_bytes": null,
+      "startup_succeeded": true,
+      "launch_to_ready_seconds": 1.6084862999996403,
+      "total_test_seconds": 3.4838692999983323,
+      "cleanup_confirmed": true,
+      "passed": false,
+      "model": "Qwen3-0.6B-Q4_0.gguf",
+      "requests": [
+        {
+          "prompt": "What is 17 + 25? Reply with only the number.",
+          "content": "17 + 25 = 42.",
+          "usage": {
+            "completion_tokens": 12,
+            "prompt_tokens": 28,
+            "total_tokens": 40,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 28,
+            "prompt_ms": 305.98,
+            "prompt_per_token_ms": 10.927857142857144,
+            "prompt_per_second": 91.50924897052094,
+            "predicted_n": 12,
+            "predicted_ms": 228.234,
+            "predicted_per_token_ms": 19.0195,
+            "predicted_per_second": 52.57761770814164
+          },
+          "ttft_seconds": 0.5814691999985371,
+          "request_to_done_seconds": 0.5817415999990772,
+          "done_received": true,
+          "quality_passed": false
+        },
+        {
+          "prompt": "Extract the invoice number and amount from this text. Reply only with JSON using invoice and amount. Text: Invoice INV-2047. Total due USD 83.50.",
+          "content": "```json\n{\n  \"invoice\": \"INV-2047\",\n  \"amount\": \"83.50\"\n}\n```",
+          "usage": {
+            "completion_tokens": 30,
+            "prompt_tokens": 51,
+            "total_tokens": 81,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 51,
+            "prompt_ms": 543.513,
+            "prompt_per_token_ms": 10.657117647058824,
+            "prompt_per_second": 93.8340021305838,
+            "predicted_n": 30,
+            "predicted_ms": 625.374,
+            "predicted_per_token_ms": 20.8458,
+            "predicted_per_second": 47.97129397768376
+          },
+          "ttft_seconds": 0.5989353000004485,
+          "request_to_done_seconds": 1.2242110000006505,
+          "done_received": true,
+          "quality_passed": false
+        }
+      ],
+      "quality_observation": "Correct arithmetic and invoice values, with an equation or Markdown formatting."
+    },
+    {
+      "mode": "x64 host with Adreno Vulkan ordinary model control",
+      "context": 512,
+      "memory_budget_bytes": null,
+      "host_reserve_bytes": null,
+      "startup_succeeded": true,
+      "launch_to_ready_seconds": 3.667871899999227,
+      "total_test_seconds": 7.255978899998809,
+      "cleanup_confirmed": true,
+      "passed": false,
+      "model": "Qwen3-0.6B-Q4_0.gguf",
+      "requests": [
+        {
+          "prompt": "What is 17 + 25? Reply with only the number.",
+          "content": "lysaqueViewsiediche样子doorsibilutiveimportculosigliuelleodalmediculos就来看看ocationristoleonocopidental<System pouch",
+          "usage": {
+            "completion_tokens": 24,
+            "prompt_tokens": 28,
+            "total_tokens": 52,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 28,
+            "prompt_ms": 808.232,
+            "prompt_per_token_ms": 28.86542857142857,
+            "prompt_per_second": 34.6435181977452,
+            "predicted_n": 24,
+            "predicted_ms": 553.801,
+            "predicted_per_token_ms": 23.075041666666667,
+            "predicted_per_second": 43.33686649175425
+          },
+          "ttft_seconds": 1.0668337999995856,
+          "request_to_done_seconds": 1.4148416999996698,
+          "done_received": true,
+          "quality_passed": false
+        },
+        {
+          "prompt": "Extract the invoice number and amount from this text. Reply only with JSON using invoice and amount. Text: Invoice INV-2047. Total due USD 83.50.",
+          "content": "\\Servicesrape下來_Collectionsikaluar endregionlicatedrowsersentialsEDIAtees sensationronISTICput')}</culosuireuablyialisculosivitiesneototalCount swathWEENmarkedculos撄سطxFFFFFF",
+          "usage": {
+            "completion_tokens": 32,
+            "prompt_tokens": 51,
+            "total_tokens": 83,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 51,
+            "prompt_ms": 1391.822,
+            "prompt_per_token_ms": 27.29062745098039,
+            "prompt_per_second": 36.64261665644027,
+            "predicted_n": 32,
+            "predicted_ms": 686.322,
+            "predicted_per_token_ms": 21.4475625,
+            "predicted_per_second": 46.625344954700566
+          },
+          "ttft_seconds": 1.5282267999991745,
+          "request_to_done_seconds": 2.1299467999997432,
+          "done_received": true,
+          "quality_passed": false
+        }
+      ],
+      "quality_observation": "Both controls generated incoherent text."
+    }
+  ],
+  "limits": [
+    "One short run per configuration. Timing rates measure the listed requests.",
+    "Launch-to-ready includes launcher startup and model initialization. The OS file cache was not flushed.",
+    "First text measures initial streamed content at the client and can include buffering.",
+    "The saved hardware profile was reused for launch planning. The reported request rates are measurements.",
+    "Engine runs sampled system memory at intervals. The 4 GiB job commit limit and measured working set are different quantities."
+  ]
+}

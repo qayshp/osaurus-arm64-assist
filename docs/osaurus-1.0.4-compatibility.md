@@ -46,6 +46,8 @@ The initial test used an unqualified ID and received `model_not_found`. Earlier 
 
 ## Separate installed InferSSD recheck
 
+The published InferSSD 0.1.5 package became available after this installed-build recheck. See the [November 19 follow-up](#inferssd-015-follow-up) for the original Ornith Q4 result.
+
 InferSSD is a different inference runtime. Updating Osaurus does not update its packaged engine, change its tensor loader or turn its GPU backend into an NPU backend. The installed package tested on the same date identified **build 266**, revision **`e91c7d7a000b69ef69ee0e20fd1345254a504bd7`**. It ran as an **x64 program under Windows ARM64 emulation**. These results apply to that installed package and the tested defaults.
 
 | Installed InferSSD check | Observed result | Interpretation |
@@ -65,3 +67,18 @@ The official [Windows Vulkan engine feed](https://appapi.wici.ai/versioning/infe
 The historical [CPU/GPU/NPU comparisons](benchmarks.md) retain their original runtime, application, context and load policies. This recheck does not provide a new speed ranking, battery claim or universal model-compatibility result. It did not rerun full Ornith NPU offload, every Ornith assistance workload, cold-boot provisioning or long-duration stress tests.
 
 For current usage, keep the **NPU Hybrid** provider and select the shared Raptor entry. Its tested Auto context remains 8K; explicit 16K support is backed by the separate context evidence. Keep stock-engine fallback visible for unsupported architectures or explicit preferences. After future application updates, repeat request correctness and execution attribution rather than relying on a provider badge or an unchanged model listing.
+
+## InferSSD 0.1.5 follow-up
+
+On November 19, 2026 the original 20.22 GiB Ornith Q4 GGUF loaded and answered two prompts on the same Surface Laptop 7 with InferSSD build 294 (`da97fc9`). The published x64 Vulkan package ran under Prism from an isolated extraction. Windows validated the launcher and server signatures and the archive matched the release manifest. CPU inference used six threads, a 512-token context and a 4 GiB job commit limit. The engine skipped the unused NextN block, deferred 18.16 GiB of expert weights and read expert slices through Windows I/O rings. [Official release](https://github.com/wici-ai/inferssd/releases/tag/v0.1.5), [test evidence](../evidence/inferssd-0.1.5-windows-arm64.json).
+
+The first launch stopped at the 1.5 GiB available-memory reserve. The successful retry used a 1 GiB runtime reserve with the same job commit limit and kept the internal expert-cache headroom setting at 1.5 GiB. The server took 8.77 seconds to become ready. The job peaked at 2.10 GiB of commit, server working set reached 2.46 GiB in samples, and system available physical memory reached a sampled low of 1.27 GiB.
+
+| Ornith Q4 request | Input / output tokens | Prompt evaluation | Generation | First text at client | Complete response |
+|---|---:|---:|---:|---:|---:|
+| `17 + 25` | 28 / 3 | 4.80 s | 0.88 s, 3.41 tokens/s | 5.80 s | 5.80 s |
+| Invoice `INV-2047`, USD `83.50` | 51 / 22 | 7.95 s | 8.22 s, 2.68 tokens/s | 13.29 s | 16.27 s |
+
+The arithmetic reply was `42` and the invoice reply parsed as JSON with the expected fields. Launch time excludes both requests. Client timings include buffering and transport. These are one-off measurements of short prompts with the 512-token context, using a saved hardware profile for planning.
+
+The small Qwen3 CPU control still returned correct values with extra formatting. The default Adreno Vulkan control still returned garbled text on both prompts. The verified path in this test is CPU plus SSD expert reads. The WiCi desktop installation continued to use its existing engine, and the test used the new package directly.
